@@ -1,0 +1,8 @@
+C:/Users/arm/Desktop/Qt/Q1ORM/Examples/DbContextExample/out/build/x64-Debug/CMakeFiles/DbContextExample.dir
+C:/Users/arm/Desktop/Qt/Q1ORM/Examples/DbContextExample/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/arm/Desktop/Qt/Q1ORM/Examples/DbContextExample/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
+C:/Users/arm/Desktop/Qt/Q1ORM/Examples/DbContextExample/out/build/x64-Debug/CMakeFiles/list_install_components.dir
+C:/Users/arm/Desktop/Qt/Q1ORM/Examples/DbContextExample/out/build/x64-Debug/CMakeFiles/install.dir
+C:/Users/arm/Desktop/Qt/Q1ORM/Examples/DbContextExample/out/build/x64-Debug/CMakeFiles/install/local.dir
+C:/Users/arm/Desktop/Qt/Q1ORM/Examples/DbContextExample/out/build/x64-Debug/CMakeFiles/DbContextExample_autogen_timestamp_deps.dir
+C:/Users/arm/Desktop/Qt/Q1ORM/Examples/DbContextExample/out/build/x64-Debug/CMakeFiles/DbContextExample_autogen.dir

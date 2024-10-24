@@ -1,0 +1,93 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"src/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 54,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 59,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 70,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "C:/Users/arm/Desktop/Qt/Q1ORM/src/../Releases/Release-0.1/lib",
+			"paths" : 
+			[
+				"Src/Q1ORM.lib"
+			],
+			"targetId" : "Src::@fffd7673bb2fd0d58c2a",
+			"targetIndex" : 12,
+			"targetIsImportLibrary" : true,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "C:/Users/arm/Desktop/Qt/Q1ORM/src/../Releases/Release-0.1/bin",
+			"paths" : 
+			[
+				"Src/Q1ORM.dll"
+			],
+			"targetId" : "Src::@fffd7673bb2fd0d58c2a",
+			"targetIndex" : 12,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "C:/Users/arm/Desktop/Qt/Q1ORM/src/../Releases/Release-0.1/include",
+			"paths" : 
+			[
+				{
+					"from" : "src/",
+					"to" : "."
+				}
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "C:/Users/arm/Desktop/Qt/Q1ORM/src/../Releases/Release-0.1/scripts",
+			"paths" : 
+			[
+				"src/Q1DatabaseInstall"
+			],
+			"type" : "directory"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "Src",
+		"source" : "src"
+	}
+}

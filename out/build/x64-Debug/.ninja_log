@@ -1,0 +1,8 @@
+# ninja log v5
+5	100	7345489200570156	Examples/DbContextExample/DbContextExample_autogen/timestamp	a1615afa73fc04d2
+5	100	7345489200570156	Examples/DbContextExample/DbContextExample_autogen/mocs_compilation.cpp	a1615afa73fc04d2
+5	100	7345489200570156	C:/Users/arm/Desktop/Qt/Q1ORM/out/build/x64-Debug/Examples/DbContextExample/DbContextExample_autogen/timestamp	a1615afa73fc04d2
+5	100	7345489200570156	C:/Users/arm/Desktop/Qt/Q1ORM/out/build/x64-Debug/Examples/DbContextExample/DbContextExample_autogen/mocs_compilation.cpp	a1615afa73fc04d2
+104	3890	7345489238642066	Examples/DbContextExample/CMakeFiles/DbContextExample.dir/main.cpp.obj	ee1a599c0a5cb6c7
+101	155	7345489201260077	Examples/DbContextExample/CMakeFiles/DbContextExample.dir/DbContextExample_autogen/mocs_compilation.cpp.obj	af90cd54f924ab3
+25	178	7345489691799645	Examples/DbContextExample/DbContextExample.exe	6a75fed19b6d38b3

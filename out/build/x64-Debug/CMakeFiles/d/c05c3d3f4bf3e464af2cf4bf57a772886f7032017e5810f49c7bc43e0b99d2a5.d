@@ -1,0 +1,21 @@
+Examples/DbContextExample/DbContextExample_autogen/timestamp: \
+  C:/Program\ Files/Microsoft\ Visual\ Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe \
+  C:/Program\ Files/Microsoft\ Visual\ Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.27/Modules/CMakeParseArguments.cmake \
+  C:/Program\ Files/Microsoft\ Visual\ Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.27/Modules/GNUInstallDirs.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5Config.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ConfigVersion.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ModuleLocation.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core/Qt5CoreConfig.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core/Qt5CoreMacros.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Sql/Qt5SqlConfig.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Sql/Qt5SqlConfigVersion.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Sql/Qt5Sql_QODBCDriverPlugin.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Sql/Qt5Sql_QPSQLDriverPlugin.cmake \
+  C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Sql/Qt5Sql_QSQLiteDriverPlugin.cmake \
+  C:/Users/arm/Desktop/Qt/Q1ORM/Examples/DbContextExample/CMakeLists.txt \
+  C:/Users/arm/Desktop/Qt/Q1ORM/Examples/DbContextExample/Object.h \
+  C:/Users/arm/Desktop/Qt/Q1ORM/Examples/DbContextExample/Person.h \
+  C:/Users/arm/Desktop/Qt/Q1ORM/Examples/DbContextExample/main.cpp
