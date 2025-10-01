@@ -21,7 +21,8 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Sql)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Sql)
 
 add_executable(DbContextExample main.cpp Person.h Object.h
-    Address.h)
+    Address.h
+    Profile.h)
 target_link_libraries(DbContextExample Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql Q1ORM)
 
 include(GNUInstallDirs)

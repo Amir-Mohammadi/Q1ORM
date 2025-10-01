@@ -7,11 +7,11 @@
 #include <QStringList>
 #include <QDateTime>
 #include <QUuid>
+#include <qdebug.h>
 
-#include "Q1ORM_global.h"
-#include "qdebug.h"
+#include "../../Q1ORM_global.h"
 
-enum Q1Driver
+                  enum Q1Driver
 {
     POSTGRE_SQL
 };
@@ -155,22 +155,18 @@ public:
 
     bool Connect()
     {
-        if(is_open)
+        if(is_open) return true;
+
+        if (!database.open())
         {
-            return true;
-        }
-
-        is_open = database.open();
-
-        if(!is_open)
-        {
-            is_open = false;
-
             error = database.lastError();
             error_type = error.type();
+            qCritical() << "Q1Connection::Connect failed:" << error.text();
+            return false;
         }
 
-        return is_open;
+        is_open = true;
+        return true;
     }
 
     void Disconnect()
@@ -196,7 +192,7 @@ private: //Connection Parameters
     QString host_name;
     int port;
 
-    QString name = QUuid::createUuid().toString() + QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz");
+    QString name = "conn_" + QUuid::createUuid().toString().remove('{').remove('}').remove('-');
     QString database_name;
     QString username;
     QString password;
@@ -210,3 +206,5 @@ private: //Defaults
 };
 
 #endif // Q1CONNECTION_H
+
+

@@ -4,12 +4,12 @@
 #include <QStringList>
 #include <QSqlQuery>
 
-#include "Q1Core/Q1Context/Q1Connection.h"
-#include "Q1Core/Q1Entity/Q1Column.h"
-#include "Q1Core/Q1Entity/Q1Table.h"
-#include "Q1Core/Q1Migration/Q1MigrationQuery.h"
+#include "../../Q1Core/Q1Context/Q1Connection.h"
+#include "../../Q1Core/Q1Entity/Q1Column.h"
+#include "../../Q1Core/Q1Entity/Q1Table.h"
+#include "../../Q1Core/Q1Migration/Q1MigrationQuery.h"
 
-#include "Q1ORM_global.h"
+#include "../../Q1ORM_global.h"
 
 class Q1ORM_EXPORT Q1Migration
 {
@@ -22,6 +22,7 @@ public:
     bool AddDatabase(QString database_name);
     bool AddTable(Q1Table q1table);
     bool AddColumn(QString table_name, Q1Column &column);
+    bool AddRelation(const Q1Relation &relation);
 
     bool DropTable(QString table_name);
     bool DropColumn(QString table_name, QString column_name);
@@ -35,9 +36,14 @@ public:
 
     bool HasNullData(QString table_name, QString column_name);
 
+    bool ConstraintExists(QSqlDatabase &db, const QString &constraint_name);
+
+    QString ErrorMessage() const { return m_lastError; }
+
 private:
     Q1Connection connection;
     Q1MigrationQuery translator;
+    QString m_lastError;
 };
 
 #endif // Q1MIGRATION_H

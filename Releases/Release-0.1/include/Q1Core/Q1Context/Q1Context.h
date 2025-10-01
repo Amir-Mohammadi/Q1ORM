@@ -1,57 +1,46 @@
 #ifndef Q1CONTEXT_H
 #define Q1CONTEXT_H
 
-#include <QCoreApplication>
+#include <QList>
 #include <QString>
-#include <QObject>
-#include <QSqlDatabase>
-#include <QtSql>
+#include <QDebug>
 
-#include "Q1Core/Q1Entity/Q1Table.h"
-#include "Q1Core/Q1Entity/Q1Entity.h"
-#include "Q1Core/Q1Context/Q1Connection.h"
+#include "../Q1Entity/Q1Table.h"
+#include "../Q1Entity/Q1Column.h"
+#include "Q1Connection.h"
 #include "Q1Core/Q1Migration/Q1Migration.h"
 
-#include "Q1ORM_global.h"
-
-class Q1ORM_EXPORT Q1Context : public QObject
+class Q1ORM_EXPORT Q1Context
 {
-    Q_OBJECT
 public:
-    Q1Context() { }
-    ~Q1Context();
+    Q1Context() = default;
+    virtual ~Q1Context();
 
-public: //Virtual
-    virtual void OnConfiguration() = 0;
-    virtual QList<Q1Table> OnTablesCreating() = 0;
-
-public: //Methods
     void Initialize();
 
-public: //Setter
-    void ColumnsMigration(bool status)
-    {
-        check_columns = status;
-    }
+protected:
+    // Must override in derived class
+    virtual void OnConfiguration() = 0;
+    virtual QList<Q1Table> OnTablesCreating() = 0;
+    virtual QList<Q1Relation> OnTableRelationCreating() = 0;
 
-private: //Methods
     void InitialDatabase();
     void InitialTables();
     void InitialColumns(Q1Table &q1table);
-    void CompareColumn(QString table_name, Q1Column &column, Q1Column &q1column);
+    void CompareColumn(const QString &table_name, Q1Column &dbColumn, Q1Column &declColumn);
+    void InitialRelations(const QList<Q1Relation> &relations);
 
 protected:
-    Q1Connection* connection = nullptr;
-    Q1Migration* query = nullptr;
+    Q1Connection *connection = nullptr;
+    Q1Migration *query = nullptr;
 
-private:
     QString database_name;
     QList<Q1Table> q1tables;
-
     QStringList tables;
 
-private:
-    bool check_columns = false;
+    bool check_columns = true;
+
+
 };
 
 #endif // Q1CONTEXT_H

@@ -7,12 +7,15 @@
 
 class Address
 {
+
 public:
     int id;
     QString address_name;
     int person_id;
 
-    // Person person;
+    Person person;
+
+    static QString TableName() { return "Addresses"; }
 };
 
 #endif // ADDRESS_H

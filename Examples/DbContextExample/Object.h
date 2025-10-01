@@ -15,6 +15,8 @@ public:
     float weight;
 
     Person person;
+
+    static QString TableName() { return "Objects"; }
 };
 
 #endif // OBJECT_H

@@ -1,165 +1,212 @@
 #include "Q1Context.h"
+#include <algorithm>
 
 Q1Context::~Q1Context()
 {
-    if(connection != nullptr)
-    {
-        delete connection;
-        connection = nullptr;
-    }
-
-    if(query != nullptr)
+    if (query)
     {
         delete query;
         query = nullptr;
     }
-}
 
+    if (connection)
+    {
+        connection->Disconnect();
+        connection->RootDisconnect();
+        delete connection;
+        connection = nullptr;
+    }
+}
 void Q1Context::Initialize()
 {
     OnConfiguration();
 
-    if(connection == nullptr)
+    if (!connection)
     {
+        qWarning() << "Q1Context::Initialize - connection is null!";
         return;
     }
-    
+
+    if (query)
+    {
+        delete query;
+        query = nullptr;
+    }
+
     query = new Q1Migration(*connection);
     database_name = connection->GetDatabaseName();
 
+    // 1) Ensure database exists
     InitialDatabase();
 
+    // 2) Get table definitions
     q1tables = OnTablesCreating();
-    InitialTables();
+
+    // 3) Create tables first
+    InitialTables(); // Create tables and columns, no relations yet
+
+    // 4) Ensure all parent tables exist before creating relations
+    QList<Q1Relation> allRelations = OnTableRelationCreating();
+
+    // 5) Create relations safely
+    InitialRelations(allRelations);
 }
+
 
 void Q1Context::InitialDatabase()
 {
-    QStringList databases = query->GetDatabases();
-    bool has_database = databases.contains(database_name);
+    if (!connection || !query) return;
 
-    if(has_database)
+    QStringList databases = query->GetDatabases();
+    if (!databases.contains(database_name))
     {
-        return;
+        qDebug() << "InitialDatabase - creating database" << database_name;
+        query->AddDatabase(database_name);
+    }
+    else
+    {
+        qDebug() << "InitialDatabase - database" << database_name << "already exists";
     }
 
-    query->AddDatabase(database_name);
+    if (!connection->Connect())
+    {
+        qCritical() << "Failed to connect to database" << database_name
+                    << "-" << connection->ErrorMessage();
+    }
 }
+
 
 void Q1Context::InitialTables()
 {
-    connection->Connect();
-    tables = connection->database.tables();
+    if (!connection || !query)
+        return;
+
+    if (!connection->Connect())
+    {
+        qWarning() << "InitialTables - failed to connect to database:" << connection->ErrorMessage();
+        return;
+    }
+
+    // Get existing tables once
+    QStringList existingTables = connection->database.tables();
+
+    for (Q1Table &declaredTable : q1tables)
+    {
+        if (!existingTables.contains(declaredTable.table_name))
+        {
+            qDebug() << "InitialTables - creating table:" << declaredTable.table_name;
+            query->AddTable(declaredTable);
+            existingTables.append(declaredTable.table_name);
+        }
+
+        if (check_columns)
+            InitialColumns(declaredTable);
+    }
+
     connection->Disconnect();
-
-    for(Q1Table q1table : q1tables)
-    {
-        if(tables.contains(q1table.table_name))
-        {
-            if(check_columns)
-            {
-                InitialColumns(q1table);
-            }
-
-            continue;
-        }
-
-        query->AddTable(q1table);
-        tables.append(q1table.table_name);
-    }
-
-    bool drop_table = true;
-
-    for(QString table : tables)
-    {
-        for(Q1Table q1table : q1tables)
-        {
-            if(q1table.table_name == table)
-            {
-                drop_table = false;
-                break;
-            }
-        }
-
-        if(drop_table)
-        {
-            query->DropTable(table);
-        }
-
-        drop_table = true;
-    }
 }
+
 
 void Q1Context::InitialColumns(Q1Table &q1table)
 {
-    QList<Q1Column> columns = query->GetColumns(q1table.table_name);
-    bool drop_column = true;
+    if (!query) return;
 
-    for(Q1Column column : columns)
+    QList<Q1Column> existingColumns = query->GetColumns(q1table.table_name);
+
+    // Drop columns not declared
+    for (Q1Column &dbCol : existingColumns)
     {
-        for(Q1Column q1column : q1table.columns)
+        bool found = false;
+        for (Q1Column &declCol : q1table.columns)
         {
-            if(q1column == column)
+            if (declCol == dbCol)
             {
-                CompareColumn(q1table.table_name, column, q1column);
-                drop_column = false;
-
+                CompareColumn(q1table.table_name, dbCol, declCol);
+                found = true;
                 break;
             }
         }
 
-        if(drop_column)
+        if (!found)
         {
-            query->DropColumn(q1table.table_name, column.name);
+            qDebug() << "InitialColumns - dropping column" << dbCol.name << "from" << q1table.table_name;
+            query->DropColumn(q1table.table_name, dbCol.name);
         }
-
-        drop_column = true;
     }
 
-    for(Q1Column q1column : q1table.columns)
+    // Add missing columns
+    for (Q1Column &declCol : q1table.columns)
     {
-        int index_of = Q1Column::IndexOf(columns, q1column);
-
-        if(index_of != -1)
+        int idx = Q1Column::IndexOf(existingColumns, declCol);
+        if (idx == -1)
         {
-            continue;
+            qDebug() << "InitialColumns - adding column" << declCol.name << "to" << q1table.table_name;
+            query->AddColumn(q1table.table_name, declCol);
         }
-
-        query->AddColumn(q1table.table_name, q1column);
     }
 }
 
-void Q1Context::CompareColumn(QString table_name, Q1Column &column, Q1Column &q1column)
+void Q1Context::CompareColumn(const QString &table_name, Q1Column &dbColumn, Q1Column &declColumn)
 {
-    if(column.size != q1column.size)
-    {
-        query->UpdateColumnSize(table_name, q1column.name, q1column.size);
-    }
+    if (!query) return;
 
-    if(column.nullable != q1column.nullable)
+    if (dbColumn.size != declColumn.size)
+        query->UpdateColumnSize(table_name, declColumn.name, declColumn.size);
+
+    if (dbColumn.nullable != declColumn.nullable)
     {
-        if(column.nullable  && !q1column.nullable)
+        if (declColumn.nullable && !dbColumn.nullable)
         {
-            if(!query->HasNullData(table_name, q1column.name))
-            {
-                query->DropColumnNullable(table_name, q1column.name);
-            }
+            if (!query->HasNullData(table_name, dbColumn.name))
+                query->DropColumnNullable(table_name, dbColumn.name);
         }
         else
         {
-            query->SetColumnNullable(table_name, q1column.name);
+            query->SetColumnNullable(table_name, dbColumn.name);
         }
     }
 
-    if(column.default_value != q1column.default_value)
+    if (dbColumn.default_value != declColumn.default_value)
     {
-        if(q1column.default_value != "")
-        {
-            query->setColumnDefault(table_name, q1column.name, q1column.default_value);
-        }
-        else if(column.default_value != "")
-        {
-            query->DropColumnDefault(table_name, q1column.name);
-        }
+        if (!declColumn.default_value.isEmpty())
+            query->setColumnDefault(table_name, declColumn.name, declColumn.default_value);
+        else if (!dbColumn.default_value.isEmpty())
+            query->DropColumnDefault(table_name, declColumn.name);
     }
+}
+
+void Q1Context::InitialRelations(const QList<Q1Relation> &relations)
+{
+    if (!query || !connection)
+        return;
+
+    if (!connection->Connect())
+        return;
+
+    QStringList existingTables = connection->database.tables();
+
+    for (const Q1Relation &rel : relations)
+    {
+        // Skip invalid relations silently
+        if (rel.base_table.isEmpty() || rel.top_table.isEmpty())
+            continue;
+
+        // Skip if tables do not exist yet
+        if (!existingTables.contains(rel.base_table) || !existingTables.contains(rel.top_table))
+            continue;
+
+        const QString constraint_name = rel.GetConstraintName();
+
+        // Skip if constraint already exists
+        if (query->ConstraintExists(connection->database, constraint_name))
+            continue;
+
+        // Add relation
+        if (!query->AddRelation(rel))
+            qWarning() << "[Error] Failed to create relation:" << query->ErrorMessage();
+        else
+            qDebug() << "[Info] Relation created successfully:" << constraint_name;
+    }
+
+    connection->Disconnect();
 }
