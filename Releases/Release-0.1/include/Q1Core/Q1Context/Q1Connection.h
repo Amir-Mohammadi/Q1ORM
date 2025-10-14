@@ -1,13 +1,14 @@
 #ifndef Q1CONNECTION_H
 #define Q1CONNECTION_H
 
-#include <QSqlError>
-#include <QSqlDatabase>
+
 #include <QString>
 #include <QStringList>
 #include <QDateTime>
 #include <QUuid>
 #include <qdebug.h>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlDatabase>
 
 #include "../../Q1ORM_global.h"
 

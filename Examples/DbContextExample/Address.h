@@ -2,20 +2,24 @@
 #define ADDRESS_H
 
 
-#include "Person.h"
+#include "AddressDto.h"
+#include <Q1Core/Q1Entity/Q1Entity.h>
 #include <QString>
 
-class Address
+class Address : public Q1Entity<AddressDto>
 {
 
 public:
-    int id;
-    QString address_name;
-    int person_id;
+    explicit Address(Q1Connection* connection = nullptr) : Q1Entity<AddressDto>(connection) {}
 
-    Person person;
 
-    static QString TableName() { return "Addresses"; }
+    static void ConfigureEntity(Q1Entity<Address> &entity) {
+        entity.ToTableName(entity.TableName());
+        entity.Property(entity.id, "id", false, true);
+        entity.Property(entity.address_name, "address_name", true);
+        entity.Property(entity.person_id, "person_id", true);
+    }
+
 };
 
 #endif // ADDRESS_H

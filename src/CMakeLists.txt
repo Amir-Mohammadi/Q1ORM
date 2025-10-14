@@ -41,7 +41,9 @@ set(Q1ORM_SOURCES
     Q1Core/Q1Migration/Q1Migration.cpp
 )
 
-add_library(Src SHARED ${Q1ORM_HEADERS} ${Q1ORM_SOURCES} ${Q1ORM_SCRIPTS})
+add_library(Src SHARED ${Q1ORM_HEADERS} ${Q1ORM_SOURCES} ${Q1ORM_SCRIPTS}
+    Q1Core/Q1Query/Q1Query.h
+)
 
 target_link_libraries(Src PRIVATE
     Qt${QT_VERSION_MAJOR}::Core

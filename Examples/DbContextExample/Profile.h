@@ -2,19 +2,24 @@
 #define PROFILE_H
 
 
-#include "Person.h"
+
+#include "ProfileDto.h"
+#include <Q1Core/Q1Entity/Q1Entity.h>
 #include <QString>
 
-class Profile
+
+class Profile : public Q1Entity<ProfileDto>
 {
 public:
-    int id;
-    QString user_name;
-    int person_id;
+    explicit Profile(Q1Connection* conn = nullptr) : Q1Entity<ProfileDto>(conn) {}
 
-    Person person;
-
-    static QString TableName() { return "Profiles"; }
+    static void ConfigureEntity(Q1Entity<Profile> &entity)
+    {
+        entity.ToTableName(entity.TableName());
+        entity.Property(entity.id, "id", false, true);
+        entity.Property(entity.user_name, "user_name", true);
+        entity.Property(entity.person_id, "person_id", true);
+    }
 };
 
 #endif // PROFILE_H

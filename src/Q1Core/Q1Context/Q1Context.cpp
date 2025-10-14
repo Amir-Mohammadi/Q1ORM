@@ -184,22 +184,30 @@ void Q1Context::InitialRelations(const QList<Q1Relation> &relations)
         return;
 
     QStringList existingTables = connection->database.tables();
+    for (QString &t : existingTables) t = t.toLower(); // normalize
 
     for (const Q1Relation &rel : relations)
     {
-        // Skip invalid relations silently
         if (rel.base_table.isEmpty() || rel.top_table.isEmpty())
             continue;
 
-        // Skip if tables do not exist yet
-        if (!existingTables.contains(rel.base_table) || !existingTables.contains(rel.top_table))
+        // check tables (case-insensitive)
+        if (!existingTables.contains(rel.base_table.toLower()) ||
+            !existingTables.contains(rel.top_table.toLower()))
+        {
+            qDebug() << "[Debug] Tables missing, skipping relation:"
+                     << rel.base_table << "->" << rel.top_table;
             continue;
+        }
 
         const QString constraint_name = rel.GetConstraintName();
 
         // Skip if constraint already exists
-        if (query->ConstraintExists(connection->database, constraint_name))
+        if (query->ConstraintExists(connection->database, constraint_name.toLower()))
+        {
+            qDebug() << "[Info] Relation already exists, skipping:" << constraint_name;
             continue;
+        }
 
         // Add relation
         if (!query->AddRelation(rel))

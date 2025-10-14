@@ -281,21 +281,24 @@ bool Q1Migration::AddRelation(const Q1Relation &relation)
         return false;
     }
 
-    // Ensure DB open
     if (!connection.database.isOpen())
     {
-        if(!connection.Connect())
+        if (!connection.Connect())
         {
             m_lastError = connection.ErrorMessage();
             return false;
         }
     }
 
-    // Ensure both tables exist
+    // Check that both tables exist
     QStringList existingTables = connection.database.tables();
-    if (!existingTables.contains(relation.base_table) || !existingTables.contains(relation.top_table))
+    for (QString &t : existingTables) t = t.toLower();
+
+    if (!existingTables.contains(relation.base_table.toLower()) ||
+        !existingTables.contains(relation.top_table.toLower()))
     {
-        m_lastError = QString("Table missing: %1 or %2").arg(relation.base_table, relation.top_table);
+        qWarning() << "[Warning] Tables missing, skipping relation:"
+                   << relation.base_table << "->" << relation.top_table;
         return false;
     }
 
@@ -307,59 +310,64 @@ bool Q1Migration::AddRelation(const Q1Relation &relation)
     }
 
     QSqlQuery q(connection.database);
-    // Start transaction
-    if (!q.exec("BEGIN"))
+
+    bool startedTx = connection.database.transaction();
+    if (!startedTx)
     {
-        m_lastError = q.lastError().text();
-        qWarning() << "Failed to begin transaction:" << m_lastError;
-        return false;
+        if (!q.exec("BEGIN"))
+        {
+            m_lastError = q.lastError().text();
+            qWarning() << "Failed to begin transaction:" << m_lastError;
+            return false;
+        }
+        startedTx = true;
     }
 
-    // Split by ';' — handle multiple statements
     QStringList statements = sql.split(';', Qt::SkipEmptyParts);
+    QRegExp addConstraintRx("\\badd\\s+constraint\\s+((\"[^\"]+\")|([A-Za-z0-9_]+))", Qt::CaseInsensitive);
+    addConstraintRx.setMinimal(true);
+
     for (QString stmt : statements)
     {
         stmt = stmt.trimmed();
         if (stmt.isEmpty()) continue;
 
-        // If it's a UNIQUE statement, check if unique constraint name exists
-        // We assume translator uses UQ_<base>_<col> naming for unique.
-        // Parse constraint name for UNIQUE if needed (simple approach):
-        QString lower = stmt.toLower();
-        if (lower.startsWith("alter table") && lower.contains(" add constraint "))
+        QString constraintName;
+        if (stmt.toLower().contains(" add constraint "))
         {
-            // extract constraint token between "ADD CONSTRAINT " and next space
-            int pos = lower.indexOf(" add constraint ");
-            int start = pos + QString(" add constraint ").length();
-            // get token until space
-            QString rest = stmt.mid(start).trimmed();
-            int end = rest.indexOf(' ');
-            QString constraintName = (end == -1) ? rest : rest.left(end);
-            // If constraint exists skip this statement
-            if (ConstraintExists(connection.database, constraintName))
+            int pos = addConstraintRx.indexIn(stmt);
+            if (pos != -1) constraintName = addConstraintRx.cap(1);
+
+            if (!constraintName.isEmpty())
             {
-                qDebug() << "Skipping existing constraint:" << constraintName;
-                continue;
+                if (constraintName.startsWith('"') && constraintName.endsWith('"') && constraintName.size() >= 2)
+                    constraintName = constraintName.mid(1, constraintName.size() - 2);
+
+                if (ConstraintExists(connection.database, constraintName))
+                {
+                    qDebug() << "[Info] Skipping existing constraint:" << constraintName;
+                    continue;
+                }
             }
         }
 
         if (!q.exec(stmt))
         {
             QString err = q.lastError().text();
-            q.exec("ROLLBACK");
+            if (startedTx) q.exec("ROLLBACK");
             m_lastError = err;
-            qWarning() << "Failed to execute relation SQL:" << err << "Query was:" << stmt;
+            qWarning() << "[Error] Failed to execute relation SQL:" << err << "\nQuery:" << stmt;
             return false;
         }
     }
 
-    if (!q.exec("COMMIT"))
+    if (startedTx)
     {
-        QString err = q.lastError().text();
-        q.exec("ROLLBACK");
-        m_lastError = err;
-        qWarning() << "Failed to commit relation transaction:" << err;
-        return false;
+        if (!connection.database.commit())
+        {
+            qWarning() << "[Warning] Failed to commit relation transaction:" << connection.database.lastError().text();
+            q.exec("ROLLBACK");
+        }
     }
 
     return true;
@@ -378,18 +386,21 @@ bool Q1Migration::ConstraintExists(QSqlDatabase &db, const QString &constraint_n
         return false;
 
     QSqlQuery query(db);
+
+    // Use current schema to avoid conflicts with other schemas
     query.prepare(R"(
         SELECT 1
         FROM information_schema.table_constraints
         WHERE constraint_name = :constraint
+          AND constraint_schema = current_schema()
     )");
-    query.bindValue(":constraint", constraint_name);
+    query.bindValue(":constraint", constraint_name.toLower()); // Postgres stores unquoted names in lower-case
+
     if (!query.exec())
     {
-        qWarning() << "ConstraintExists query failed:" << query.lastError().text();
+        qWarning() << "[Error] ConstraintExists query failed:" << query.lastError().text();
         return false;
     }
 
-    return query.next(); // if a row exists, constraint exists
+    return query.next(); // exists if a row returned
 }
-
