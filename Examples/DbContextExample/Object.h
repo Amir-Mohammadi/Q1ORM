@@ -13,7 +13,7 @@ public:
     static void ConfigureEntity(Q1Entity<Object> &entity)
     {
         entity.ToTableName(entity.TableName());
-        entity.Property(entity.id, "id", false, true);
+        entity.Property(entity.id, "id", false, true, "GENERATED ALWAYS AS IDENTITY");
         entity.Property(entity.person_id, "person_id", true);
         entity.Property(entity.name, "name", true);
         entity.Property(entity.width, "width", true);

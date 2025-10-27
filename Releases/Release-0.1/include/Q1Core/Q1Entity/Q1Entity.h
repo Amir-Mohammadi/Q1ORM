@@ -58,11 +58,12 @@ public:
 
     }
 
-    // Set table name
-    void ToTableName(const QString& table_name)
-    {
-        table.table_name = table_name;
-    }
+
+
+/* ############################################################################### */
+/* ********************************* Property ************************************ */
+/* ############################################################################### */
+
 
     template<typename Member>
     void Property(Member& member, const QString& name, bool nullable = false,
@@ -92,6 +93,15 @@ public:
         property_map[name] = info;
     }
 
+
+
+
+
+
+/* ############################################################################### */
+/* ********************************* Relation ************************************ */
+/* ############################################################################### */
+
     // Define relationship between tables
     Q1Relation Relations(const QString& base_table, const QString& top_table,
                          Q1RelationType type, const QString& foreign_key,
@@ -104,6 +114,22 @@ public:
         return relation;
     }
 
+
+/* ############################################################################### */
+/* ************************************ Setter *********************************** */
+/* ############################################################################### */
+
+
+    // Set table name
+    void ToTableName(const QString& table_name)
+    {
+        table.table_name = table_name;
+    }
+
+
+/* ############################################################################### */
+/* ********************************* Getter ************************************** */
+/* ############################################################################### */
 
     // Get table definition
     Q1Table GetTable() const
@@ -136,7 +162,58 @@ public:
         return lastJson;
     }
 
-    // CRUD Operations
+
+
+/* ############################################################################### */
+/* ************************ Crud Opertation ************************************** */
+/* ############################################################################### */
+
+
+    bool CheckTableSchema()
+    {
+        if (!connection || !connection->Connect())
+        {
+            qDebug() << "Cannot connect to database";
+            return false;
+        }
+
+        QString query = QString(
+                            "SELECT column_name, column_default, is_nullable, is_identity "
+                            "FROM information_schema.columns "
+                            "WHERE table_name = '%1' "
+                            "ORDER BY ordinal_position"
+                            ).arg(table.table_name);
+
+        QSqlQuery sql_query(connection->database);
+        if (!sql_query.exec(query))
+        {
+            qDebug() << "Schema check failed:" << sql_query.lastError().text();
+            connection->Disconnect();
+            return false;
+        }
+
+        qDebug() << "=== Table Schema for" << table.table_name << "===";
+        while (sql_query.next())
+        {
+            QString col_name = sql_query.value(0).toString();
+            QString col_default = sql_query.value(1).toString();
+            QString is_nullable = sql_query.value(2).toString();
+            QString is_identity = sql_query.value(3).toString();
+
+            qDebug() << "Column:" << col_name
+                     << "| Default:" << col_default
+                     << "| Nullable:" << is_nullable
+                     << "| Identity:" << is_identity;
+        }
+        qDebug() << "================================";
+
+        connection->Disconnect();
+        return true;
+    }
+
+
+/* ************************ Insert Opertation ************************************** */
+
 
     bool Insert(Entity& entity)
     {
@@ -151,16 +228,40 @@ public:
         QString pk_column_name;
         bool has_auto_pk = false;
 
+        qDebug() << "\n=== INSERT DEBUG INFO ===";
+        qDebug() << "Table:" << table.table_name;
+        qDebug() << "Columns in entity definition:";
+
         // Collect columns for INSERT and detect auto-increment PK
         for (const Q1Column& col : table.columns)
         {
+            qDebug() << "  -" << col.name
+                     << "| PK:" << col.primary_key
+                     << "| Default:" << col.default_value;
+
             if (col.primary_key)
             {
                 pk_column_name = col.name;
-                // Skip auto-increment primary key (no default value means auto-increment)
+
+                // Check if this PK is auto-generated
+                bool is_auto = false;
+
                 if (col.default_value.isEmpty())
                 {
+                    is_auto = true;
+                }
+                else if (col.default_value.contains("IDENTITY", Qt::CaseInsensitive) ||
+                         col.default_value.contains("SERIAL", Qt::CaseInsensitive) ||
+                         col.default_value.contains("nextval", Qt::CaseInsensitive) ||
+                         col.default_value.contains("GENERATED", Qt::CaseInsensitive))
+                {
+                    is_auto = true;
+                }
+
+                if (is_auto)
+                {
                     has_auto_pk = true;
+                    qDebug() << "  --> Detected as auto-increment, will skip in INSERT";
                     continue;
                 }
             }
@@ -169,6 +270,10 @@ public:
             placeholders.append("?");
         }
 
+        qDebug() << "Has auto PK:" << has_auto_pk;
+        qDebug() << "PK column name:" << pk_column_name;
+        qDebug() << "Columns to insert:" << columns.join(", ");
+
         if (columns.isEmpty())
         {
             last_error = "No columns to insert";
@@ -176,7 +281,7 @@ public:
             return false;
         }
 
-        // Build INSERT query with RETURNING clause for auto-increment PK
+        // Build INSERT query
         QString queryStr;
         if (has_auto_pk && !pk_column_name.isEmpty())
         {
@@ -188,6 +293,7 @@ public:
             queryStr = QString("INSERT INTO \"%1\" (%2) VALUES (%3)")
             .arg(table.table_name, columns.join(", "), placeholders.join(", "));
         }
+
         QSqlQuery sql_query(connection->database);
         if (!sql_query.prepare(queryStr))
         {
@@ -198,16 +304,179 @@ public:
         }
 
         qDebug() << "Prepared query:" << queryStr;
+        qDebug() << "\nBinding values:";
 
         // Bind values for non-auto-increment columns
+        int bindIndex = 0;
         for (const Q1Column& col : table.columns)
         {
-            // Skip auto-increment PK
-            if (col.primary_key && col.default_value.isEmpty() && col.default_value == "GENERATED ALWAYS AS IDENTITY")
-                continue;
+            // Skip auto-generated primary key
+            if (col.primary_key)
+            {
+                bool is_auto = false;
+
+                if (col.default_value.isEmpty())
+                {
+                    is_auto = true;
+                }
+                else if (col.default_value.contains("IDENTITY", Qt::CaseInsensitive) ||
+                         col.default_value.contains("SERIAL", Qt::CaseInsensitive) ||
+                         col.default_value.contains("nextval", Qt::CaseInsensitive) ||
+                         col.default_value.contains("GENERATED", Qt::CaseInsensitive))
+                {
+                    is_auto = true;
+                }
+
+                if (is_auto)
+                {
+                    continue;
+                }
+            }
 
             auto it = property_map.find(col.name);
             QVariant value;
+
+            if (it != property_map.end())
+            {
+                const PropertyInfo& info = it.value();
+                const char* memberPtr = reinterpret_cast<const char*>(&entity) + info.offset;
+
+                switch (col.type)
+                {
+                case INTEGER: case SMALLINT: case BIGINT:
+                    value = *reinterpret_cast<const int*>(memberPtr);
+                    break;
+                case REAL:
+                    value = *reinterpret_cast<const float*>(memberPtr);
+                    break;
+                case DOUBLE_PRECISION:
+                    value = *reinterpret_cast<const double*>(memberPtr);
+                    break;
+                case BOOLEAN:
+                    value = *reinterpret_cast<const bool*>(memberPtr);
+                    break;
+                case CHAR: case TEXT: case VARCHAR:
+                    value = *reinterpret_cast<const QString*>(memberPtr);
+                    break;
+                case DATE:
+                    value = *reinterpret_cast<const QDate*>(memberPtr);
+                    break;
+                case TIMESTAMP:
+                    value = *reinterpret_cast<const QDateTime*>(memberPtr);
+                    break;
+                default:
+                    value = QVariant();
+                }
+            }
+            else
+            {
+                value = QVariant();
+            }
+
+            qDebug() << "  [" << bindIndex << "]" << col.name << "=" << value;
+            sql_query.addBindValue(value);
+            bindIndex++;
+        }
+
+        qDebug() << "\nExecuting query...";
+
+        // Execute INSERT
+        if (!sql_query.exec())
+        {
+            last_error = sql_query.lastError().text();
+            qDebug() << "❌ Insert FAILED:" << last_error;
+            qDebug() << "Query was:" << queryStr;
+            connection->Disconnect();
+            return false;
+        }
+
+        // Retrieve auto-generated PK
+        if (has_auto_pk)
+        {
+            if (sql_query.next())
+            {
+                QVariant new_id = sql_query.value(0);
+                qDebug() << "✓ Retrieved generated PK:" << new_id;
+
+                auto it = property_map.find(pk_column_name);
+                if (it != property_map.end())
+                {
+                    const PropertyInfo& info = it.value();
+                    char* memberPtr = reinterpret_cast<char*>(&entity) + info.offset;
+
+                    Q1Column* pk_col = nullptr;
+                    for (Q1Column& col : table.columns)
+                    {
+                        if (col.name == pk_column_name)
+                        {
+                            pk_col = &col;
+                            break;
+                        }
+                    }
+
+                    if (pk_col)
+                    {
+                        switch (pk_col->type)
+                        {
+                        case INTEGER:
+                            *reinterpret_cast<int*>(memberPtr) = new_id.toInt();
+                            break;
+                        case SMALLINT:
+                            *reinterpret_cast<short*>(memberPtr) = static_cast<short>(new_id.toInt());
+                            break;
+                        case BIGINT:
+                            *reinterpret_cast<long long*>(memberPtr) = new_id.toLongLong();
+                            break;
+                        default:
+                            *reinterpret_cast<int*>(memberPtr) = new_id.toInt();
+                        }
+                        qDebug() << "✓ Set entity." << pk_column_name << "=" << new_id;
+                    }
+                }
+            }
+            else
+            {
+                qDebug() << "⚠ Warning: Expected RETURNING value but got none";
+            }
+        }
+
+        qDebug() << "✓ Insert successful!";
+        qDebug() << "========================\n";
+        connection->Disconnect();
+        return true;
+    }
+
+
+/* ************************ Update Opertation ************************************** */
+
+    // Update entity in database
+    bool Update(Entity& entity, const QString& where_clause)
+    {
+        if (!connection || !connection->Connect())
+        {
+            last_error = "Database connection failed";
+            return false;
+        }
+
+        QStringList set_clauses;
+        QList<QVariant> values;
+
+        qDebug() << "\n=== UPDATE DEBUG INFO ===";
+        qDebug() << "Table:" << table.table_name;
+        qDebug() << "WHERE clause:" << where_clause;
+        qDebug() << "Columns to update:";
+
+        for (const Q1Column& col : table.columns)
+        {
+            if (col.primary_key)
+            {
+                qDebug() << "  -" << col.name << "(skipped - primary key)";
+                continue; // Don't update primary key
+            }
+
+            set_clauses.append("\"" + col.name + "\" = ?");
+            QVariant value;
+            auto it = property_map.find(col.name);
 
             if (it != property_map.end())
             {
@@ -244,117 +513,109 @@ public:
                 default:
                     value = QVariant();
                 }
-
-                qDebug() << "Binding" << col.name << "=" << value;
             }
             else
             {
-                qDebug() << "Warning: Column" << col.name << "not found in property_map";
+                value = QVariant();
             }
 
-            sql_query.addBindValue(value);
+            qDebug() << "  -" << col.name << "=" << value;
+            values.append(value);
         }
 
-        if (!sql_query.exec())
+        if (set_clauses.isEmpty())
         {
-            last_error = sql_query.lastError().text();
-            qDebug() << "Insert failed:" << last_error;
-            qDebug() << "Query:" << queryStr;
+            last_error = "No columns to update";
+            qDebug() << "❌ Update FAILED: No columns to update";
             connection->Disconnect();
             return false;
         }
 
-        // Retrieve the auto-generated PK value and update entity
-        if (has_auto_pk && sql_query.next())
+        if (where_clause.isEmpty())
         {
-            QVariant new_id = sql_query.value(0);
-            qDebug() << "Generated PK:" << new_id;
-
-            // Update entity with new ID
-            auto it = property_map.find(pk_column_name);
-            if (it != property_map.end())
-            {
-                const PropertyInfo& info = it.value();
-                char* memberPtr = reinterpret_cast<char*>(&entity) + info.offset;
-
-                // Cast to appropriate integer type based on column type
-                Q1Column* pk_col = nullptr;
-                for (Q1Column& col : table.columns)
-                {
-                    if (col.name == pk_column_name)
-                    {
-                        pk_col = &col;
-                        break;
-                    }
-                }
-
-                if (pk_col)
-                {
-                    switch (pk_col->type)
-                    {
-                    case INTEGER:
-                        *reinterpret_cast<int*>(memberPtr) = new_id.toInt();
-                        break;
-                    case SMALLINT:
-                        *reinterpret_cast<short*>(memberPtr) = static_cast<short>(new_id.toInt());
-                        break;
-                    case BIGINT:
-                        *reinterpret_cast<long long*>(memberPtr) = new_id.toLongLong();
-                        break;
-                    default:
-                        *reinterpret_cast<int*>(memberPtr) = new_id.toInt();
-                    }
-                }
-            }
-        }
-
-        qDebug() << "Insert successful!";
-        connection->Disconnect();
-        return true;
-    }
-
-    // Update entity in database
-    bool Update(const QString& where_clause)
-    {
-        if (!connection || !connection->Connect())
-        {
-            last_error = "Database connection failed";
+            last_error = "UPDATE without WHERE clause is dangerous and not allowed";
+            qDebug() << "❌ Update FAILED: WHERE clause is required";
+            connection->Disconnect();
             return false;
         }
 
-        QStringList set_clauses;
+        QString query = QString("UPDATE \"%1\" SET %2 WHERE %3")
+                            .arg(table.table_name, set_clauses.join(", "), where_clause);
 
-        for (const Q1Column& col : table.columns)
-        {
-            if (col.primary_key)
-                continue; // Don't update primary key
-
-            set_clauses.append("\"" + col.name + "\" = ?");
-        }
-
-        QString query = QString("UPDATE \"%1\" SET %2")
-                            .arg(table.table_name, set_clauses.join(", "));
-
-        if (!where_clause.isEmpty())
-        {
-            query += " WHERE " + where_clause;
-        }
+        qDebug() << "Query:" << query;
+        qDebug() << "Binding" << values.size() << "values...";
 
         QSqlQuery sql_query(connection->database);
-        sql_query.prepare(query);
+        if (!sql_query.prepare(query))
+        {
+            last_error = sql_query.lastError().text();
+            qDebug() << "❌ Query preparation failed:" << last_error;
+            connection->Disconnect();
+            return false;
+        }
 
-        // Note: Binding values needs proper implementation
+        // Bind values in the order of set_clauses
+        for (int i = 0; i < values.size(); ++i)
+        {
+            sql_query.bindValue(i, values[i]);
+        }
+
+        qDebug() << "Executing update...";
 
         bool success = sql_query.exec();
         if (!success)
         {
             last_error = sql_query.lastError().text();
-            qDebug() << "Update failed:" << last_error;
+            qDebug() << "❌ Update FAILED:" << last_error;
+            qDebug() << "Query was:" << query;
+            connection->Disconnect();
+            return false;
         }
 
+        int rows_affected = sql_query.numRowsAffected();
+        qDebug() << "✓ Update successful!";
+        qDebug() << "Rows affected:" << rows_affected;
+
+        if (rows_affected == 0)
+        {
+            qDebug() << "⚠ Warning: No rows were updated. Check your WHERE clause.";
+        }
+
+        qDebug() << "========================\n";
         connection->Disconnect();
-        return success;
+        return true;
     }
+
+
+
+    bool UpdateById(Entity& entity, int id)
+    {
+        QString pk_name;
+
+        // Find the primary key column name
+        for (const Q1Column& col : table.columns)
+        {
+            if (col.primary_key)
+            {
+                pk_name = col.name;
+                break;
+            }
+        }
+
+        if (pk_name.isEmpty())
+        {
+            last_error = "No primary key defined for this table";
+            qDebug() << "❌ UpdateById FAILED: No primary key found";
+            return false;
+        }
+
+        QString where_clause = QString("\"%1\" = %2").arg(pk_name).arg(id);
+        return Update(entity, where_clause);
+    }
+
+
+/* ************************ Delete Opertation ************************************** */
+
 
     // Delete entity from database
     bool Delete(const QString& where_clause)
@@ -365,18 +626,23 @@ public:
             return false;
         }
 
-        QString query = QString("DELETE FROM \"%1\"").arg(table.table_name);
+        qDebug() << "\n=== DELETE DEBUG INFO ===";
+        qDebug() << "Table:" << table.table_name;
+        qDebug() << "WHERE clause:" << where_clause;
 
-        if (!where_clause.isEmpty())
-        {
-            query += " WHERE " + where_clause;
-        }
-        else
+        if (where_clause.isEmpty())
         {
             last_error = "DELETE without WHERE clause is dangerous and not allowed";
+            qDebug() << "❌ Delete FAILED: WHERE clause is required for safety";
             connection->Disconnect();
             return false;
         }
+
+        QString query = QString("DELETE FROM \"%1\" WHERE %2")
+                            .arg(table.table_name, where_clause);
+
+        qDebug() << "Query:" << query;
+        qDebug() << "Executing delete...";
 
         QSqlQuery sql_query(connection->database);
         bool success = sql_query.exec(query);
@@ -384,15 +650,55 @@ public:
         if (!success)
         {
             last_error = sql_query.lastError().text();
-            qDebug() << "Delete failed:" << last_error;
+            qDebug() << "❌ Delete FAILED:" << last_error;
+            qDebug() << "Query was:" << query;
+            connection->Disconnect();
+            return false;
         }
 
+        int rows_affected = sql_query.numRowsAffected();
+        qDebug() << "✓ Delete successful!";
+        qDebug() << "Rows affected:" << rows_affected;
+
+        if (rows_affected == 0)
+        {
+            qDebug() << "⚠ Warning: No rows were deleted. Check your WHERE clause.";
+        }
+
+        qDebug() << "========================\n";
         connection->Disconnect();
-        qDebug() << "[Q1Orm]: Delete Successfully ";
-        return success;
+        return true;
     }
 
 
+    bool DeleteById(int id)
+    {
+        QString pk_name;
+
+        // Find the primary key column name
+        for (const Q1Column& col : table.columns)
+        {
+            if (col.primary_key)
+            {
+                pk_name = col.name;
+                break;
+            }
+        }
+
+        if (pk_name.isEmpty())
+        {
+            last_error = "No primary key defined for this table";
+            qDebug() << "❌ DeleteById FAILED: No primary key found";
+            return false;
+        }
+
+        QString where_clause = QString("\"%1\" = %2").arg(pk_name).arg(id);
+        return Delete(where_clause);
+    }
+
+
+
+/* ************************ Select Opertation ************************************** */
 
 
     Q1Query<Entity> Select()
@@ -602,14 +908,6 @@ private:
         return 0; // Numeric types don't need size
     }
 
-    struct PropertyInfo
-    {
-        QString name;
-        ptrdiff_t offset;
-        Q1ColumnDataType type;
-    };
-
-
 public:
     QJsonObject EntityToJson(const Entity &entity) const
     {
@@ -680,6 +978,21 @@ public:
         }
 
         return obj; // Return the QJsonObject by value
+    }
+
+
+
+public:
+    struct PropertyInfo
+    {
+        QString name;
+        ptrdiff_t offset;
+        Q1ColumnDataType type;
+    };
+
+    const QMap<QString, PropertyInfo>& GetPropertyMap() const
+    {
+        return property_map;
     }
 
 private:

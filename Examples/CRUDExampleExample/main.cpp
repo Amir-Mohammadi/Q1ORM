@@ -1,19 +1,14 @@
-
 #include <Q1Core/Q1Context/Q1Context.h>
 #include <QCoreApplication>
 #include <Q1ORM.h>
-
 #include "Person.h"
-
-
 
 class Crud
 {
 public:
+    Crud(Q1Connection* conn) : repo(conn) {}
 
-    Crud(Q1Connection* conn) : connection(conn), repo(conn) {}
-
-    QList<PersonDto> GetList(const QString& where = "", const QString& order = "id ASC")
+    auto GetList(const QString& where = "", const QString& order = "")
     {
         auto query = repo.Select();
         if (!where.isEmpty()) query.Where(where);
@@ -21,93 +16,77 @@ public:
         return query.ToList();
     }
 
-    auto GetByJson()
+    auto GetByJson(const QString& where = "", const QString& order = "")
     {
-        auto json = repo.Select()
-        .Where("age > 30")
-            .OrderByAsc("id")
-            .ToJson();
-
-        qDebug().noquote() << json;
+        auto query = repo.Select();
+        if (!where.isEmpty()) query.Where(where);
+        if (!order.isEmpty()) query.OrderBy(order);
+        return query.ToJson();
     }
 
-    bool Insert(Person person)
+    bool Insert(Person& person)
     {
-
-       return repo.Insert(person);
+        return repo.Insert(person);
     }
 
-    void Update()
+    bool Update(Person& person, const QString& where_clause)
     {
-
+        return repo.Update(person, where_clause);
     }
 
-    bool Delete(QString clause)
+    bool Delete(const QString& clause)
     {
         return repo.Delete(clause);
     }
 
 private:
-    Q1Connection* connection;
     Person repo;
 };
-
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    const QString host = "localhost";
-    const QString dbName = "testDb";
-    const QString dbUser = "postgres";
-    const QString dbPass = "123";
-    const int port = 5432;
-
-    Q1Connection conn(Q1Driver::POSTGRE_SQL, host, dbName, dbUser, dbPass, port);
-
-
-    // Use Person as repository
-    Person repo(&conn);
-
-
-
-
-    // auto list = repo.Select()
-    //                 .Where("age > 30")
-    //                 .OrderByAsc("id")
-    //                 .ToList();
-
-    // auto json = repo.Select()
-    //                       .Where("age > 30")
-    //                       .OrderByAsc("id")
-    //                       .ToJson();
-
-    // qDebug().noquote() << json;
-
-    // for (const PersonDto& p : list)
-    //     qDebug() << p.id << p.first_name << p.last_name << p.age << p.address_id;
+    Q1Connection conn(Q1Driver::POSTGRE_SQL, "localhost", "testDb", "postgres", "123", 5432);
 
     Crud crud(&conn);
-
     Person user(&conn);
 
-    user.first_name = "michael";
-    user.last_name = "jackson";
-    user.address_id = 0;
-    user.age = 10;
+    // INSERT
+    user.first_name = "John";
+    user.last_name = "Doe";
+    user.age = 30;
+    user.address_id = 1;
+    if (crud.Insert(user)) {
+        qDebug() << "Insert successful";
+    }
 
+    // GET ALL with table
+    qDebug() << "\n--- All Records ---";
+    auto list = crud.GetList();
 
-    crud.Insert(user);
+    // GET JSON
+    qDebug() << "\n--- JSON Output ---";
+    auto json = crud.GetByJson();
+    qDebug().noquote() << json;
 
-    // crud.Delete("age = 60");
+    // UPDATE
+    qDebug() << "\n--- After Update ---";
+    user.first_name = "Jane";
+    user.last_name = "Smith";
+    user.age = 25;
+    if (crud.Update(user, "id = 1")) {
+        qDebug() << "Update successful";
+        auto updated = crud.GetList();
+    }
 
-    crud.GetByJson();
-
-
-
-
+    // DELETE
+    qDebug() << "\n--- After Delete ---";
+    if (crud.Delete("id = 1")) {
+        qDebug() << "Delete successful";
+        auto remaining = crud.GetList();
+    }
 
     conn.Disconnect();
     return a.exec();
 }
-

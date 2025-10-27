@@ -21,7 +21,7 @@ public:
     {
         entity.ToTableName(entity.TableName());
 
-        entity.Property(entity.id, "id", false, true);
+        entity.Property(entity.id, "id", false, true, "GENERATED ALWAYS AS IDENTITY");
         entity.Property(entity.first_name, "first_name", true);
         entity.Property(entity.last_name, "last_name", true);
         entity.Property(entity.age, "age", false, false);
