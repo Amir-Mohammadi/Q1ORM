@@ -1,0 +1,27 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Tools/ReleaseInstaller/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"id" : "ReleaseInstaller_autogen_timestamp_deps::@88c6fe2fab0719a7b9b9",
+	"isGeneratorProvided" : true,
+	"name" : "ReleaseInstaller_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "Tools/ReleaseInstaller",
+		"source" : "Tools/ReleaseInstaller"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

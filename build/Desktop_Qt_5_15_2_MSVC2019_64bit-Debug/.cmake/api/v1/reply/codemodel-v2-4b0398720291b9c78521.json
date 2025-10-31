@@ -1,0 +1,459 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "Src",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Src-Debug-0ab1525d9f914e45d277.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "src",
+					"targetIndexes" : 
+					[
+						15,
+						16,
+						17
+					]
+				},
+				{
+					"build" : "Examples",
+					"childIndexes" : 
+					[
+						5,
+						6,
+						7
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Examples-Debug-23a23bf6dc670584ea38.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "Examples"
+				},
+				{
+					"build" : "Docs",
+					"jsonFile" : "directory-Docs-Debug-a27a374b610a211814b0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "Docs"
+				},
+				{
+					"build" : "Tools",
+					"childIndexes" : 
+					[
+						8,
+						9
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Tools-Debug-8d97cb24eec6417dce43.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 4,
+					"source" : "Tools"
+				},
+				{
+					"build" : "Examples/CRUDExampleExample",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Examples.CRUDExampleExample-Debug-74ff41808ca4796dc22f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 5,
+					"source" : "Examples/CRUDExampleExample",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				},
+				{
+					"build" : "Examples/DbContextExample",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Examples.DbContextExample-Debug-8fdba52c6e346c28f089.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 6,
+					"source" : "Examples/DbContextExample",
+					"targetIndexes" : 
+					[
+						6,
+						7,
+						8
+					]
+				},
+				{
+					"build" : "Examples/DatabaseInstallExample",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Examples.DatabaseInstallExample-Debug-8bb70a1de2fbe5e7e9db.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 7,
+					"source" : "Examples/DatabaseInstallExample",
+					"targetIndexes" : 
+					[
+						3,
+						4,
+						5
+					]
+				},
+				{
+					"build" : "Tools/ReleaseInstaller",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Tools.ReleaseInstaller-Debug-8e0609a8a7f7bd0940db.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 4,
+					"projectIndex" : 8,
+					"source" : "Tools/ReleaseInstaller",
+					"targetIndexes" : 
+					[
+						12,
+						13,
+						14
+					]
+				},
+				{
+					"build" : "Tools/ExampleProjectModifier",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Tools.ExampleProjectModifier-Debug-650c59b743a5ee853a38.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 4,
+					"projectIndex" : 9,
+					"source" : "Tools/ExampleProjectModifier",
+					"targetIndexes" : 
+					[
+						9,
+						10,
+						11
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Q1ORM"
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "Src",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						15,
+						16,
+						17
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						5,
+						6,
+						7
+					],
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "Examples",
+					"parentIndex" : 0
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3
+					],
+					"name" : "Docs",
+					"parentIndex" : 0
+				},
+				{
+					"childIndexes" : 
+					[
+						8,
+						9
+					],
+					"directoryIndexes" : 
+					[
+						4
+					],
+					"name" : "Tools",
+					"parentIndex" : 0
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5
+					],
+					"name" : "CRUDExampleExample",
+					"parentIndex" : 2,
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						6
+					],
+					"name" : "DbContextExample",
+					"parentIndex" : 2,
+					"targetIndexes" : 
+					[
+						6,
+						7,
+						8
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						7
+					],
+					"name" : "DatabaseInstallExample",
+					"parentIndex" : 2,
+					"targetIndexes" : 
+					[
+						3,
+						4,
+						5
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						8
+					],
+					"name" : "ReleaseInstaller",
+					"parentIndex" : 4,
+					"targetIndexes" : 
+					[
+						12,
+						13,
+						14
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						9
+					],
+					"name" : "ExampleProjectModifier",
+					"parentIndex" : 4,
+					"targetIndexes" : 
+					[
+						9,
+						10,
+						11
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 5,
+					"id" : "CRUDExampleExample::@8a72a312d01ca723f36a",
+					"jsonFile" : "target-CRUDExampleExample-Debug-4e1cd55737b6000457b2.json",
+					"name" : "CRUDExampleExample",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "CRUDExampleExample_autogen::@8a72a312d01ca723f36a",
+					"jsonFile" : "target-CRUDExampleExample_autogen-Debug-b9cc06cef8d6346c6c75.json",
+					"name" : "CRUDExampleExample_autogen",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "CRUDExampleExample_autogen_timestamp_deps::@8a72a312d01ca723f36a",
+					"jsonFile" : "target-CRUDExampleExample_autogen_timestamp_deps-Debug-7bab327fe0f463f9d673.json",
+					"name" : "CRUDExampleExample_autogen_timestamp_deps",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "DatabaseInstallExample::@d18fab8dadd209ea8c5b",
+					"jsonFile" : "target-DatabaseInstallExample-Debug-6fd9968351478862ecdc.json",
+					"name" : "DatabaseInstallExample",
+					"projectIndex" : 7
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "DatabaseInstallExample_autogen::@d18fab8dadd209ea8c5b",
+					"jsonFile" : "target-DatabaseInstallExample_autogen-Debug-a8013a741b152adb0634.json",
+					"name" : "DatabaseInstallExample_autogen",
+					"projectIndex" : 7
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "DatabaseInstallExample_autogen_timestamp_deps::@d18fab8dadd209ea8c5b",
+					"jsonFile" : "target-DatabaseInstallExample_autogen_timestamp_deps-Debug-460dc3a02e22117afc56.json",
+					"name" : "DatabaseInstallExample_autogen_timestamp_deps",
+					"projectIndex" : 7
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "DbContextExample::@2ea7a5d971aabb7ee110",
+					"jsonFile" : "target-DbContextExample-Debug-1784e7af8334bccbccaa.json",
+					"name" : "DbContextExample",
+					"projectIndex" : 6
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "DbContextExample_autogen::@2ea7a5d971aabb7ee110",
+					"jsonFile" : "target-DbContextExample_autogen-Debug-ddeb0fa4f0062b936d07.json",
+					"name" : "DbContextExample_autogen",
+					"projectIndex" : 6
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "DbContextExample_autogen_timestamp_deps::@2ea7a5d971aabb7ee110",
+					"jsonFile" : "target-DbContextExample_autogen_timestamp_deps-Debug-0dd61aa890992d16a17c.json",
+					"name" : "DbContextExample_autogen_timestamp_deps",
+					"projectIndex" : 6
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "ExampleProjectModifier::@5b5cf0d17ee0c3bcea92",
+					"jsonFile" : "target-ExampleProjectModifier-Debug-5cf740a9b7c250174c33.json",
+					"name" : "ExampleProjectModifier",
+					"projectIndex" : 9
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "ExampleProjectModifier_autogen::@5b5cf0d17ee0c3bcea92",
+					"jsonFile" : "target-ExampleProjectModifier_autogen-Debug-753aa84881e31ef517fb.json",
+					"name" : "ExampleProjectModifier_autogen",
+					"projectIndex" : 9
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "ExampleProjectModifier_autogen_timestamp_deps::@5b5cf0d17ee0c3bcea92",
+					"jsonFile" : "target-ExampleProjectModifier_autogen_timestamp_deps-Debug-c319d7d81ccb795e69eb.json",
+					"name" : "ExampleProjectModifier_autogen_timestamp_deps",
+					"projectIndex" : 9
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "ReleaseInstaller::@88c6fe2fab0719a7b9b9",
+					"jsonFile" : "target-ReleaseInstaller-Debug-878a684008fb9ec728f8.json",
+					"name" : "ReleaseInstaller",
+					"projectIndex" : 8
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "ReleaseInstaller_autogen::@88c6fe2fab0719a7b9b9",
+					"jsonFile" : "target-ReleaseInstaller_autogen-Debug-dc4c82044534e57f3c95.json",
+					"name" : "ReleaseInstaller_autogen",
+					"projectIndex" : 8
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "ReleaseInstaller_autogen_timestamp_deps::@88c6fe2fab0719a7b9b9",
+					"jsonFile" : "target-ReleaseInstaller_autogen_timestamp_deps-Debug-f1a117ab9efa06a834dd.json",
+					"name" : "ReleaseInstaller_autogen_timestamp_deps",
+					"projectIndex" : 8
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "Src::@fffd7673bb2fd0d58c2a",
+					"jsonFile" : "target-Src-Debug-f692fa4b8a0dfa8fe28d.json",
+					"name" : "Src",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "Src_autogen::@fffd7673bb2fd0d58c2a",
+					"jsonFile" : "target-Src_autogen-Debug-9052b3f50b9217b8f727.json",
+					"name" : "Src_autogen",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "Src_autogen_timestamp_deps::@fffd7673bb2fd0d58c2a",
+					"jsonFile" : "target-Src_autogen_timestamp_deps-Debug-12b7b79910baf319a9a8.json",
+					"name" : "Src_autogen_timestamp_deps",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_5_15_2_MSVC2019_64bit-Debug",
+		"source" : "C:/Users/ARM/Desktop/Q1ORM"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

@@ -1,0 +1,71 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Tools/ExampleProjectModifier/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "ExampleProjectModifier_autogen_timestamp_deps::@5b5cf0d17ee0c3bcea92"
+		}
+	],
+	"id" : "ExampleProjectModifier_autogen::@5b5cf0d17ee0c3bcea92",
+	"isGeneratorProvided" : true,
+	"name" : "ExampleProjectModifier_autogen",
+	"paths" : 
+	{
+		"build" : "Tools/ExampleProjectModifier",
+		"source" : "Tools/ExampleProjectModifier"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1,
+				2
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_5_15_2_MSVC2019_64bit-Debug/Tools/ExampleProjectModifier/CMakeFiles/ExampleProjectModifier_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_5_15_2_MSVC2019_64bit-Debug/Tools/ExampleProjectModifier/CMakeFiles/ExampleProjectModifier_autogen.rule",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_5_15_2_MSVC2019_64bit-Debug/Tools/ExampleProjectModifier/ExampleProjectModifier_autogen/timestamp.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

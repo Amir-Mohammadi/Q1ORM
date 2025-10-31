@@ -1,0 +1,27 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Examples/CRUDExampleExample/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"id" : "CRUDExampleExample_autogen_timestamp_deps::@8a72a312d01ca723f36a",
+	"isGeneratorProvided" : true,
+	"name" : "CRUDExampleExample_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "Examples/CRUDExampleExample",
+		"source" : "Examples/CRUDExampleExample"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

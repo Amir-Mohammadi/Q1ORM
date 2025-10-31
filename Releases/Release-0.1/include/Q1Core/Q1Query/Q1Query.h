@@ -86,6 +86,7 @@ public:
         qDebug() << "Total rows:" << jsonArray.size();
     }
 
+
 private:
     static QString PrintRow(const QStringList& data, const QStringList& headers, const QMap<QString, int>& colWidths)
     {
@@ -115,7 +116,7 @@ public:
     explicit Q1Query(Q1Entity<Entity>* repo = nullptr)
         : repository(repo), limit_val(-1) {}
 
-
+    // Query builders
     Q1Query& Where(const QString& clause)
     {
         where_clause = clause;
@@ -134,7 +135,6 @@ public:
         return *this;
     }
 
-
     Q1Query& OrderByAsc(const QString& column)
     {
         if(!order_by.isEmpty())
@@ -151,57 +151,92 @@ public:
         return *this;
     }
 
-    operator QList<Entity>()
+    // Join methods
+    Q1Query& InnerJoin(const QString& table, const QString& onCondition)
     {
-        return ToList();
+        joins += QString(" INNER JOIN %1 ON %2").arg(table, onCondition);
+        return *this;
     }
 
-    QList<Entity> ToList()
+    Q1Query& LeftJoin(const QString& table, const QString& onCondition)
     {
-        if (!repository) return {};
+        joins += QString(" LEFT JOIN %1 ON %2").arg(table, onCondition);
+        return *this;
+    }
 
-        // Only execute query if results are empty
-        if (results.isEmpty()) {
-            results = repository->SelectExec(where_clause, order_by, limit_val);
-        }
+    Q1Query& RightJoin(const QString& table, const QString& onCondition)
+    {
+        joins += QString(" RIGHT JOIN %1 ON %2").arg(table, onCondition);
+        return *this;
+    }
 
-        // Print table only when ToList() is called
-        if (!results.isEmpty()) {
-            QJsonArray array;
-            QStringList columnOrder;
+    Q1Query& FullJoin(const QString& table, const QString& onCondition)
+    {
+        joins += QString(" FULL OUTER JOIN %1 ON %2").arg(table, onCondition);
+        return *this;
+    }
 
-            for (const auto& entity : results)
-            {
-                QJsonObject obj = repository->EntityToJson(entity);
+    // Select specific columns
+    Q1Query& Select(const QStringList& columns)
+    {
+        selected_columns = columns;
+        return *this;
+    }
 
-                // Capture column order from first entity
-                if (columnOrder.isEmpty()) {
-                    columnOrder = obj.keys();
-                }
+    // Group and Having
+    Q1Query& GroupBy(const QString& columns)
+    {
+        group_by = columns;
+        return *this;
+    }
 
-                array.append(obj);
-            }
+    Q1Query& Having(const QString& condition)
+    {
+        having_clause = condition;
+        return *this;
+    }
 
+
+    Q1Query& SetColumns(const QStringList& columns)
+    {
+        selected_columns = columns;
+        return *this;
+    }
+
+
+    QList<Entity>& ShowList()
+    {
+        if (!repository) return results;
+
+        if (results.isEmpty())
+                ToList();
+
+
+        QJsonArray array = repository->GetLastJson();
+        if (!array.isEmpty()) {
+            QStringList columnOrder = array[0].toObject().keys();
             TableDebugger::PrintTable(array, columnOrder);
         }
+
         return results;
     }
 
-    // Return JSON for the same result with sorted keys
-    QByteArray ToJson()
-    {
-        if (results.isEmpty()) {
-            if (!repository) return QByteArray();
-            results = repository->SelectExec(where_clause, order_by, limit_val);
-        }
 
-        QJsonArray array;
-        for (const auto& entity : results)
-        {
-            QJsonObject obj = repository->EntityToJson(entity);
+
+    QList<Entity>& ShowJson()
+    {
+        if (!repository) return results;
+
+        if (results.isEmpty())
+            ToList();
+
+        QJsonArray array = repository->GetLastJson();
+
+        QJsonArray sortedArray;
+        for (const auto& val : array) {
+            QJsonObject obj = val.toObject();
             QJsonObject sortedObj;
 
-            // Sort keys alphabetically
             QStringList keys = obj.keys();
             std::sort(keys.begin(), keys.end());
 
@@ -209,41 +244,87 @@ public:
                 sortedObj.insert(key, obj[key]);
             }
 
-            array.append(sortedObj);
+            sortedArray.append(sortedObj);
         }
 
-        // Return pretty JSON as QByteArray
-        QJsonDocument doc(array);
-        return doc.toJson(QJsonDocument::Indented);
+        QJsonDocument doc(sortedArray);
+        qDebug().noquote() << doc.toJson(QJsonDocument::Indented);
+
+        return results;
+
+
     }
 
-    void DebugTable()
+    // Operators
+    operator QList<Entity>()
     {
-        if (results.isEmpty()) ToList();
+        return ToList();
+    }
 
-        QJsonArray array;
-        QStringList columnOrder;
 
-        for (const auto& entity : results)
-        {
-            QJsonObject obj = repository->EntityToJson(entity);
+    QList<Entity> ToList()
+    {
+        if (!repository) return {};
 
-            // Capture column order from first entity
-            if (columnOrder.isEmpty()) {
-                columnOrder = obj.keys();
-            }
-
-            array.append(obj);
+        if (results.isEmpty()) {
+            results = repository->SelectExec(where_clause,
+                                             order_by,
+                                             limit_val,
+                                             joins,
+                                             selected_columns,
+                                             group_by,
+                                             having_clause);
         }
 
-        TableDebugger::PrintTable(array, columnOrder);
+        return results;
+    }
+
+
+    QByteArray ToJson()
+    {
+        if (results.isEmpty()) {
+            if (!repository) return QByteArray();
+            results = repository->SelectExec(where_clause,
+                                             order_by,
+                                             limit_val,
+                                             joins,
+                                             selected_columns,
+                                             group_by,
+                                             having_clause);
+        }
+
+
+        QJsonArray array = repository->GetLastJson();
+
+
+        QJsonArray sortedArray;
+        for (const auto& val : array) {
+            QJsonObject obj = val.toObject();
+            QJsonObject sortedObj;
+
+            QStringList keys = obj.keys();
+            std::sort(keys.begin(), keys.end());
+
+            for (const QString& key : keys) {
+                sortedObj.insert(key, obj[key]);
+            }
+
+            sortedArray.append(sortedObj);
+        }
+
+        QJsonDocument doc(sortedArray);
+        return doc.toJson(QJsonDocument::Indented);
+
     }
 
 private:
     Q1Entity<Entity>* repository = nullptr;
     QString where_clause;
     QString order_by;
+    QString joins;
+    QString group_by;
+    QString having_clause;
+    QStringList selected_columns;
     int limit_val;
     QList<Entity> results;
-    bool show_debug;
 };

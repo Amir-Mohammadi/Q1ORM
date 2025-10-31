@@ -706,6 +706,13 @@ public:
         return Q1Query<Entity>(this);
     }
 
+    Q1Query<Entity> SelectJoin(const QStringList& columns)
+    {
+        Q1Query<Entity> query(this);
+        query.SetColumns(columns);
+        return query;
+    }
+
     QList<Entity> SelectAll()
     {
         return SelectExec(QString(), QString(), -1);
@@ -714,10 +721,13 @@ public:
     // Select entities from database
     QList<Entity> SelectExec(const QString& where_clause = QString(),
                          const QString& order_by = QString(),
-                         int limit = -1)
+                         int limit = -1,
+                         const QString& joins = QString(),
+                         const QStringList& columns = QStringList(),
+                         const QString& group_by = QString(),
+                         const QString& having_clause = QString())
     {
         lastJson = QJsonArray(); // Clear previous JSON
-
         QList<Entity> results;
 
         if (!connection || !connection->Connect()) {
@@ -726,10 +736,51 @@ public:
         }
 
         // Build SQL query
-        QString query = QString("SELECT * FROM \"%1\"").arg(table.table_name);
-        if (!where_clause.isEmpty()) query += " WHERE " + where_clause;
-        if (!order_by.isEmpty()) query += " ORDER BY " + order_by;
-        if (limit > 0) query += " LIMIT " + QString::number(limit);
+        QString query;
+
+        // SELECT clause
+        if (!columns.isEmpty()) {
+            query = "SELECT " + columns.join(", ");
+        } else {
+            query = QString("SELECT * FROM \"%1\"").arg(table.table_name);
+        }
+
+        // FROM clause (only if columns are specified)
+        if (!columns.isEmpty()) {
+            query += QString(" FROM \"%1\"").arg(table.table_name);
+        }
+
+        // JOIN clause
+        if (!joins.isEmpty()) {
+            query += joins;
+        }
+
+        // WHERE clause
+        if (!where_clause.isEmpty()) {
+            query += " WHERE " + where_clause;
+        }
+
+        // GROUP BY clause
+        if (!group_by.isEmpty()) {
+            query += " GROUP BY " + group_by;
+        }
+
+        // HAVING clause
+        if (!having_clause.isEmpty()) {
+            query += " HAVING " + having_clause;
+        }
+
+        // ORDER BY clause
+        if (!order_by.isEmpty()) {
+            query += " ORDER BY " + order_by;
+        }
+
+        // LIMIT clause
+        if (limit > 0) {
+            query += " LIMIT " + QString::number(limit);
+        }
+
+        qDebug() << "SQL Query:" << query;
 
         QSqlQuery sql_query(connection->database);
         if (!sql_query.exec(query)) {
@@ -740,18 +791,29 @@ public:
         }
 
         QSqlRecord rec = sql_query.record();
+        QStringList allColumnNames;
+
+        // Get all column names from result set
+        for (int i = 0; i < rec.count(); ++i) {
+            allColumnNames << rec.fieldName(i);
+        }
 
         while (sql_query.next()) {
             Entity entity;
 
-            // Populate entity members
+            // Populate entity members from table.columns
             for (const Q1Column& col : table.columns) {
                 auto it = property_map.find(col.name);
                 if (it == property_map.end()) continue;
 
                 const PropertyInfo& info = it.value();
                 char* memberPtr = reinterpret_cast<char*>(&entity) + info.offset;
-                QVariant val = sql_query.value(rec.indexOf(col.name));
+
+                // Get column index (works for simple select and joins)
+                int colIndex = rec.indexOf(col.name);
+                if (colIndex < 0) continue;
+
+                QVariant val = sql_query.value(colIndex);
 
                 if (val.isNull()) {
                     switch (col.type) {
@@ -760,33 +822,26 @@ public:
                     case BIGINT:
                         *reinterpret_cast<int*>(memberPtr) = 0;
                         break;
-
                     case REAL:
                         *reinterpret_cast<float*>(memberPtr) = 0.0f;
                         break;
-
                     case DOUBLE_PRECISION:
                         *reinterpret_cast<double*>(memberPtr) = 0.0;
                         break;
-
                     case BOOLEAN:
                         *reinterpret_cast<bool*>(memberPtr) = false;
                         break;
-
                     case CHAR:
                     case TEXT:
                     case VARCHAR:
                         *reinterpret_cast<QString*>(memberPtr) = QString();
                         break;
-
                     case DATE:
                         *reinterpret_cast<QDate*>(memberPtr) = QDate();
                         break;
-
                     case TIMESTAMP:
                         *reinterpret_cast<QDateTime*>(memberPtr) = QDateTime();
                         break;
-
                     default:
                         break;
                     }
@@ -795,96 +850,57 @@ public:
                     case INTEGER:
                         *reinterpret_cast<int*>(memberPtr) = val.toInt();
                         break;
-
                     case SMALLINT:
                         *reinterpret_cast<short*>(memberPtr) = static_cast<short>(val.toInt());
                         break;
-
                     case BIGINT:
                         *reinterpret_cast<long long*>(memberPtr) = val.toLongLong();
                         break;
-
                     case REAL:
                         *reinterpret_cast<float*>(memberPtr) = static_cast<float>(val.toDouble());
                         break;
-
                     case DOUBLE_PRECISION:
                         *reinterpret_cast<double*>(memberPtr) = val.toDouble();
                         break;
-
                     case BOOLEAN:
                         *reinterpret_cast<bool*>(memberPtr) = val.toBool();
                         break;
-
                     case CHAR:
                     case TEXT:
                     case VARCHAR:
                         *reinterpret_cast<QString*>(memberPtr) = val.toString();
                         break;
-
                     case DATE:
                         *reinterpret_cast<QDate*>(memberPtr) = val.toDate();
                         break;
-
                     case TIMESTAMP:
                         *reinterpret_cast<QDateTime*>(memberPtr) = val.toDateTime();
                         break;
-
                     default:
                         break;
                     }
                 }
             }
 
-            // Convert entity to JSON
+            // Convert ALL result columns to JSON (including joined columns)
             QJsonObject obj;
-            for (const Q1Column& col : table.columns) {
-                auto it = property_map.find(col.name);
-                if (it == property_map.end()) continue;
+            for (const QString& colName : allColumnNames) {
+                QVariant val = sql_query.value(rec.indexOf(colName));
 
-                const PropertyInfo& info = it.value();
-                const char* memberPtr = reinterpret_cast<const char*>(&entity) + info.offset;
-
-                switch (col.type) {
-                case INTEGER:
-                case SMALLINT:
-                case BIGINT:
-                    obj.insert(col.name, *reinterpret_cast<const int*>(memberPtr));
-                    break;
-
-                case REAL:
-                    obj.insert(col.name, static_cast<double>(*reinterpret_cast<const float*>(memberPtr)));
-                    break;
-
-                case DOUBLE_PRECISION:
-                    obj.insert(col.name, *reinterpret_cast<const double*>(memberPtr));
-                    break;
-
-                case BOOLEAN:
-                    obj.insert(col.name, *reinterpret_cast<const bool*>(memberPtr));
-                    break;
-
-                case CHAR:
-                case TEXT:
-                case VARCHAR:
-                    obj.insert(col.name, *reinterpret_cast<const QString*>(memberPtr));
-                    break;
-
-                case DATE: {
-                    const QDate& d = *reinterpret_cast<const QDate*>(memberPtr);
-                    obj.insert(col.name, d.isValid() ? d.toString(Qt::ISODate) : QString());
-                    break;
-                }
-
-                case TIMESTAMP: {
-                    const QDateTime& dt = *reinterpret_cast<const QDateTime*>(memberPtr);
-                    obj.insert(col.name, dt.isValid() ? dt.toString(Qt::ISODate) : QString());
-                    break;
-                }
-
-                default:
-                    obj.insert(col.name, QString());
-                    break;
+                if (val.isNull()) {
+                    obj.insert(colName, QJsonValue::Null);
+                } else if (val.type() == QVariant::Int) {
+                    obj.insert(colName, val.toInt());
+                } else if (val.type() == QVariant::Double) {
+                    obj.insert(colName, val.toDouble());
+                } else if (val.type() == QVariant::Bool) {
+                    obj.insert(colName, val.toBool());
+                } else if (val.type() == QVariant::Date) {
+                    obj.insert(colName, val.toDate().toString(Qt::ISODate));
+                } else if (val.type() == QVariant::DateTime) {
+                    obj.insert(colName, val.toDateTime().toString(Qt::ISODate));
+                } else {
+                    obj.insert(colName, val.toString());
                 }
             }
 

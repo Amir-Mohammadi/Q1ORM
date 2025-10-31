@@ -1,0 +1,15 @@
+ExampleProjectModifier_autogen/timestamp: \
+	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5Config.cmake \
+	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ConfigVersion.cmake \
+	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ModuleLocation.cmake \
+	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core/Qt5CoreConfig.cmake \
+	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake \
+	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake \
+	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake \
+	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core/Qt5CoreMacros.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeParseArguments.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/GNUInstallDirs.cmake \
+	C:/Users/ARM/Desktop/Q1ORM/Tools/ExampleProjectModifier/CMakeLists.txt \
+	C:/Users/ARM/Desktop/Q1ORM/Tools/ExampleProjectModifier/main.cpp \
+	C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_5_15_2_MSVC2019_64bit-Release/.qtc/package-manager/auto-setup.cmake \
+	C:/Qt/Tools/CMake_64/bin/cmake.exe
