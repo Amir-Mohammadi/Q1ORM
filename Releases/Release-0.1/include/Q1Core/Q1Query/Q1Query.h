@@ -116,6 +116,44 @@ public:
     explicit Q1Query(Q1Entity<Entity>* repo = nullptr)
         : repository(repo), limit_val(-1) {}
 
+
+    //aggregate functions
+    template<typename T = double>
+    T Max(const QString& column)
+    {
+        return ExecuteAggregate<T>(QString("MAX(%1)").arg(column));
+    }
+
+    template<typename T = double>
+    T Min(const QString& column)
+    {
+        return ExecuteAggregate<T>(QString("MIN(%1)").arg(column));
+    }
+
+    template<typename T = int>
+    T Count(const QString& column = "*")
+    {
+        return ExecuteAggregate<T>(QString("COUNT(%1)").arg(column));
+    }
+
+    template<typename T = double>
+    T Sum(const QString& column)
+    {
+        return ExecuteAggregate<T>(QString("SUM(%1)").arg(column));
+    }
+
+    template<typename T = double>
+    T Avg(const QString& column)
+    {
+        return ExecuteAggregate<T>(QString("AVG(%1)").arg(column));
+    }
+
+    Q1Query& Distinct()
+    {
+        distinct_flag = true;
+        return *this;
+    }
+
     // Query builders
     Q1Query& Where(const QString& clause)
     {
@@ -317,6 +355,37 @@ public:
 
     }
 
+
+private:
+    template<typename T>
+    T ExecuteAggregate(const QString& function)
+    {
+        if(!repository) return T();
+
+        QString sql = "SELECT ";
+        if (distinct_flag)
+            sql += "DISTINCT ";
+
+        if (selected_columns.isEmpty())
+            sql += "*";
+        else
+            sql += selected_columns.join(", ");
+
+        sql += " FROM " + repository->GetTable().table_name;
+
+        if (!joins.isEmpty())
+            sql += " " + joins;
+        if (!where_clause.isEmpty())
+            sql += " WHERE " + where_clause;
+        if (!group_by.isEmpty())
+            sql += " GROUP BY " + group_by;
+        if (!having_clause.isEmpty())
+            sql += " HAVING " + having_clause;
+
+        QVariant result = repository->ExecuteScalar(sql);
+        return result.value<T>();
+    }
+
 private:
     Q1Entity<Entity>* repository = nullptr;
     QString where_clause;
@@ -327,4 +396,5 @@ private:
     QStringList selected_columns;
     int limit_val;
     QList<Entity> results;
+    bool distinct_flag = false;
 };

@@ -12,7 +12,6 @@ int main(int argc, char *argv[])
     Person user(&conn);
 
 
-
     /* ############################################################################### */
     /* ******************************* return data *********************************** */
     /* ############################################################################### */
@@ -20,31 +19,31 @@ int main(int argc, char *argv[])
     qDebug() << "\n========== INNER JOIN TABLE ==========";
     user.Select()
         .InnerJoin("addresses", "persons.address_id = addresses.id")
-        .ShowList();
+        .ToList();
 
     qDebug() << "\n========== LEFT JOIN TABLE ==========";
     user.Select()
         .LeftJoin("addresses", "persons.address_id = addresses.id")
-        .ShowList();
+        .ToList();
 
     qDebug() << "\n========== WHERE + ORDER BY TABLE ==========";
     user.Select()
         .InnerJoin("addresses", "persons.address_id = addresses.id")
         .Where("persons.age > 25")
         .OrderByAsc("persons.first_name")
-        .ShowList();
+        .ToList();
 
     // ===== JSON OUTPUT EXAMPLES =====
     qDebug() << "\n========== JSON OUTPUT ==========";
     user.Select()
         .InnerJoin("addresses", "persons.address_id = addresses.id")
         .Where("persons.age > 20")
-        .ShowJson();  // <-- Print JSON
+        .ToJson();  // <-- Print JSON
 
     qDebug() << "\n========== JSON + TABLE PRINT ==========";
     user.Select()
         .InnerJoin("addresses", "persons.address_id = addresses.id")
-        .ShowJson();  // <-- Print JSON with pretty formatting
+        .ToJson();  // <-- Print JSON with pretty formatting
 
     // ===== COMPLEX QUERIES =====
     qDebug() << "\n========== GROUP BY + HAVING TABLE ==========";
@@ -52,7 +51,7 @@ int main(int argc, char *argv[])
         .InnerJoin("addresses", "persons.address_id = addresses.id")
         .GroupBy("addresses.address_name")
         .Having("COUNT(*) > 1")
-        .ShowList();
+        .ToList();
 
     qDebug() << "\n========== COMPLEX QUERY JSON ==========";
     user.SelectJoin(QStringList()
@@ -63,7 +62,7 @@ int main(int argc, char *argv[])
         .Where("persons.age >= 18")
         .GroupBy("addresses.id, addresses.address_name")
         .Having("COUNT(*) >= 1")
-        .ShowJson();
+        .ToJson();
 
 
 
@@ -76,53 +75,53 @@ int main(int argc, char *argv[])
 
 
     // ===== TABLE OUTPUT EXAMPLES =====
-    qDebug() << "\n========== INNER JOIN TABLE ==========";
-    user.Select()
-        .InnerJoin("addresses", "persons.address_id = addresses.id")
-        .ShowList();
+    // qDebug() << "\n========== INNER JOIN TABLE ==========";
+    // user.Select()
+    //     .InnerJoin("addresses", "persons.address_id = addresses.id")
+    //     .ShowList();
 
-    qDebug() << "\n========== LEFT JOIN TABLE ==========";
-    user.Select()
-        .LeftJoin("addresses", "persons.address_id = addresses.id")
-        .ShowList();
+    // qDebug() << "\n========== LEFT JOIN TABLE ==========";
+    // user.Select()
+    //     .LeftJoin("addresses", "persons.address_id = addresses.id")
+    //     .ShowList();
 
-    qDebug() << "\n========== WHERE + ORDER BY TABLE ==========";
-    user.Select()
-        .InnerJoin("addresses", "persons.address_id = addresses.id")
-        .Where("persons.age > 25")
-        .OrderByAsc("persons.first_name")
-        .ShowList();
+    // qDebug() << "\n========== WHERE + ORDER BY TABLE ==========";
+    // user.Select()
+    //     .InnerJoin("addresses", "persons.address_id = addresses.id")
+    //     .Where("persons.age > 25")
+    //     .OrderByAsc("persons.first_name")
+    //     .ShowList();
 
-    // ===== JSON OUTPUT EXAMPLES =====
-    qDebug() << "\n========== JSON OUTPUT ==========";
-    user.Select()
-        .InnerJoin("addresses", "persons.address_id = addresses.id")
-        .Where("persons.age > 20")
-        .ShowJson();  // <-- Print JSON
+    // // ===== JSON OUTPUT EXAMPLES =====
+    // qDebug() << "\n========== JSON OUTPUT ==========";
+    // user.Select()
+    //     .InnerJoin("addresses", "persons.address_id = addresses.id")
+    //     .Where("persons.age > 20")
+    //     .ShowJson();  // <-- Print JSON
 
-    qDebug() << "\n========== JSON + TABLE PRINT ==========";
-    user.Select()
-        .InnerJoin("addresses", "persons.address_id = addresses.id")
-        .ShowJson();  // <-- Print JSON with pretty formatting
+    // qDebug() << "\n========== JSON + TABLE PRINT ==========";
+    // user.Select()
+    //     .InnerJoin("addresses", "persons.address_id = addresses.id")
+    //     .ShowJson();  // <-- Print JSON with pretty formatting
 
-    // ===== COMPLEX QUERIES =====
-    qDebug() << "\n========== GROUP BY + HAVING TABLE ==========";
-    user.SelectJoin(QStringList() << "addresses.address_name")
-        .InnerJoin("addresses", "persons.address_id = addresses.id")
-        .GroupBy("addresses.address_name")
-        .Having("COUNT(*) > 1")
-        .ShowList();
+    // // ===== COMPLEX QUERIES =====
+    // qDebug() << "\n========== GROUP BY + HAVING TABLE ==========";
+    // user.SelectJoin(QStringList() << "addresses.address_name")
+    //     .InnerJoin("addresses", "persons.address_id = addresses.id")
+    //     .GroupBy("addresses.address_name")
+    //     .Having("COUNT(*) > 1")
+    //     .ShowList();
 
-    qDebug() << "\n========== COMPLEX QUERY JSON ==========";
-    user.SelectJoin(QStringList()
-                    << "addresses.id"
-                    << "addresses.address_name"
-                    << "AVG(persons.age) as avg_age")
-        .InnerJoin("addresses", "persons.address_id = addresses.id")
-        .Where("persons.age >= 18")
-        .GroupBy("addresses.id, addresses.address_name")
-        .Having("COUNT(*) >= 1")
-        .ShowJson();
+    // qDebug() << "\n========== COMPLEX QUERY JSON ==========";
+    // user.SelectJoin(QStringList()
+    //                 << "addresses.id"
+    //                 << "addresses.address_name"
+    //                 << "AVG(persons.age) as avg_age")
+    //     .InnerJoin("addresses", "persons.address_id = addresses.id")
+    //     .Where("persons.age >= 18")
+    //     .GroupBy("addresses.id, addresses.address_name")
+    //     .Having("COUNT(*) >= 1")
+    //     .ShowJson();
 
     conn.Disconnect();
     return a.exec();

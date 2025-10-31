@@ -998,6 +998,34 @@ public:
 
 
 
+    QVariant ExecuteScalar(const QString& sql)
+    {
+        if(!connection || !connection->Connect())
+        {
+            last_error = "Database connection failed";
+            return QVariant();
+        }
+
+        QSqlQuery query(connection->database);
+        if(!query.exec(sql))
+        {
+            last_error = query.lastError().text();
+            qDebug() << "ExecuteScalar failed: " << last_error;
+            connection->Disconnect();
+            return QVariant();
+        }
+
+        QVariant result;
+        if(query.next())
+        {
+            result = query.value(0);
+        }
+
+
+        connection->Disconnect();
+        return result;
+    }
+
 public:
     struct PropertyInfo
     {

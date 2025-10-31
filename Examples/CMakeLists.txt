@@ -1,4 +1,4 @@
 cmake_minimum_required(VERSION 3.14)
 project(Examples)
 
-subdirs(JoinTablesExample CRUDExampleExample DbContextExample DatabaseInstallExample)
+subdirs(AggregateFunctionExample JoinTablesExample CRUDExampleExample DbContextExample DatabaseInstallExample)
