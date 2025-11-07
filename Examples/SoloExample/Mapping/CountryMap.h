@@ -11,8 +11,8 @@ class CountryMap : public Q1Entity<Country>
 public :
     static void ConfigureEntity(Q1Entity<Country>& entity)
     {
-        entity.ToTableName("Countries");
-        entity.Property(entity.id, "id", false, true);
+        entity.ToTableName("countries");
+        entity.Property(entity.id, "id", false, true, "GENERATED ALWAYS AS IDENTITY");
         entity.Property(entity.name, "name", false, false);
     }
 

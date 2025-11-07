@@ -12,9 +12,10 @@
 
 #include "../../Q1ORM_global.h"
 
-                  enum Q1Driver
+enum Q1Driver
 {
-    POSTGRE_SQL
+    POSTGRE_SQL,
+    SQLSERVER
 };
 
 class Q1ORM_EXPORT Q1Connection
@@ -201,9 +202,9 @@ private: //Connection Parameters
     bool is_open = false;
 
 private: //Defaults
-    QStringList default_databases = {"postgres"};
-    QStringList drivers = {"QPSQL"};
-    QList<int> ports = {5432};
+    QStringList default_databases = {"postgres", "master"};
+    QStringList drivers = {"QPSQL", "QODBC"};
+    QList<int> ports = {5432, 1433};
 };
 
 #endif // Q1CONNECTION_H

@@ -9,8 +9,8 @@ class CityMap : public Q1Entity<City>
 public :
     static void ConfigureEntity(Q1Entity<City>& entity)
     {
-        entity.ToTableName("Cities");
-        entity.Property(entity.id, "id", false, true);
+        entity.ToTableName("cities");
+        entity.Property(entity.id, "id", false, true, "GENERATED ALWAYS AS IDENTITY");
         entity.Property(entity.name, "name", false, false);
         entity.Property(entity.country_id, "country_id", false, false);
     }
@@ -20,7 +20,7 @@ public :
     {
         QList<Q1Relation> relations;
 
-        relations.append(entity.Relations("Countries", "Cities", ONE_TO_MANY, "id", "country_id"));
+        relations.append(entity.Relations("countries", "cities", ONE_TO_MANY, "id", "country_id"));
 
         return relations;
     }

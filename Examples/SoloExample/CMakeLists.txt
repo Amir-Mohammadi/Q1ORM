@@ -26,7 +26,11 @@ add_executable(SoloExample main.cpp applicationdbcontext.cpp applicationdbcontex
     Mapping/CityMap.h
     Models/Country.h
     Mapping/CountryMap.h
-    Services/insertservice.h Services/insertservice.cpp
+
+    Repository/IRepository.h
+    Repository/Repository.h
+    Services/InsertService.h
+
 
 
 )

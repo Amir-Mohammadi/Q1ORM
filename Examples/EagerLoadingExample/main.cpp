@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     QTimer::singleShot(0, [&]() {
         // run the select and print JSON
         auto json = user.Select()
-                        // .Include(QStringList() << "addresses")
+                        .Include(QStringList() << "addresses")
                         .ShowJson();
 
         // if ShowJson returns something useful you can also capture it here.
