@@ -69,28 +69,29 @@ public:
     void Property(Member& member, const QString& name, bool nullable = false,
                   bool primary_key = false, const QString& default_value = QString())
     {
-        // Skip duplicate registration
-        if(property_map.contains(name))
+        if (property_map.contains(name))
             return;
 
-        QString type = typeid(Member).name();
-        Q1ColumnDataType column_type = Q1Column::GetVariableType(type);
+        QString cpp_type = typeid(Member).name();
+        Q1ColumnDataType column_type = Q1Column::GetVariableType(cpp_type);
         int size = DetermineSize<Member>(column_type);
 
-        QString effective_default = default_value;
-        if(primary_key && default_value.isEmpty())
-            effective_default = "GENERATED ALWAYS AS IDENTITY";
 
-        table.columns.append(Q1Column(name, column_type, size, nullable, primary_key, effective_default));
+        bool is_identity = (primary_key && default_value.isEmpty());
 
-        // **Store offset relative to the DTO object**
+
+        Q1Column col(name, column_type, size, nullable, primary_key, default_value, is_identity);
+        table.columns.append(col);
+
+
         PropertyInfo info;
         info.name = name;
 
-        // Compute offset from DTO part, not Q1Entity
         info.offset = reinterpret_cast<char*>(&member) - reinterpret_cast<char*>(static_cast<Entity*>(this));
         info.type = column_type;
         property_map[name] = info;
+
+
     }
 
 
@@ -126,6 +127,11 @@ public:
         table.table_name = table_name;
     }
 
+    void SetLastJson(const QJsonArray& jsonArray)
+    {
+        lastJson = jsonArray;
+    }
+
 
 /* ############################################################################### */
 /* ********************************* Getter ************************************** */
@@ -142,6 +148,12 @@ public:
     {
         return relation;
     }
+
+    const QList<Q1Relation>& GetRelations() const
+    {
+        return table.relations;
+    }
+
 
     // Get last error message
     QString GetLastError() const
@@ -161,6 +173,8 @@ public:
     {
         return lastJson;
     }
+
+
 
 
 
@@ -1025,6 +1039,126 @@ public:
         connection->Disconnect();
         return result;
     }
+
+
+    QList<QJsonObject> ExecuteRelationQuery(const QString& query)
+    {
+        QList<QJsonObject> results;
+
+        if (!connection || !connection->Connect()) {
+            last_error = "Database connection failed";
+            return results;
+        }
+
+        qDebug() << "Executing relation query:" << query;
+
+        QSqlQuery sql_query(connection->database);
+        if (!sql_query.exec(query)) {
+            last_error = sql_query.lastError().text();
+            qDebug() << "Relation query failed:" << last_error;
+            connection->Disconnect();
+            return results;
+        }
+
+        QSqlRecord rec = sql_query.record();
+        QStringList columnNames;
+
+        // Get all column names from result set
+        for (int i = 0; i < rec.count(); ++i) {
+            columnNames << rec.fieldName(i);
+        }
+
+        // Fetch all rows as JSON objects
+        while (sql_query.next()) {
+            QJsonObject obj;
+
+            // Convert each column value to appropriate JSON type
+            for (const QString& colName : columnNames) {
+                QVariant val = sql_query.value(rec.indexOf(colName));
+
+                if (val.isNull()) {
+                    obj.insert(colName, QJsonValue::Null);
+                } else if (val.type() == QVariant::Int) {
+                    obj.insert(colName, val.toInt());
+                } else if (val.type() == QVariant::Double) {
+                    obj.insert(colName, val.toDouble());
+                } else if (val.type() == QVariant::Bool) {
+                    obj.insert(colName, val.toBool());
+                } else if (val.type() == QVariant::Date) {
+                    obj.insert(colName, val.toDate().toString(Qt::ISODate));
+                } else if (val.type() == QVariant::DateTime) {
+                    obj.insert(colName, val.toDateTime().toString(Qt::ISODate));
+                } else {
+                    obj.insert(colName, val.toString());
+                }
+            }
+
+            results.append(obj);
+        }
+
+        connection->Disconnect();
+        return results;
+    }
+
+    QList<QJsonObject> ExecuteQuery(const QString& query)
+    {
+        QList<QJsonObject> results;
+
+        if (!connection || !connection->Connect()) {
+            last_error = "Database connection failed";
+            return results;
+        }
+
+        qDebug() << "Executing query:" << query;
+
+        QSqlQuery sql_query(connection->database);
+        if (!sql_query.exec(query)) {
+            last_error = sql_query.lastError().text();
+            qDebug() << "Query failed:" << last_error;
+            connection->Disconnect();
+            return results;
+        }
+
+        QSqlRecord rec = sql_query.record();
+
+        // Get all column names
+        for (int i = 0; i < rec.count(); ++i) {
+            // Process each row
+            while (sql_query.next()) {
+                QJsonObject obj;
+
+                for (int j = 0; j < rec.count(); ++j) {
+                    QString colName = rec.fieldName(j);
+                    QVariant val = sql_query.value(j);
+
+                    if (val.isNull()) {
+                        obj.insert(colName, QJsonValue::Null);
+                    } else if (val.type() == QVariant::Int) {
+                        obj.insert(colName, val.toInt());
+                    } else if (val.type() == QVariant::Double) {
+                        obj.insert(colName, val.toDouble());
+                    } else if (val.type() == QVariant::Bool) {
+                        obj.insert(colName, val.toBool());
+                    } else if (val.type() == QVariant::Date) {
+                        obj.insert(colName, val.toDate().toString(Qt::ISODate));
+                    } else if (val.type() == QVariant::DateTime) {
+                        obj.insert(colName, val.toDateTime().toString(Qt::ISODate));
+                    } else {
+                        obj.insert(colName, val.toString());
+                    }
+                }
+
+                results.append(obj);
+            }
+            break;
+        }
+
+        connection->Disconnect();
+        return results;
+    }
+
+
+
 
 public:
     struct PropertyInfo

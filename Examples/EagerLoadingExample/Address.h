@@ -13,13 +13,12 @@ public:
 
     static void ConfigureEntity(Q1Entity<AddressDto>& entity)
     {
-        entity.ToTableName(entity.TableName());
+        entity.ToTableName("addresses");
         entity.Property(entity.id, "id", false, true);
         entity.Property(entity.person_id, "person_id", false, false);
-        entity.Property(entity.address_name, "address_name", false, false);
     }
 
-    static QList<Q1Relation> CreateRelations(Q1Entity<Address>& entity)
+    static QList<Q1Relation> CreateRelations(Q1Entity<AddressDto>& entity)
     {
         QList<Q1Relation> relations;
         relations.append(entity.Relations("addresses", "persons", MANY_TO_ONE, "person_id", "id"));

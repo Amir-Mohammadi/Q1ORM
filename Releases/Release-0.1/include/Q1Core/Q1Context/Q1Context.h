@@ -40,7 +40,6 @@ protected:
 
     bool check_columns = true;
 
-
 };
 
 #endif // Q1CONTEXT_H

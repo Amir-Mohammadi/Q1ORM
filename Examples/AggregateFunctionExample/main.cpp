@@ -12,25 +12,32 @@ int main(int argc, char *argv[])
     // Create the repository for the Person entity
     Person user(&conn);
 
-    // Example: get average age
-    auto avgAge = user.Select().Avg("age");
-    qDebug() << "Average age:" << avgAge;
+    // // Example: get average age
+    // auto avgAge = user.Select().Avg("age");
+    // qDebug() << "Average age:" << avgAge;
 
-    // Example: get maximum age
-    auto maxAge = user.Select().Max("age");
-    qDebug() << "Maximum age:" << maxAge;
+    // // Example: get maximum age
+    // auto maxAge = user.Select().Max("age");
+    // qDebug() << "Maximum age:" << maxAge;
 
-    // Example: get count of users
-    auto totalUsers = user.Select().Count();
-    qDebug() << "Total users:" << totalUsers;
+    // // Example: get count of users
+    // auto totalUsers = user.Select().Count();
+    // qDebug() << "Total users:" << totalUsers;
 
-    // Example: get sum of ages
-    auto sumAge = user.Select().Sum("age");
-    qDebug() << "Sum of ages:" << sumAge;
+    // // Example: get sum of ages
+    // auto sumAge = user.Select().Sum("age");
+    // qDebug() << "Sum of ages:" << sumAge;
 
 
-    qDebug() << "distinct List : " ;
-    auto distinct = user.Select().Distinct().ShowList();
+    // qDebug() << "distinct List : " ;
+    // auto distinct = user.Select().Distinct().ShowList();
+
+
+    auto json = user.Select().Where("id = 2")
+                    .Include( "addresses" )
+                    .ToJson();
+
+    qDebug().noquote() << json;
 
     return a.exec();
 }

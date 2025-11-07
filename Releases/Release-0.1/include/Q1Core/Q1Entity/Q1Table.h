@@ -48,6 +48,11 @@ public:
         return false;
     }
 
+    bool HasForeignKey() const
+    {
+        return !relations.isEmpty();
+    }
+
     QList<Q1Column> GetPrimaryKeys() const
     {
         QList<Q1Column> pk_columns;

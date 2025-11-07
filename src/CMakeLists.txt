@@ -24,7 +24,7 @@ set(Q1ORM_HEADERS
     Q1DatabaseInstall/Q1DatabaseInstall.h
     Q1Core/Q1Context/Q1Context.h
     Q1Core/Q1Context/Q1Connection.h
-    Q1Core/Q1Entity/Q1Column.h
+
     Q1Core/Q1Entity/Q1Entity.h
     Q1Core/Q1Entity/Q1Table.h
     Q1Core/Q1Migration/Q1MigrationQuery.h
@@ -43,6 +43,8 @@ set(Q1ORM_SOURCES
 
 add_library(Src SHARED ${Q1ORM_HEADERS} ${Q1ORM_SOURCES} ${Q1ORM_SCRIPTS}
     Q1Core/Q1Query/Q1Query.h
+    Q1Core/Q1Entity/Q1Column.h
+
 )
 
 target_link_libraries(Src PRIVATE

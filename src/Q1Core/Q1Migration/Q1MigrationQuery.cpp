@@ -36,7 +36,7 @@ QString Q1MigrationQuery::AddDatabase(QString database_name, QString username)
 QString Q1MigrationQuery::AddTable(Q1Table &q1table)
 {
     QString comma = ", ";
-    QString query = "CREATE TABLE \"";
+    QString query = "CREATE TABLE IF NOT EXISTS \"";
 
     query.append(q1table.table_name);
     query.append("\"(");
@@ -147,189 +147,133 @@ QString Q1MigrationQuery::HasNulllData(QString table_name, QString column_name)
 
 QString Q1MigrationQuery::ColumnProperty(Q1Column &column)
 {
-    QString query = "";
-    QString type,
-        size,
-        nullable,
-        primary_key,
-        default_value = nullptr;
+    QString query;
+    QString type;
+    QString size;
 
+    // Map C++ type to SQL type
     switch (column.type)
     {
-        case 0:
-        {
-            type = "INTEGER";
-            size = nullptr;
-            break;
-        }
-
-        case 1:
-        {
-            type = "SMALLINT";
-            size = nullptr;
-            break;
-        }
-
-        case 2:
-        {
-            type = "BIGINT";
-            size = nullptr;
-            break;
-        }
-
-        case 3:
-        {
-            type = "REAL";
-            size = nullptr;
-            break;
-        }
-
-        case 4:
-        {
-            type = "DOUBLE PRECISION";
-            size = nullptr;
-            break;
-        }
-
-        case 5:
-        {
-            type = "BOOLEAN";
-            size = nullptr;
-            break;
-        }
-
-        case 6:
-        {
-            type = "CHAR";
-            size = "(" + QString::number(column.size) + ")";
-            break;
-        }
-
-        case 7:
-        {
-            type = "TEXT";
-            size = nullptr;
-            break;
-        }
-
-        case 8:
-        {
-            type = "VARCHAR";
-            size = "(" + QString::number(column.size) + ")";
-            break;
-        }
-
-        case 9:
-        {
-            type = "DATE";
-            size = nullptr;
-            break;
-        }
-
-        case 10:
-        {
-            type = "TIMESTAMP";
-            size = nullptr;
-            break;
-        }
+    case 0: type = "INTEGER"; break;
+    case 1: type = "SMALLINT"; break;
+    case 2: type = "BIGINT"; break;
+    case 3: type = "REAL"; break;
+    case 4: type = "DOUBLE PRECISION"; break;
+    case 5: type = "BOOLEAN"; break;
+    case 6: type = "CHAR"; size = "(" + QString::number(column.size) + ")"; break;
+    case 7: type = "TEXT"; break;
+    case 8: type = "VARCHAR"; size = "(" + QString::number(column.size) + ")"; break;
+    case 9: type = "DATE"; break;
+    case 10: type = "TIMESTAMP"; break;
+    default: type = "VARCHAR"; break;
     }
 
-    if(column.nullable)
+    // Handle identity/auto-increment primary key
+    if (column.primary_key && column.default_value == "GENERATED ALWAYS AS IDENTITY")
     {
-        if (column.primary_key)
-        {
-            nullable = "NOT NULL";
-        }
+        query = "\"" + column.name + "\" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY";
+        return query;
+    }
+
+    // Nullable or NOT NULL
+    QString nullable = column.nullable ? "" : "NOT NULL";
+
+    // Primary key (if not identity)
+    QString primary_key = (column.primary_key && column.default_value != "GENERATED ALWAYS AS IDENTITY") ? "PRIMARY KEY" : "";
+
+    // Default value
+    QString default_clause;
+    if (!column.default_value.isEmpty())
+    {
+        // Do NOT wrap integer/boolean defaults in quotes
+        if (column.type == INTEGER || column.type == SMALLINT || column.type == BIGINT || column.type == REAL || column.type == DOUBLE_PRECISION || column.type == BOOLEAN)
+            default_clause = "DEFAULT " + column.default_value;
         else
-        {
-            nullable = "NULL";
-        }
-    }
-    else
-    {
-        nullable = "NOT NULL";
+            default_clause = "DEFAULT '" + column.default_value + "'";
     }
 
-    if(column.primary_key)
-    {
-        primary_key = "PRIMARY KEY";
-    }
-    else
-    {
-        primary_key = "";
-    }
+    // Build full column definition
+    query = "\"" + column.name + "\" " + type + size + " " + nullable + " " + primary_key + " " + default_clause;
 
-    query.append("\"")
-        .append(column.name)
-        .append("\" ")
-        .append(type)
-        .append(size)
-        .append(" ")
-        .append(nullable)
-        .append(" ")
-        .append(primary_key)
-        .append(" ");
-
-    if (column.default_value != nullptr)
-    {
-        default_value = "DEFAULT ";
-        query.append(default_value + "'" + column.default_value + "'");
-    }
-
-    return query;
+    return query.trimmed();
 }
 
 
 
 QString Q1MigrationQuery::AddRelationSQL(const Q1Relation &relation)
 {
-    if (!relation.IsValid())
-    {
+    if (!relation.IsValid()) {
         m_lastError = "Invalid relation";
         return "";
     }
 
     QString fkName = relation.GetConstraintName();
-    QString base = relation.base_table;
-    QString top = relation.top_table;
-    QString fkCol = relation.foreign_key;
-    QString refCol = relation.reference_key;
+    QString fkBase;    // table that will hold the FK column
+    QString fkTop;     // referenced table
+    QString fkColumn;  // FK column in fkBase
+    QString fkRefCol;  // referenced column in fkTop
 
-    if(relation.type == Q1RelationType::ONE_TO_ONE)
+    // Determine FK/Parent orientation based on relation type
+    switch (relation.type)
     {
-        //Unique then FK - seperated by ';'
-        QString uqName = QString("UQ_%1_%2").arg(base, fkCol);
-        QString uqSql = QString("ALTER TABLE \"%1\" ADD CONSTRAINT %2 UNIQUE (\"%3\")").arg(base, uqName, fkCol);
-        QString fkSql = QString("ALTER TABLE \"%1\" ADD CONSTRAINT %2 FOREIGN KEY (\"%3\") REFERENCES \"%4\" (\"%5\") ON DELETE %6 ON UPDATE %7")
-                            .arg(base, fkName, fkCol, top, refCol, relation.GetOnDeleteString(), relation.GetOnUpdateString());
+
+        case ONE_TO_ONE:
+            fkBase   = relation.base_table;
+            fkTop    = relation.top_table;
+            fkColumn = relation.foreign_key;
+            fkRefCol = relation.reference_key;
+            break;
+
+        case ONE_TO_MANY:
+            // base = parent, top = child
+            fkBase   = relation.top_table;     // FK lives in child
+            fkTop    = relation.base_table;    // parent table is referenced
+            fkColumn = relation.reference_key; // child column
+            fkRefCol = relation.foreign_key;   // parent column
+            break;
+
+        case MANY_TO_ONE:
+            // base = child, top = parent
+            fkBase   = relation.base_table;    // child table holds FK
+            fkTop    = relation.top_table;     // parent table is referenced
+            fkColumn = relation.foreign_key;   // child column
+            fkRefCol = relation.reference_key; // parent column
+            break;
+
+        case MANY_TO_MANY:
+        {
+            // create junction table
+            QString junction = relation.base_table + "_" + relation.top_table;
+            QString base_col = relation.base_table + "_" + relation.foreign_key;
+            QString top_col  = relation.top_table + "_" + relation.reference_key;
+
+            return QString(
+                       "CREATE TABLE IF NOT EXISTS \"%1\" ("
+                       "\"%2\" INTEGER NOT NULL, "
+                       "\"%3\" INTEGER NOT NULL, "
+                       "PRIMARY KEY (\"%2\", \"%3\"), "
+                       "CONSTRAINT fk_%1_%2 FOREIGN KEY (\"%2\") REFERENCES \"%4\"(\"%5\") ON DELETE CASCADE, "
+                       "CONSTRAINT fk_%1_%3 FOREIGN KEY (\"%3\") REFERENCES \"%6\"(\"%7\") ON DELETE CASCADE)"
+                       ).arg(junction, base_col, top_col, relation.base_table, relation.foreign_key, relation.top_table, relation.reference_key);
+        }
+    }
+
+    if (relation.type == ONE_TO_ONE) {
+        // UNIQUE + FK
+        QString uqName = QString("UQ_%1_%2").arg(fkBase, fkColumn);
+        QString uqSql  = QString("ALTER TABLE \"%1\" ADD CONSTRAINT \"%2\" UNIQUE (\"%3\")")
+                            .arg(fkBase, uqName, fkColumn);
+        QString fkSql  = QString("ALTER TABLE \"%1\" ADD CONSTRAINT \"%2\" FOREIGN KEY (\"%3\") REFERENCES \"%4\" (\"%5\") ON DELETE %6 ON UPDATE %7")
+                            .arg(fkBase, fkName, fkColumn, fkTop, fkRefCol, relation.GetOnDeleteString(), relation.GetOnUpdateString());
         return uqSql + ";" + fkSql;
-
     }
-    else if (relation.type == Q1RelationType::ONE_TO_MANY || relation.type == Q1RelationType::MANY_TO_ONE)
-    {
-        QString fkSql = QString("ALTER TABLE \"%1\" ADD CONSTRAINT %2 FOREIGN KEY (\"%3\") REFERENCES \"%4\" (\"%5\") ON DELETE %6 ON UPDATE %7")
-        .arg(base, fkName, fkCol, top, refCol, relation.GetOnDeleteString(), relation.GetOnUpdateString());
-        return fkSql;
+    else {
+        // typical FK for ONE_TO_MANY, MANY_TO_ONE
+        return QString("ALTER TABLE \"%1\" ADD CONSTRAINT \"%2\" FOREIGN KEY (\"%3\") REFERENCES \"%4\" (\"%5\") ON DELETE %6 ON UPDATE %7")
+            .arg(fkBase, fkName, fkColumn, fkTop, fkRefCol, relation.GetOnDeleteString(), relation.GetOnUpdateString());
     }
-    else if (relation.type == Q1RelationType::MANY_TO_MANY)
-    {
-        // create junction table name deterministic
-        QString junction = base + "_" + top;
-        QString base_col = base + "_" + relation.foreign_key;
-        QString top_col  = top  + "_" + relation.reference_key;
-
-        QString createSql = QString(
-                                "CREATE TABLE IF NOT EXISTS \"%1\" ("
-                                "\"%2\" INTEGER NOT NULL, "
-                                "\"%3\" INTEGER NOT NULL, "
-                                "PRIMARY KEY (\"%2\", \"%3\"), "
-                                "CONSTRAINT fk_%1_%2 FOREIGN KEY (\"%2\") REFERENCES \"%4\"(\"%5\") ON DELETE CASCADE, "
-                                "CONSTRAINT fk_%1_%3 FOREIGN KEY (\"%3\") REFERENCES \"%6\"(\"%7\") ON DELETE CASCADE)"
-                                ).arg(junction, base_col, top_col, base, relation.foreign_key, top, relation.reference_key);
-        return createSql;
-    }
-
-
-
-    return QString();
 }
+
+
+
+

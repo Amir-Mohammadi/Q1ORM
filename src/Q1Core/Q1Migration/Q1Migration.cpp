@@ -111,6 +111,7 @@ bool Q1Migration::AddTable(Q1Table q1table)
     connection.Disconnect();
 
     return is_executed;
+
 }
 
 bool Q1Migration::AddColumn(QString table_name, Q1Column &column)
@@ -387,14 +388,15 @@ bool Q1Migration::ConstraintExists(QSqlDatabase &db, const QString &constraint_n
 
     QSqlQuery query(db);
 
-    // Use current schema to avoid conflicts with other schemas
+    // Compare lower(constraint_name) to handle quoted vs unquoted identifiers
     query.prepare(R"(
         SELECT 1
         FROM information_schema.table_constraints
-        WHERE constraint_name = :constraint
+        WHERE lower(constraint_name) = lower(:cname)
           AND constraint_schema = current_schema()
+        LIMIT 1
     )");
-    query.bindValue(":constraint", constraint_name.toLower()); // Postgres stores unquoted names in lower-case
+    query.bindValue(":cname", constraint_name);
 
     if (!query.exec())
     {
@@ -402,5 +404,5 @@ bool Q1Migration::ConstraintExists(QSqlDatabase &db, const QString &constraint_n
         return false;
     }
 
-    return query.next(); // exists if a row returned
+    return query.next();
 }

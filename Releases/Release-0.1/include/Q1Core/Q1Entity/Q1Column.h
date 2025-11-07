@@ -30,18 +30,20 @@ class Q1ORM_EXPORT Q1Column
 public:
     Q1Column() {}
 
-    Q1Column(QString name,
+    inline Q1Column(QString name,
              Q1ColumnDataType type,
              int size = 0,
              bool nullable = true,
              bool primary_key = false,
-             QString default_value = QString()):
+             QString default_value = QString(),
+             bool is_identity = false):
         name(name),
         type(type),
         size(size),
         nullable(nullable),
         primary_key(primary_key),
-        default_value(default_value)
+        default_value(default_value),
+        is_identity(is_identity)
     {
     }
 
@@ -155,6 +157,7 @@ public:
     bool nullable;
     bool primary_key;
     QString default_value;
+    bool is_identity = false;
 };
 
 #endif // Q1COLUMN_H

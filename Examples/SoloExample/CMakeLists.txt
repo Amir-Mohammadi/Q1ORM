@@ -1,6 +1,7 @@
+
 cmake_minimum_required(VERSION 3.14)
 
-project(DbContextExample VERSION 0.1 LANGUAGES CXX)
+project(SoloExample VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -20,21 +21,20 @@ target_include_directories(Q1ORM INTERFACE "${Q1ORM_PATH}/include")
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Sql)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Sql)
 
-add_executable(DbContextExample main.cpp Person.h Object.h
-    Address.h
-    Profile.h
-    AddressDto.h
-    PersonDto.h
-    ObjectDto.h
-    ProfileDto.h
-
+add_executable(SoloExample main.cpp applicationdbcontext.cpp applicationdbcontext.h
+    Models/City.h
+    Mapping/CityMap.h
+    Models/Country.h
+    Mapping/CountryMap.h
+    Services/insertservice.h Services/insertservice.cpp
 
 
 )
-target_link_libraries(DbContextExample Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql Q1ORM)
+target_link_libraries(SoloExample Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql Q1ORM)
 
 include(GNUInstallDirs)
-install(TARGETS DbContextExample
+install(TARGETS SoloExample
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+

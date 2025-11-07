@@ -6,89 +6,46 @@
 #include "Object.h"
 #include "Profile.h"
 
+// Your custom DbContext
 class TestContext : public Q1Context
 {
 public:
-    TestContext(Q1Connection* conn) : persons(conn),
-                                      objects(conn),
-                                      addresses(conn),
-                                      profiles(conn)
-    { connection = conn; }
-
-    void OnConfiguration() override {
-        if (!connection)
-            connection = new Q1Connection(Q1Driver::POSTGRE_SQL, "localhost", "testDb", "postgres", "123");
+    explicit TestContext(Q1Connection* conn)
+        : persons(conn), objects(conn), addresses(conn), profiles(conn)
+    {
+        connection = conn;
     }
 
+    void OnConfiguration() override
+    {
 
-    QList<Q1Table> OnTablesCreating() override {
+        if (!connection)
+            connection = new Q1Connection(Q1Driver::POSTGRE_SQL, "localhost", "solo1", "postgres", "123");
 
-// //method 1
-//         // persons.ToTableName(persons.TableName());
-//         // persons.Property(persons.id, "id", false, true);
-//         // persons.Property(persons.first_name, "first_name", true);
-//         // persons.Property(persons.last_name, "last_name", true);
-//         // persons.Property(persons.age, "age", false, false);
-//         // persons.Property(persons.address_id, "address_id", true);
+    }
 
-//         // objects.ToTableName(objects.TableName());
-//         // objects.Property(objects.id, "id", false, true);
-//         // objects.Property(objects.person_id, "person_id", true);
-//         // objects.Property(objects.name, "name", true);
-//         // objects.Property(objects.width, "width", true);
-//         // objects.Property(objects.height, "height", true);
-//         // objects.Property(objects.weight, "weight", false, false, "60");
+    QList<Q1Table> OnTablesCreating() override
+    {
+        Person::ConfigureEntity(persons);
 
+        Address::ConfigureEntity(addresses);
+        Object::ConfigureEntity(objects);
+        Profile::ConfigureEntity(profiles);
 
-//         // addresses.ToTableName(addresses.TableName());
-//         // addresses.Property(addresses.id,"id", false, true);
-//         // addresses.Property(addresses.address_name, "address_name",true);
-//         // addresses.Property(addresses.person_id,"person_id",true);
-
-
-
-//         // profiles.ToTableName(profiles.TableName());
-//         // profiles.Property(profiles.id,"id", false, true);
-//         // profiles.Property(profiles.user_name, "user_name",true);
-//         // profiles.Property(profiles.person_id,"person_id",true);
-
-
-
-// //method 2
-//         Person::ConfigureEntity(persons);
-//         Address::ConfigureEntity(addresses);
-//         Object::ConfigureEntity(objects);
-//         Profile::ConfigureEntity(profiles);
-
-return {};
-//         return { persons.GetTable(), addresses.GetTable(), objects.GetTable(), profiles.GetTable()};
+        return { persons.GetTable(), addresses.GetTable(), objects.GetTable(), profiles.GetTable() };
     }
 
     QList<Q1Relation> OnTableRelationCreating() override
     {
+        QList<Q1Relation> relations;
 
-//         QList<Q1Relation> relations;
+        // Append all defined entity relationships
+        relations.append(Address::CreateRelations(addresses));
+        relations.append(Object::CreateRelations(objects));
+        relations.append(Profile::CreateRelations(profiles));
 
-
-// //method 1
-//         // relations.append(objects.Relations(objects.TableName(), persons.TableName(), Q1RelationType::ONE_TO_MANY, "person_id", "id"));
-//         // relations.append(addresses.Relations(addresses.TableName(), persons.TableName(), Q1RelationType::ONE_TO_MANY, "person_id", "id"));
-//         // relations.append(profiles.Relations (profiles.TableName(), persons.TableName(), Q1RelationType::ONE_TO_ONE, "person_id", "id"));
-
-
-// //method 1
-//         // Let Person expose relations that involve Person and other entities
-//         relations.append(Person::CreateRelations(persons, addresses ,objects, profiles));
-
-//         // If other entities have extra relations not covered by Person, append them here:
-//         // relations.append(Object::CreateRelations(...));
-//         // (Note: CreateRelations returns a QList, append(...) accepts a QList)
-
-//         return relations;
-return {};
-
+        return relations;
     }
-
 
 public:
     Q1Entity<Person> persons;
@@ -101,23 +58,31 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    Q1Connection* conn = new Q1Connection(Q1Driver::POSTGRE_SQL, "localhost", "testDb", "postgres", "123");
+    // Initialize connection
+    Q1Connection* conn = new Q1Connection(
+        Q1Driver::POSTGRE_SQL,
+        "localhost",
+        "solo1",
+        "postgres",
+        "123"
+        );
 
     if (!conn->RootConnect() || !conn->Connect())
+    {
+        qDebug() << "Database connection failed.";
         return 1;
+    }
 
+    // Initialize ORM Context
     TestContext ctx(conn);
-    ctx.Initialize();
+    ctx.Initialize();  // Creates database/tables/relations if needed
 
-
+    // Example query
     QList<Person> people = ctx.persons.Select();
-    qDebug() << "Total rows:" << people.count();
 
 
-    for (const Person& p : people)
-        qDebug() << p.id << p.first_name << p.last_name << p.age << p.address_id;
-
-
+    for (const Person &p : people)
+        qDebug() << p.id << p.first_name << p.last_name << p.age;
 
     conn->Disconnect();
     conn->RootDisconnect();

@@ -7,10 +7,9 @@ class AddressDto
 {
 public:
     int id = 0;
-    QString address_name;
-    int person_id = 0; // FK -> persons.id
-
-    static QString TableName() { return "addresses"; }
+    QString city;
+    QString street;
+    int person_id = 0; // foreign key to Person
 };
 
 #endif // ADDRESSDTO_H

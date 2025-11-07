@@ -17,6 +17,8 @@ Q1Context::~Q1Context()
         connection = nullptr;
     }
 }
+
+
 void Q1Context::Initialize()
 {
     OnConfiguration();
