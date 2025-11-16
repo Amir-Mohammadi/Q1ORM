@@ -715,15 +715,13 @@ public:
 /* ************************ Select Opertation ************************************** */
 
 
-    Q1Query<Entity> Select()
-    {
-        return Q1Query<Entity>(this);
-    }
-
-    Q1Query<Entity> SelectJoin(const QStringList& columns)
+    Q1Query<Entity> Select(const QStringList& columns = QStringList())
     {
         Q1Query<Entity> query(this);
-        query.SetColumns(columns);
+        if (!columns.isEmpty())
+        {
+            query.SetColumns(columns);
+        }
         return query;
     }
 

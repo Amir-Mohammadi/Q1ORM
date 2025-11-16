@@ -20,7 +20,7 @@ public :
     {
         QList<Q1Relation> relations;
 
-        relations.append(entity.Relations("countries", "cities", ONE_TO_MANY, "id", "country_id"));
+        relations.append(entity.Relations("cities", "countries", MANY_TO_ONE, "country_id", "id"));
 
         return relations;
     }

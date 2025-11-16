@@ -44,6 +44,11 @@ set(Q1ORM_SOURCES
 add_library(Src SHARED ${Q1ORM_HEADERS} ${Q1ORM_SOURCES} ${Q1ORM_SCRIPTS}
     Q1Core/Q1Query/Q1Query.h
     Q1Core/Q1Entity/Q1Column.h
+    Q1Core/Q1Migration/Q1PgMigrationQuery.h Q1Core/Q1Migration/Q1PgMigrationQuery.cpp
+    Q1Core/Q1Migration/Q1SQLServerMigrationQuery.h Q1Core/Q1Migration/Q1SQLServerMigrationQuery.cpp
+    Q1Core/Q1Migration/Q1SqlServerMigrationQuery.h Q1Core/Q1Migration/Q1SqlServerMigrationQuery.cpp
+    Q1Core/Q1Migration/Q1SqlServerMigrationQuery.cpp Q1Core/Q1Migration/Q1SqlServerMigrationQuery.h
+    Q1Core/Q1Entity/Q1Column.cpp
 
 )
 

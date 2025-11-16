@@ -54,26 +54,46 @@ void Q1Context::Initialize()
     InitialRelations(allRelations);
 }
 
-
 void Q1Context::InitialDatabase()
 {
     if (!connection || !query) return;
 
+    // 1) Connect to server using root connection
+    if (!connection->RootConnect())
+    {
+        qCritical() << "Cannot connect to server:" << connection->ErrorMessage();
+        return;
+    }
+
+    // 2) Check if the database exists
     QStringList databases = query->GetDatabases();
     if (!databases.contains(database_name))
     {
-        qDebug() << "InitialDatabase - creating database" << database_name;
-        query->AddDatabase(database_name);
+        qDebug() << "InitialDatabase - database not found. Creating:" << database_name;
+
+        if (!query->AddDatabase(database_name))
+        {
+            qCritical() << "Failed to create database:" << connection->ErrorMessage();
+            connection->RootDisconnect();
+            return;
+        }
+
+        qDebug() << "Database created successfully:" << database_name;
     }
     else
     {
-        qDebug() << "InitialDatabase - database" << database_name << "already exists";
+        qDebug() << "InitialDatabase - database already exists:" << database_name;
     }
 
+    // 3) Disconnect from server-level connection
+    connection->RootDisconnect();
+
+    // 4) Connect normally to the newly created database
     if (!connection->Connect())
     {
         qCritical() << "Failed to connect to database" << database_name
                     << "-" << connection->ErrorMessage();
+        return;
     }
 }
 
