@@ -2,7 +2,8 @@
 
 
 A lightweight **Object–Relational Mapping (ORM)** framework built with **Qt** and **C++**, designed to make database operations simple, type-safe, and cross-platform.
-
+- This release of Q1ORM **currently supports PostgreSQL only**.  
+- Support for additional databases (SQLite, SQL Server, etc.) will be added in future releases
 ---
 
 ## 📁 Project Structure
