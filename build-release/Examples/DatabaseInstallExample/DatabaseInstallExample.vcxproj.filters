@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\project\training\Qt\Q1ORM\build-release\Examples\DatabaseInstallExample\DatabaseInstallExample_autogen\mocs_compilation_Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\project\training\Qt\Q1ORM\Examples\DatabaseInstallExample\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\project\training\Qt\Q1ORM\build-release\Examples\DatabaseInstallExample\DatabaseInstallExample_autogen\mocs_compilation_Release.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\project\training\Qt\Q1ORM\build-release\Examples\DatabaseInstallExample\DatabaseInstallExample_autogen\mocs_compilation_MinSizeRel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\project\training\Qt\Q1ORM\build-release\Examples\DatabaseInstallExample\DatabaseInstallExample_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\project\training\Qt\Q1ORM\Examples\DatabaseInstallExample\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{27047FB9-21B0-3B68-BDDD-9BDBE1EF60DA}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

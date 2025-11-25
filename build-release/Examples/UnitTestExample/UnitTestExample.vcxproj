@@ -1,0 +1,504 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{46C27181-CBFF-3CF1-A22E-A3259AC5C695}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>UnitTestExample</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\project\training\Qt\Q1ORM\build-release\bin\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UnitTestExample.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UnitTestExample</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\project\training\Qt\Q1ORM\build-release\bin\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UnitTestExample.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UnitTestExample</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\project\training\Qt\Q1ORM\build-release\bin\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">UnitTestExample.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">UnitTestExample</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\project\training\Qt\Q1ORM\build-release\bin\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">UnitTestExample.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">UnitTestExample</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\include_Debug;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/project/training/Qt/Q1ORM/Examples/UnitTestExample/../../Releases/Release-0.1/include" /external:I "C:/ProgramData/anaconda3/Library/include/qt" /external:I "C:/ProgramData/anaconda3/Library/include/qt/QtCore" /external:I "C:/ProgramData/anaconda3/Library/./mkspecs/win32-msvc" /external:I "C:/ProgramData/anaconda3/Library/include/qt/QtTest" /external:I "C:/ProgramData/anaconda3/Library/include/qt/QtSql"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;QT_CORE_LIB;QT_TESTLIB_LIB;QT_TESTCASE_BUILDDIR="D:/project/training/Qt/Q1ORM/build-release";QT_SQL_LIB;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;QT_CORE_LIB;QT_TESTLIB_LIB;QT_TESTCASE_BUILDDIR=\"D:/project/training/Qt/Q1ORM/build-release\";QT_SQL_LIB;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\include_Debug;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..\..\Releases\Release-0.1\include;C:\ProgramData\anaconda3\Library\include\qt;C:\ProgramData\anaconda3\Library\include\qt\QtCore;C:\ProgramData\anaconda3\Library\.\mkspecs\win32-msvc;C:\ProgramData\anaconda3\Library\include\qt\QtTest;C:\ProgramData\anaconda3\Library\include\qt\QtSql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\include_Debug;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..\..\Releases\Release-0.1\include;C:\ProgramData\anaconda3\Library\include\qt;C:\ProgramData\anaconda3\Library\include\qt\QtCore;C:\ProgramData\anaconda3\Library\.\mkspecs\win32-msvc;C:\ProgramData\anaconda3\Library\include\qt\QtTest;C:\ProgramData\anaconda3\Library\include\qt\QtSql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Automatic MOC and UIC for target UnitTestExample</Message>
+      <Command>setlocal
+cd D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen D:/project/training/Qt/Q1ORM/build-release/Examples/UnitTestExample/CMakeFiles/UnitTestExample_autogen.dir/AutogenInfo.json Debug
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying Q1ORM.dll next to test executable</Message>
+      <Command>setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory D:/project/training/Qt/Q1ORM/build-release/bin/Debug
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different D:/project/training/Qt/Q1ORM/Examples/UnitTestExample/../../Releases/Release-0.1/bin/Q1ORM.dll D:/project/training/Qt/Q1ORM/build-release/bin/Debug
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>C:\ProgramData\anaconda3\Library\lib\Qt5Test_conda.lib;C:\ProgramData\anaconda3\Library\lib\Qt5Sql_conda.lib;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..\..\Releases\Release-0.1\lib\Q1ORM.lib;C:\ProgramData\anaconda3\Library\lib\Qt5Core_conda.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/project/training/Qt/Q1ORM/build-release/Examples/UnitTestExample/Debug/UnitTestExample.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/project/training/Qt/Q1ORM/build-release/bin/Debug/UnitTestExample.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\include_Release;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/project/training/Qt/Q1ORM/Examples/UnitTestExample/../../Releases/Release-0.1/include" /external:I "C:/ProgramData/anaconda3/Library/include/qt" /external:I "C:/ProgramData/anaconda3/Library/include/qt/QtCore" /external:I "C:/ProgramData/anaconda3/Library/./mkspecs/win32-msvc" /external:I "C:/ProgramData/anaconda3/Library/include/qt/QtTest" /external:I "C:/ProgramData/anaconda3/Library/include/qt/QtSql"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_CORE_LIB;QT_NO_DEBUG;QT_TESTLIB_LIB;QT_TESTCASE_BUILDDIR="D:/project/training/Qt/Q1ORM/build-release";QT_SQL_LIB;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_CORE_LIB;QT_NO_DEBUG;QT_TESTLIB_LIB;QT_TESTCASE_BUILDDIR=\"D:/project/training/Qt/Q1ORM/build-release\";QT_SQL_LIB;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\include_Release;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..\..\Releases\Release-0.1\include;C:\ProgramData\anaconda3\Library\include\qt;C:\ProgramData\anaconda3\Library\include\qt\QtCore;C:\ProgramData\anaconda3\Library\.\mkspecs\win32-msvc;C:\ProgramData\anaconda3\Library\include\qt\QtTest;C:\ProgramData\anaconda3\Library\include\qt\QtSql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\include_Release;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..\..\Releases\Release-0.1\include;C:\ProgramData\anaconda3\Library\include\qt;C:\ProgramData\anaconda3\Library\include\qt\QtCore;C:\ProgramData\anaconda3\Library\.\mkspecs\win32-msvc;C:\ProgramData\anaconda3\Library\include\qt\QtTest;C:\ProgramData\anaconda3\Library\include\qt\QtSql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Automatic MOC and UIC for target UnitTestExample</Message>
+      <Command>setlocal
+cd D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen D:/project/training/Qt/Q1ORM/build-release/Examples/UnitTestExample/CMakeFiles/UnitTestExample_autogen.dir/AutogenInfo.json Release
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying Q1ORM.dll next to test executable</Message>
+      <Command>setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory D:/project/training/Qt/Q1ORM/build-release/bin/Release
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different D:/project/training/Qt/Q1ORM/Examples/UnitTestExample/../../Releases/Release-0.1/bin/Q1ORM.dll D:/project/training/Qt/Q1ORM/build-release/bin/Release
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>C:\ProgramData\anaconda3\Library\lib\Qt5Test_conda.lib;C:\ProgramData\anaconda3\Library\lib\Qt5Sql_conda.lib;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..\..\Releases\Release-0.1\lib\Q1ORM.lib;C:\ProgramData\anaconda3\Library\lib\Qt5Core_conda.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/project/training/Qt/Q1ORM/build-release/Examples/UnitTestExample/Release/UnitTestExample.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/project/training/Qt/Q1ORM/build-release/bin/Release/UnitTestExample.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\include_MinSizeRel;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/project/training/Qt/Q1ORM/Examples/UnitTestExample/../../Releases/Release-0.1/include" /external:I "C:/ProgramData/anaconda3/Library/include/qt" /external:I "C:/ProgramData/anaconda3/Library/include/qt/QtCore" /external:I "C:/ProgramData/anaconda3/Library/./mkspecs/win32-msvc" /external:I "C:/ProgramData/anaconda3/Library/include/qt/QtTest" /external:I "C:/ProgramData/anaconda3/Library/include/qt/QtSql"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_CORE_LIB;QT_NO_DEBUG;QT_TESTLIB_LIB;QT_TESTCASE_BUILDDIR="D:/project/training/Qt/Q1ORM/build-release";QT_SQL_LIB;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_CORE_LIB;QT_NO_DEBUG;QT_TESTLIB_LIB;QT_TESTCASE_BUILDDIR=\"D:/project/training/Qt/Q1ORM/build-release\";QT_SQL_LIB;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\include_MinSizeRel;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..\..\Releases\Release-0.1\include;C:\ProgramData\anaconda3\Library\include\qt;C:\ProgramData\anaconda3\Library\include\qt\QtCore;C:\ProgramData\anaconda3\Library\.\mkspecs\win32-msvc;C:\ProgramData\anaconda3\Library\include\qt\QtTest;C:\ProgramData\anaconda3\Library\include\qt\QtSql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\include_MinSizeRel;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..\..\Releases\Release-0.1\include;C:\ProgramData\anaconda3\Library\include\qt;C:\ProgramData\anaconda3\Library\include\qt\QtCore;C:\ProgramData\anaconda3\Library\.\mkspecs\win32-msvc;C:\ProgramData\anaconda3\Library\include\qt\QtTest;C:\ProgramData\anaconda3\Library\include\qt\QtSql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Automatic MOC and UIC for target UnitTestExample</Message>
+      <Command>setlocal
+cd D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen D:/project/training/Qt/Q1ORM/build-release/Examples/UnitTestExample/CMakeFiles/UnitTestExample_autogen.dir/AutogenInfo.json MinSizeRel
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying Q1ORM.dll next to test executable</Message>
+      <Command>setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory D:/project/training/Qt/Q1ORM/build-release/bin/MinSizeRel
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different D:/project/training/Qt/Q1ORM/Examples/UnitTestExample/../../Releases/Release-0.1/bin/Q1ORM.dll D:/project/training/Qt/Q1ORM/build-release/bin/MinSizeRel
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>C:\ProgramData\anaconda3\Library\lib\Qt5Test_conda.lib;C:\ProgramData\anaconda3\Library\lib\Qt5Sql_conda.lib;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..\..\Releases\Release-0.1\lib\Q1ORM.lib;C:\ProgramData\anaconda3\Library\lib\Qt5Core_conda.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/project/training/Qt/Q1ORM/build-release/Examples/UnitTestExample/MinSizeRel/UnitTestExample.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/project/training/Qt/Q1ORM/build-release/bin/MinSizeRel/UnitTestExample.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\include_RelWithDebInfo;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/project/training/Qt/Q1ORM/Examples/UnitTestExample/../../Releases/Release-0.1/include" /external:I "C:/ProgramData/anaconda3/Library/include/qt" /external:I "C:/ProgramData/anaconda3/Library/include/qt/QtCore" /external:I "C:/ProgramData/anaconda3/Library/./mkspecs/win32-msvc" /external:I "C:/ProgramData/anaconda3/Library/include/qt/QtTest" /external:I "C:/ProgramData/anaconda3/Library/include/qt/QtSql"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_CORE_LIB;QT_NO_DEBUG;QT_TESTLIB_LIB;QT_TESTCASE_BUILDDIR="D:/project/training/Qt/Q1ORM/build-release";QT_SQL_LIB;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_CORE_LIB;QT_NO_DEBUG;QT_TESTLIB_LIB;QT_TESTCASE_BUILDDIR=\"D:/project/training/Qt/Q1ORM/build-release\";QT_SQL_LIB;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\include_RelWithDebInfo;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..\..\Releases\Release-0.1\include;C:\ProgramData\anaconda3\Library\include\qt;C:\ProgramData\anaconda3\Library\include\qt\QtCore;C:\ProgramData\anaconda3\Library\.\mkspecs\win32-msvc;C:\ProgramData\anaconda3\Library\include\qt\QtTest;C:\ProgramData\anaconda3\Library\include\qt\QtSql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\include_RelWithDebInfo;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..\..\Releases\Release-0.1\include;C:\ProgramData\anaconda3\Library\include\qt;C:\ProgramData\anaconda3\Library\include\qt\QtCore;C:\ProgramData\anaconda3\Library\.\mkspecs\win32-msvc;C:\ProgramData\anaconda3\Library\include\qt\QtTest;C:\ProgramData\anaconda3\Library\include\qt\QtSql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Automatic MOC and UIC for target UnitTestExample</Message>
+      <Command>setlocal
+cd D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen D:/project/training/Qt/Q1ORM/build-release/Examples/UnitTestExample/CMakeFiles/UnitTestExample_autogen.dir/AutogenInfo.json RelWithDebInfo
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying Q1ORM.dll next to test executable</Message>
+      <Command>setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory D:/project/training/Qt/Q1ORM/build-release/bin/RelWithDebInfo
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different D:/project/training/Qt/Q1ORM/Examples/UnitTestExample/../../Releases/Release-0.1/bin/Q1ORM.dll D:/project/training/Qt/Q1ORM/build-release/bin/RelWithDebInfo
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>C:\ProgramData\anaconda3\Library\lib\Qt5Test_conda.lib;C:\ProgramData\anaconda3\Library\lib\Qt5Sql_conda.lib;D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\..\..\Releases\Release-0.1\lib\Q1ORM.lib;C:\ProgramData\anaconda3\Library\lib\Qt5Core_conda.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/project/training/Qt/Q1ORM/build-release/Examples/UnitTestExample/RelWithDebInfo/UnitTestExample.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/project/training/Qt/Q1ORM/build-release/bin/RelWithDebInfo/UnitTestExample.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/project/training/Qt/Q1ORM/Examples/UnitTestExample/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/project/training/Qt/Q1ORM -BD:/project/training/Qt/Q1ORM/build-release --check-stamp-file D:/project/training/Qt/Q1ORM/build-release/Examples/UnitTestExample/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.31\Modules\CMakeParseArguments.cmake;C:\Program Files\CMake\share\cmake-3.31\Modules\GNUInstallDirs.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5\Qt5Config.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5\Qt5ConfigVersion.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5\Qt5ModuleLocation.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfig.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfigExtras.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfigExtrasMkspecDir.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfigVersion.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreMacros.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5SqlConfig.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5SqlConfigVersion.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5Sql_QODBCDriverPlugin.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5Sql_QPSQLDriverPlugin.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5Sql_QSQLiteDriverPlugin.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Test\Qt5TestConfig.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Test\Qt5TestConfigExtras.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Test\Qt5TestConfigVersion.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/project/training/Qt/Q1ORM/Examples/UnitTestExample/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/project/training/Qt/Q1ORM -BD:/project/training/Qt/Q1ORM/build-release --check-stamp-file D:/project/training/Qt/Q1ORM/build-release/Examples/UnitTestExample/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.31\Modules\CMakeParseArguments.cmake;C:\Program Files\CMake\share\cmake-3.31\Modules\GNUInstallDirs.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5\Qt5Config.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5\Qt5ConfigVersion.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5\Qt5ModuleLocation.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfig.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfigExtras.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfigExtrasMkspecDir.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfigVersion.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreMacros.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5SqlConfig.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5SqlConfigVersion.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5Sql_QODBCDriverPlugin.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5Sql_QPSQLDriverPlugin.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5Sql_QSQLiteDriverPlugin.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Test\Qt5TestConfig.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Test\Qt5TestConfigExtras.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Test\Qt5TestConfigVersion.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/project/training/Qt/Q1ORM/Examples/UnitTestExample/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/project/training/Qt/Q1ORM -BD:/project/training/Qt/Q1ORM/build-release --check-stamp-file D:/project/training/Qt/Q1ORM/build-release/Examples/UnitTestExample/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.31\Modules\CMakeParseArguments.cmake;C:\Program Files\CMake\share\cmake-3.31\Modules\GNUInstallDirs.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5\Qt5Config.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5\Qt5ConfigVersion.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5\Qt5ModuleLocation.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfig.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfigExtras.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfigExtrasMkspecDir.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfigVersion.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreMacros.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5SqlConfig.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5SqlConfigVersion.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5Sql_QODBCDriverPlugin.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5Sql_QPSQLDriverPlugin.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5Sql_QSQLiteDriverPlugin.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Test\Qt5TestConfig.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Test\Qt5TestConfigExtras.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Test\Qt5TestConfigVersion.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/project/training/Qt/Q1ORM/Examples/UnitTestExample/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/project/training/Qt/Q1ORM -BD:/project/training/Qt/Q1ORM/build-release --check-stamp-file D:/project/training/Qt/Q1ORM/build-release/Examples/UnitTestExample/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.31\Modules\CMakeParseArguments.cmake;C:\Program Files\CMake\share\cmake-3.31\Modules\GNUInstallDirs.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5\Qt5Config.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5\Qt5ConfigVersion.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5\Qt5ModuleLocation.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfig.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfigExtras.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfigExtrasMkspecDir.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreConfigVersion.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Core\Qt5CoreMacros.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5SqlConfig.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5SqlConfigVersion.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5Sql_QODBCDriverPlugin.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5Sql_QPSQLDriverPlugin.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Sql\Qt5Sql_QSQLiteDriverPlugin.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Test\Qt5TestConfig.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Test\Qt5TestConfigExtras.cmake;C:\ProgramData\anaconda3\Library\lib\cmake\Qt5Test\Qt5TestConfigVersion.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\mocs_compilation_Debug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\main.cpp" />
+    <ClCompile Include="D:\project\training\Qt\Q1ORM\Examples\SoloExample\applicationdbcontext.cpp" />
+    <ClInclude Include="D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\Q1ORMTests.h" />
+    <ClCompile Include="D:\project\training\Qt\Q1ORM\Examples\UnitTestExample\Q1ORMTests.cpp" />
+    <ClCompile Include="D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\mocs_compilation_Release.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\mocs_compilation_MinSizeRel.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="D:\project\training\Qt\Q1ORM\build-release\Examples\UnitTestExample\UnitTestExample_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="D:\project\training\Qt\Q1ORM\build-release\ZERO_CHECK.vcxproj">
+      <Project>{973D662C-E822-38DE-ACDB-70F69F550635}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

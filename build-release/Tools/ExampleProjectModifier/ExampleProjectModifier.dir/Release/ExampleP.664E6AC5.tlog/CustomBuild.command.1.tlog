@@ -1,0 +1,10 @@
+^D:\PROJECT\TRAINING\QT\Q1ORM\TOOLS\EXAMPLEPROJECTMODIFIER\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/project/training/Qt/Q1ORM -BD:/project/training/Qt/Q1ORM/build-release --check-stamp-file D:/project/training/Qt/Q1ORM/build-release/Tools/ExampleProjectModifier/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

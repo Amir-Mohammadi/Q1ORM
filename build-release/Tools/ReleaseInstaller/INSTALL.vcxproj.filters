@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\project\training\Qt\Q1ORM\build-release\CMakeFiles\612ebebb55d860e67b5ac38b73bfb2a4\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{EA90AE22-4834-3F23-A93F-97F370495126}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
