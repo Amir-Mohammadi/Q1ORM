@@ -3,10 +3,10 @@
 
 
 #include <QString>
-#include <qdebug.h>
-#include <qsqldatabase.h>
-#include <qsqlerror.h>
-#include <qsqlquery.h>
+#include <QDebug>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlQuery>
 
 #include "../../Q1ORM_global.h"
 
