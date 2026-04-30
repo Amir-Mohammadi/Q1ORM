@@ -1,8 +1,23 @@
 # Q1ORM
 
-Q1ORM is a Qt-based ORM for C++ projects that work with PostgreSQL or SQL Server. It helps you define entities, map them to tables, initialize the database schema, and run fluent queries such as `Select`, `Where`, `Join`, `GroupBy`, `Having`, `OrderBy`, and aggregate functions.
+<p align="center">
+  <img src="" alt="Q1ORM banner" width="900" />
+</p>
 
-This README is written to be GitHub-friendly, so you can push the project and have a clear landing page for build steps and usage.
+<p align="center">
+  <b>Qt-based ORM for C++ with PostgreSQL and SQL Server support</b>
+</p>
+
+<p align="center">
+  Define entities, map them to tables, initialize schema, and run fluent queries with ease.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/C%2B%2B-17%2B-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Qt-Compatible-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Supported-316192?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/SQL%20Server-Supported-CC2927?style=for-the-badge" />
+</p>
 
 ## Features
 
