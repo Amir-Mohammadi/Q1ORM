@@ -23,6 +23,7 @@ public:
     bool AddTable(Q1Table q1table);
     bool AddColumn(QString table_name, Q1Column &column);
     bool AddRelation(const Q1Relation &relation);
+    bool CreateTableWithColumns(Q1Table& q1table);
 
     bool DropTable(QString table_name);
     bool DropColumn(QString table_name, QString column_name);
@@ -37,6 +38,9 @@ public:
     bool HasNullData(QString table_name, QString column_name);
 
     bool ConstraintExists(QSqlDatabase &db, const QString &constraint_name);
+
+    QStringList GetTables();
+
 
     QString ErrorMessage() const { return m_lastError; }
 

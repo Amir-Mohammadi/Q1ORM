@@ -16,6 +16,15 @@ public :
         entity.Property(entity.name, "name", false, false);
     }
 
+    static QList<Q1Relation> CreateRelations(Q1Entity<Country>& entity)
+    {
+        QList<Q1Relation> relations;
+
+        relations.append(entity.Relations("countries", "cities", ONE_TO_MANY, "country_id", "id"));
+
+        return relations;
+    }
+
 
 
 };

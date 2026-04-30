@@ -39,21 +39,21 @@ public:
     QList<T> SelectAll() override
     {
         Q1Query<T> query(&entity);
-        return query.ShowList();
+        return query.ToList();
     }
 
     QList<T> SelectJoin(const QString& table, const QString& onClause)
     {
         Q1Query<T> query(&entity);
         query.InnerJoin(table, onClause);
-        return query.ShowList();
+        return query.ToList();
     }
 
     QList<T> SelectInclude(const QStringList& relations)
     {
         Q1Query<T> query(&entity);
         query.Include(relations);
-        return query.ShowList();
+        return query.ToList();
     }
 
 private:

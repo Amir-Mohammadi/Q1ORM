@@ -3,10 +3,18 @@
 
 #include <QString>
 #include <QStringList>
+#include <cstddef>
+#include <type_traits>
+#include <typeinfo>
+#include <utility>
 #include <QVariant>
 #include <QVariantMap>
 #include <QList>
+#include <QMap>
+#include <QDate>
+#include <QDateTime>
 #include <QSqlRecord>
+#include <QSqlQuery>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -108,9 +116,16 @@ public:
                          Q1RelationType type, const QString& foreign_key,
                          const QString& top_table_primary_key)
     {
-
-
         Q1Relation relation(base_table, top_table, type, foreign_key, top_table_primary_key);
+
+        for (const Q1Relation& existing_relation : table.relations)
+        {
+            if (existing_relation.GetConstraintName() == relation.GetConstraintName())
+            {
+                return existing_relation;
+            }
+        }
+
         table.relations.append(relation);
         return relation;
     }
@@ -141,6 +156,16 @@ public:
     Q1Table GetTable() const
     {
         return table;
+    }
+
+    Q1Table* GetTablePtr()
+    {
+        return &table;
+    }
+
+    const Q1Table* GetTablePtr() const
+    {
+        return &table;
     }
 
     //Get Relation
@@ -174,6 +199,35 @@ public:
         return lastJson;
     }
 
+    bool UsesSqlServer() const
+    {
+        return connection && connection->IsSqlServer();
+    }
+
+    QString QuoteIdentifier(const QString &identifier) const
+    {
+        if (!connection)
+        {
+            QString escaped = identifier;
+            escaped.replace('"', "\"\"");
+            return QString("\"%1\"").arg(escaped);
+        }
+
+        return connection->QuoteIdentifier(identifier);
+    }
+
+    QString QuoteStringLiteral(const QString &value) const
+    {
+        if (!connection)
+        {
+            QString escaped = value;
+            escaped.replace('\'', "''");
+            return QString("'%1'").arg(escaped);
+        }
+
+        return connection->QuoteStringLiteral(value);
+    }
+
 
 
 
@@ -192,10 +246,17 @@ public:
         }
 
         QString query = QString(
-                            "SELECT column_name, column_default, is_nullable, is_identity "
-                            "FROM information_schema.columns "
-                            "WHERE table_name = '%1' "
-                            "ORDER BY ordinal_position"
+                            UsesSqlServer()
+                                ? "SELECT COLUMN_NAME AS column_name, COLUMN_DEFAULT AS column_default, "
+                                  "IS_NULLABLE AS is_nullable, "
+                                  "CAST(COLUMNPROPERTY(OBJECT_ID(QUOTENAME(TABLE_SCHEMA) + '.' + QUOTENAME(TABLE_NAME)), COLUMN_NAME, 'IsIdentity') AS INT) AS is_identity "
+                                  "FROM INFORMATION_SCHEMA.COLUMNS "
+                                  "WHERE TABLE_NAME = '%1' "
+                                  "ORDER BY ORDINAL_POSITION"
+                                : "SELECT column_name, column_default, is_nullable, is_identity "
+                                  "FROM information_schema.columns "
+                                  "WHERE table_name = '%1' "
+                                  "ORDER BY ordinal_position"
                             ).arg(table.table_name);
 
         QSqlQuery sql_query(connection->database);
@@ -280,7 +341,7 @@ public:
                 }
             }
 
-            columns.append("\"" + col.name + "\"");
+            columns.append(QuoteIdentifier(col.name));
             placeholders.append("?");
         }
 
@@ -299,13 +360,27 @@ public:
         QString queryStr;
         if (has_auto_pk && !pk_column_name.isEmpty())
         {
-            queryStr = QString("INSERT INTO \"%1\" (%2) VALUES (%3) RETURNING \"%4\"")
-            .arg(table.table_name, columns.join(", "), placeholders.join(", "), pk_column_name);
+            if (UsesSqlServer())
+            {
+                queryStr = QString("INSERT INTO %1 (%2) OUTPUT INSERTED.%3 VALUES (%4)")
+                               .arg(QuoteIdentifier(table.table_name),
+                                    columns.join(", "),
+                                    QuoteIdentifier(pk_column_name),
+                                    placeholders.join(", "));
+            }
+            else
+            {
+                queryStr = QString("INSERT INTO %1 (%2) VALUES (%3) RETURNING %4")
+                               .arg(QuoteIdentifier(table.table_name),
+                                    columns.join(", "),
+                                    placeholders.join(", "),
+                                    QuoteIdentifier(pk_column_name));
+            }
         }
         else
         {
-            queryStr = QString("INSERT INTO \"%1\" (%2) VALUES (%3)")
-            .arg(table.table_name, columns.join(", "), placeholders.join(", "));
+            queryStr = QString("INSERT INTO %1 (%2) VALUES (%3)")
+                           .arg(QuoteIdentifier(table.table_name), columns.join(", "), placeholders.join(", "));
         }
 
         QSqlQuery sql_query(connection->database);
@@ -488,7 +563,7 @@ public:
                 continue; // Don't update primary key
             }
 
-            set_clauses.append("\"" + col.name + "\" = ?");
+            set_clauses.append(QuoteIdentifier(col.name) + " = ?");
             QVariant value;
             auto it = property_map.find(col.name);
 
@@ -553,8 +628,8 @@ public:
             return false;
         }
 
-        QString query = QString("UPDATE \"%1\" SET %2 WHERE %3")
-                            .arg(table.table_name, set_clauses.join(", "), where_clause);
+        QString query = QString("UPDATE %1 SET %2 WHERE %3")
+                            .arg(QuoteIdentifier(table.table_name), set_clauses.join(", "), where_clause);
 
         qDebug() << "Query:" << query;
         qDebug() << "Binding" << values.size() << "values...";
@@ -623,7 +698,7 @@ public:
             return false;
         }
 
-        QString where_clause = QString("\"%1\" = %2").arg(pk_name).arg(id);
+        QString where_clause = QString("%1 = %2").arg(QuoteIdentifier(pk_name)).arg(id);
         return Update(entity, where_clause);
     }
 
@@ -652,8 +727,8 @@ public:
             return false;
         }
 
-        QString query = QString("DELETE FROM \"%1\" WHERE %2")
-                            .arg(table.table_name, where_clause);
+        QString query = QString("DELETE FROM %1 WHERE %2")
+                            .arg(QuoteIdentifier(table.table_name), where_clause);
 
         qDebug() << "Query:" << query;
         qDebug() << "Executing delete...";
@@ -706,7 +781,7 @@ public:
             return false;
         }
 
-        QString where_clause = QString("\"%1\" = %2").arg(pk_name).arg(id);
+        QString where_clause = QString("%1 = %2").arg(QuoteIdentifier(pk_name)).arg(id);
         return Delete(where_clause);
     }
 
@@ -752,14 +827,22 @@ public:
 
         // SELECT clause
         if (!columns.isEmpty()) {
-            query = "SELECT " + columns.join(", ");
+            query = "SELECT ";
+            if (limit > 0 && UsesSqlServer())
+                query += QString("TOP %1 ").arg(limit);
+
+            query += columns.join(", ");
         } else {
-            query = QString("SELECT * FROM \"%1\"").arg(table.table_name);
+            query = "SELECT ";
+            if (limit > 0 && UsesSqlServer())
+                query += QString("TOP %1 ").arg(limit);
+
+            query += QString("* FROM %1").arg(QuoteIdentifier(table.table_name));
         }
 
         // FROM clause (only if columns are specified)
         if (!columns.isEmpty()) {
-            query += QString(" FROM \"%1\"").arg(table.table_name);
+            query += QString(" FROM %1").arg(QuoteIdentifier(table.table_name));
         }
 
         // JOIN clause
@@ -788,7 +871,7 @@ public:
         }
 
         // LIMIT clause
-        if (limit > 0) {
+        if (limit > 0 && !UsesSqlServer()) {
             query += " LIMIT " + QString::number(limit);
         }
 

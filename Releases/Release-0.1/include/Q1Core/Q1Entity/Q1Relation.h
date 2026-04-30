@@ -3,19 +3,19 @@
 
 
 #include <QString>
-#include <qdebug.h>
-#include <qsqldatabase.h>
-#include <qsqlerror.h>
-#include <qsqlquery.h>
+#include <QDebug>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlQuery>
 
 #include "../../Q1ORM_global.h"
 
 enum Q1RelationType
 {
-    ONE_TO_ONE,      // 1:1 relationship (e.g., User -> Profile)
-    ONE_TO_MANY,     // 1:* relationship (e.g., User -> Posts)
-    MANY_TO_ONE,     // *:1 relationship (e.g., Posts -> User)
-    MANY_TO_MANY     // *:* relationship (e.g., Students <-> Courses)
+    ONE_TO_ONE,
+    ONE_TO_MANY,
+    MANY_TO_ONE,
+    MANY_TO_MANY
 };
 
 

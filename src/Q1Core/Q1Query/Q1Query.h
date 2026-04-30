@@ -1,9 +1,12 @@
 #pragma once
 #include "Q1Core/Q1Entity/Q1Relation.h"
 #include "Q1Core/Q1Entity/Q1Table.h"
+#include <algorithm>
+#include <type_traits>
 #include <QString>
 #include <QList>
 #include <QDebug>
+#include <QMap>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -259,7 +262,7 @@ public:
     }
 
     // Display methods
-    QList<Entity>& ShowList()
+    QList<Entity> ShowList()
     {
         if (!repository)
         {
@@ -303,7 +306,7 @@ public:
         return results;
     }
 
-    QList<Entity>& ShowJson()
+    QList<Entity> ShowJson()
     {
         if (!repository)
         {
@@ -650,8 +653,8 @@ private:
             }
         }
 
-        QString sql = QString("SELECT %1 AS __agg FROM \"%2\"")
-                          .arg(selectExpr, repository->GetTable().table_name);
+        QString sql = QString("SELECT %1 AS __agg FROM %2")
+                          .arg(selectExpr, repository->QuoteIdentifier(repository->GetTable().table_name));
 
         if (!joins.isEmpty())
         {
@@ -733,25 +736,30 @@ private:
             return;
         }
 
-        QStringList fkValues;
+        const Q1Table& table = repository->GetTable();
+        const bool relationUsesLocalForeignKey = table.HasColumn(relation.foreign_key);
+        const QString sourceColumn = relationUsesLocalForeignKey ? relation.foreign_key : relation.reference_key;
+        const QString targetColumn = relationUsesLocalForeignKey ? relation.reference_key : relation.foreign_key;
+
+        QStringList keyValues;
         for (const Entity& entity : entities)
         {
-            QString fkValue = GetForeignKeyValue(entity, relation.foreign_key);
-            if (!fkValue.isEmpty() && !fkValues.contains(fkValue))
+            QString keyValue = GetPropertyValue(entity, sourceColumn);
+            if (!keyValue.isEmpty() && !keyValues.contains(keyValue))
             {
-                fkValues.append(fkValue);
+                keyValues.append(keyValue);
             }
         }
 
-        if (fkValues.isEmpty())
+        if (keyValues.isEmpty())
         {
             return;
         }
 
-        QString query = QString("SELECT * FROM \"%1\" WHERE \"%2\" IN (%3)")
-                            .arg(relation.top_table,
-                                 relation.reference_key,
-                                 fkValues.join(", "));
+        QString query = QString("SELECT * FROM %1 WHERE %2 IN (%3)")
+                            .arg(repository->QuoteIdentifier(relation.top_table),
+                                 repository->QuoteIdentifier(targetColumn),
+                                 keyValues.join(", "));
 
         qDebug() << "Eager Loading Query:" << query;
 
@@ -759,11 +767,11 @@ private:
         relation_cache[relation.top_table] = relatedData;
     }
 
-    QString GetForeignKeyValue(const Entity& entity, const QString& fkColumn)
+    QString GetPropertyValue(const Entity& entity, const QString& columnName)
     {
         const QMap<QString, typename Q1Entity<Entity>::PropertyInfo>& propMap = repository->GetPropertyMap();
 
-        auto it = propMap.find(fkColumn);
+        auto it = propMap.find(columnName);
         if (it != propMap.end())
         {
             const typename Q1Entity<Entity>::PropertyInfo& info = it.value();
@@ -787,7 +795,10 @@ private:
             case CHAR:
             {
                 const QString* s = reinterpret_cast<const QString*>(memberPtr);
-                return s ? *s : QString();
+                if (!s)
+                    return QString();
+
+                return repository->QuoteStringLiteral(*s);
             }
             default:
                 return QString();
@@ -828,14 +839,21 @@ private:
                         continue;
                     }
 
-                    QString fkValue = obj[matchingRelation->foreign_key].toVariant().toString();
+                    const bool relationUsesLocalForeignKey = repository->GetTable().HasColumn(matchingRelation->foreign_key);
+                    const QString localColumn = relationUsesLocalForeignKey
+                                                    ? matchingRelation->foreign_key
+                                                    : matchingRelation->reference_key;
+                    const QString relatedColumn = relationUsesLocalForeignKey
+                                                      ? matchingRelation->reference_key
+                                                      : matchingRelation->foreign_key;
+                    const QString localValue = obj[localColumn].toVariant().toString();
 
                     QJsonArray relatedArray;
                     for (const QJsonObject& related : relatedData)
                     {
-                        QString refValue = related[matchingRelation->reference_key].toVariant().toString();
+                        QString relatedValue = related[relatedColumn].toVariant().toString();
 
-                        if (fkValue == refValue)
+                        if (localValue == relatedValue)
                         {
                             relatedArray.append(related);
                         }

@@ -12,16 +12,24 @@ class Q1ORMTests : public QObject
 {
     Q_OBJECT
 
-private:
-    Q1Connection* conn;
-    ApplicationDbContext* ctx;
+protected:
+    Q1Connection* conn = nullptr;
+    ApplicationDbContext* ctx = nullptr;
 
     void setupTestData();
 
+    virtual Q1Driver TestDriver() const = 0;
+    virtual QString DriverLabel() const = 0;
+    virtual QString Host() const = 0;
+    virtual QString DatabaseName() const = 0;
+    virtual QString Username() const = 0;
+    virtual QString Password() const = 0;
+    virtual int Port() const = 0;
+
 private slots:
     // Setup and cleanup
-    void initTestCase();
-    void cleanupTestCase();
+    virtual void initTestCase();
+    virtual void cleanupTestCase();
     void init();
     void cleanup();
 
@@ -76,6 +84,7 @@ private slots:
     void test_include_showList();
     void test_include_showJson();
     void test_include_withWhere();
+    void test_include_reverseCollection();
 
     // Test 12: Combined Operations
     void test_whereOrderByLimit();
@@ -92,6 +101,7 @@ private slots:
     // Test 15: Edge Cases
     void test_emptyResult();
     void test_nullValues();
+    void test_reinitialize_is_clean();
 };
 
 #endif // Q1ORMTESTS_H

@@ -1,7 +1,7 @@
 #ifndef Q1TABLE_H
 #define Q1TABLE_H
 
-#include <QStringlist>
+#include <QStringList>
 
 #include "../../Q1Core/Q1Entity/Q1Column.h"
 #include "../../Q1Core/Q1Entity/Q1Relation.h"
@@ -10,11 +10,20 @@
 
 class Q1ORM_EXPORT Q1Table
 {
-
 public:
     Q1Table() {}
 
     Q1Table(const QString& name) : table_name(name) {}
+
+    void SetName(const QString& name)
+    {
+        table_name = name;
+    }
+
+    QString GetName() const
+    {
+        return table_name;
+    }
 
     void AddColumn(const Q1Column& column)
     {
@@ -27,6 +36,17 @@ public:
     }
 
     Q1Column* FindColumn(const QString& name)
+    {
+        for(int i = 0; i < columns.size(); i++)
+        {
+            if(columns[i].name.toLower() == name.toLower())
+                return &columns[i];
+        }
+
+        return nullptr;
+    }
+
+    const Q1Column* FindColumn(const QString& name) const
     {
         for(int i = 0; i < columns.size(); i++)
         {
@@ -64,12 +84,41 @@ public:
         return pk_columns;
     }
 
+    QList<Q1Column>& GetColumns()
+    {
+        return columns;
+    }
+
+    const QList<Q1Column>& GetColumns() const
+    {
+        return columns;
+    }
+
+    QList<Q1Relation>& GetRelations()
+    {
+        return relations;
+    }
+
+    const QList<Q1Relation>& GetRelations() const
+    {
+        return relations;
+    }
+
+    int ColumnCount() const
+    {
+        return columns.size();
+    }
 
     bool IsValid() const
     {
         return !table_name.isEmpty() && !columns.isEmpty();
     }
 
+    void Clear()
+    {
+        columns.clear();
+        relations.clear();
+    }
 
 public:
     QString table_name;
@@ -77,4 +126,4 @@ public:
     QList<Q1Relation> relations;
 };
 
-#endif // Q1ENTITY_H
+#endif // Q1TABLE_H
