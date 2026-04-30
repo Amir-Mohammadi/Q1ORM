@@ -1,7 +1,7 @@
 # Q1ORM
 
 <p align="center">
-  <img src="Images/banner.png" alt="Q1ORM banner" width="900" />
+  <img src="Images/image.png" alt="Q1ORM banner" width="900" />
 </p>
 
 <p align="center">
