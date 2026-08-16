@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QByteArray>
 #include <QDir>
+#include <qregularexpression.h>
 
 #include "Q1ORM_global.h"
 
@@ -51,7 +52,7 @@ signals:
 private:
     QProcess process;
 
-    QRegExp process_output_regx;
+    QRegularExpression process_output_regx;
     QStringList process_output_numbers = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"};
 
     QString batch_file_directory = QDir::currentPath();

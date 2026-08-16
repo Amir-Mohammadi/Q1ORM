@@ -1,6 +1,7 @@
 #include "Q1Migration.h"
 #include <QSqlError>
 #include <QDebug>
+#include <QRegularExpression>
 
 Q1Migration::Q1Migration(Q1Connection &connection)
     : connection(connection)
@@ -9,6 +10,8 @@ Q1Migration::Q1Migration(Q1Connection &connection)
         translator = Q1MigrationQuery(DatabaseType::PostgreSQL);
     else if (connection.GetDriver() == Q1Driver::SQLSERVER)
         translator = Q1MigrationQuery(DatabaseType::SQLServer);
+    else if (connection.GetDriver() == Q1Driver::MYSQL)
+        translator = Q1MigrationQuery(DatabaseType::MySQL);
 }
 
 QStringList Q1Migration::GetDatabases()
@@ -256,10 +259,13 @@ bool Q1Migration::AddRelation(const Q1Relation &relation)
     }
 
     QStringList existingTables = connection.database.tables();
-    for (QString &t : existingTables) t = t.toLower();
+    QList<QString> lowerTables;
+    for (const QString &t : existingTables) {
+        lowerTables.append(t.toLower());
+    }
 
-    if (!existingTables.contains(relation.base_table.toLower()) ||
-        !existingTables.contains(relation.top_table.toLower()))
+    if (!lowerTables.contains(relation.base_table.toLower()) ||
+        !lowerTables.contains(relation.top_table.toLower()))
     {
         m_lastError = "Tables missing: " + relation.base_table + " or " + relation.top_table;
         qWarning() << "[Warning]" << m_lastError;
@@ -273,23 +279,17 @@ bool Q1Migration::AddRelation(const Q1Relation &relation)
         return false;
     }
 
-    QSqlQuery q(connection.database);
-
-    bool startedTx = connection.database.transaction();
-    if (!startedTx)
+    if (!connection.database.transaction())
     {
-        if (!q.exec("BEGIN"))
-        {
-            m_lastError = q.lastError().text();
-            qWarning() << "Failed to begin transaction:" << m_lastError;
-            return false;
-        }
-        startedTx = true;
+        m_lastError = "Failed to start transaction: " + connection.database.lastError().text();
+        return false;
     }
 
+    QSqlQuery q(connection.database);
     QStringList statements = sql.split(';', Qt::SkipEmptyParts);
-    QRegExp addConstraintRx("\\badd\\s+constraint\\s+((\"[^\"]+\")|([A-Za-z0-9_]+))", Qt::CaseInsensitive);
-    addConstraintRx.setMinimal(true);
+
+    QRegularExpression addConstraintRx("\\badd\\s+constraint\\s+((\"[^\"]+?\")|([A-Za-z0-9_]+))",
+                                       QRegularExpression::CaseInsensitiveOption);
 
     for (QString stmt : statements)
     {
@@ -297,15 +297,18 @@ bool Q1Migration::AddRelation(const Q1Relation &relation)
         if (stmt.isEmpty()) continue;
 
         QString constraintName;
+
         if (stmt.toLower().contains(" add constraint "))
         {
-            int pos = addConstraintRx.indexIn(stmt);
-            if (pos != -1) constraintName = addConstraintRx.cap(1);
-
-            if (!constraintName.isEmpty())
+            QRegularExpressionMatch match = addConstraintRx.match(stmt);
+            if (match.hasMatch())
             {
+                constraintName = match.captured(1);
+
                 if (constraintName.startsWith('"') && constraintName.endsWith('"') && constraintName.size() >= 2)
+                {
                     constraintName = constraintName.mid(1, constraintName.size() - 2);
+                }
 
                 if (ConstraintExists(connection.database, constraintName))
                 {
@@ -318,24 +321,18 @@ bool Q1Migration::AddRelation(const Q1Relation &relation)
         if (!q.exec(stmt))
         {
             QString err = q.lastError().text();
-            if (startedTx)
-            {
-                connection.database.rollback();
-            }
+            connection.database.rollback();
             m_lastError = err;
             qWarning() << "[Error] Failed to execute relation SQL:" << err << "\nQuery:" << stmt;
             return false;
         }
     }
 
-    if (startedTx)
+    if (!connection.database.commit())
     {
-        if (!connection.database.commit())
-        {
-            qWarning() << "[Warning] Failed to commit relation transaction:" << connection.database.lastError().text();
-            connection.database.rollback();
-            return false;
-        }
+        qWarning() << "[Warning] Failed to commit transaction:" << connection.database.lastError().text();
+        connection.database.rollback();
+        return false;
     }
 
     return true;

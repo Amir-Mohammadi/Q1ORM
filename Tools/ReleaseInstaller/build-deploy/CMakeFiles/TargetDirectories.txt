@@ -1,0 +1,4 @@
+C:/Users/ARM/Desktop/Q1ORM/Tools/ReleaseInstaller/build-deploy/CMakeFiles/ReleaseInstaller.dir
+C:/Users/ARM/Desktop/Q1ORM/Tools/ReleaseInstaller/build-deploy/CMakeFiles/INSTALL.dir
+C:/Users/ARM/Desktop/Q1ORM/Tools/ReleaseInstaller/build-deploy/CMakeFiles/ALL_BUILD.dir
+C:/Users/ARM/Desktop/Q1ORM/Tools/ReleaseInstaller/build-deploy/CMakeFiles/ZERO_CHECK.dir

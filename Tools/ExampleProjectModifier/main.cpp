@@ -3,7 +3,7 @@
 #include <QProcess>
 #include <QThread>
 #include <QDir>
-
+#include <QRegularExpression>
 
 QString CURRENT_DIR = QDir::currentPath();
 QString EXAMPLES_DIR = QDir::currentPath() + "/../Examples";
@@ -131,47 +131,54 @@ void RemoveProject(QString project_name)
 
 void GetCommand()
 {
-    QRegExp pattern("^([A-Za-z]:)?[^/:*?\"<>|]+\\b");
+    QRegularExpression pattern("^([A-Za-z]:)?[^/:*?\"<>|]+\\b");
     QTextStream input(stdin);
 
-    QString project_name = "";
-    QString command = "";
+    QString project_name;
     QStringList commands;
-
     bool is_valid = false;
 
-    while(project_name.trimmed().length() == 0 && !is_valid)
+    while (!is_valid)
     {
-        qDebug() << "Enter your command:";
+        qDebug() << "Enter your command (e.g., 'add MyProject'):";
         input.flush();
 
-        command = input.readLine();
-        commands = command.split(" ");
+        QString line = input.readLine();
+        commands = line.split(" ", Qt::SkipEmptyParts);
 
-        if(commands.length() != 2)
+        if (commands.length() < 2)
         {
-            qDebug() << "This command is wrong!";
+            qDebug() << "Error: Command must be 'add/remove <name>'";
+            continue;
         }
 
-        if(commands[0].toLower() != "add" && commands[0].toLower() != "remove")
-        {
-            qDebug() << "This command is wrong!";
-        }
-
+        QString action = commands[0].toLower();
         project_name = commands[1];
-        is_valid = pattern.exactMatch(project_name);
+
+        if (action != "add" && action != "remove")
+        {
+            qDebug() << "Error: Unknown command. Use 'add' or 'remove'.";
+            continue;
+        }
+
+        if (pattern.match(project_name).hasMatch())
+        {
+            is_valid = true;
+        }
+        else
+        {
+            qDebug() << "Error: Invalid project name format.";
+        }
     }
 
-    project_name = project_name + "Example";
+    project_name += "Example";
 
-    if(commands[0].toLower() == "add")
+    if (commands[0].toLower() == "add")
     {
         QString folder_path = CreateFolder(project_name);
-
         CreateFiles(project_name, folder_path);
         FixProjectFile(project_name, folder_path);
         FixSubProjectsFile(project_name, true);
-
         qDebug() << "Project created successfully!";
     }
     else
@@ -179,6 +186,7 @@ void GetCommand()
         RemoveProject(project_name);
     }
 }
+
 
 int main(int argc, char *argv[])
 {

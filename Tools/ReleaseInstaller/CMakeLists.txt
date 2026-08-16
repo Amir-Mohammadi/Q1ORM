@@ -1,28 +1,48 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.21)
 
-project(ReleaseInstaller VERSION 0.1 LANGUAGES CXX)
+project(ReleaseInstaller
+    VERSION 0.1
+    LANGUAGES CXX
+)
 
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(App_Icon "icon.rc")
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
 
 set(PROJECT_NAME "ReleaseInstaller")
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
-add_executable(ReleaseInstaller main.cpp ${App_Icon})
-set_target_properties(ReleaseInstaller PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
-target_link_libraries(ReleaseInstaller Qt${QT_VERSION_MAJOR}::Core)
+qt_standard_project_setup()
+
+
+add_executable(${PROJECT_NAME}
+    main.cpp
+    icon.rc
+)
+
+
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+    Qt6::Core
+)
+
+
+set_target_properties(${PROJECT_NAME}
+    PROPERTIES
+    OUTPUT_NAME "${PROJECT_NAME}"
+)
+
 
 include(GNUInstallDirs)
-install(TARGETS ReleaseInstaller
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+
+install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

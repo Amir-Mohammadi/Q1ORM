@@ -1,184 +1,348 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QProcess>
-#include <QThread>
+#include <QProcessEnvironment>
+#include <QLibraryInfo>
+#include <QDir>
+#include <QFile>
 
+// Auto-detected from the Qt build this program was compiled with,
+// so it works regardless of where Qt 6 is installed on the machine.
+static QString qtBinPath;
+static QString qtPrefixPath;
 
-void ConfigReleaseFolder()
+bool RunProcess(const QString &program,
+                const QStringList &arguments,
+                const QString &workingDirectory)
 {
-    QString path = "./../";
+    QProcess process;
 
-    try
+    process.setWorkingDirectory(workingDirectory);
+
+    // Make sure the Qt runtime DLLs (and Qt-based tools) can be found.
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    QString path = env.value("PATH");
+    if (!qtBinPath.isEmpty() && !path.contains(qtBinPath))
+        env.insert("PATH", qtBinPath + ";" + path);
+    process.setProcessEnvironment(env);
+
+    qDebug() << "\n================================";
+    qDebug() << "Command:" << program;
+    qDebug() << "Arguments:" << arguments;
+    qDebug() << "Directory:" << workingDirectory;
+    qDebug() << "================================\n";
+
+
+    process.start(program, arguments);
+
+
+    if (!process.waitForStarted())
     {
-        path = path.replace('\\', '/');
-
-        QProcess process;
-        QString command = "cmake";
-        QStringList arguments = {"-S", "./", "-B", "./../build-Q1ORM-Desktop_Qt_5_15_2_MSVC2019_64bit-Release"};
-
-        process.setWorkingDirectory(path);
-        process.start(command, arguments);
-
-        if (process.waitForStarted())
-        {
-            if (process.waitForFinished())
-            {
-                QByteArray output = process.readAllStandardOutput();
-                qDebug() << output;
-
-                qDebug() << "";
-                qDebug() << "config successfully!";
-            }
-            else
-            {
-                qDebug() << "Command execution failed!";
-            }
-        }
-        else
-        {
-            qDebug() << "Failed to start the command!";
-        }
+        qDebug() << "FAILED TO START:";
+        qDebug() << process.errorString();
+        return false;
     }
-    catch (...)
+
+
+    process.waitForFinished(-1);
+
+
+    QByteArray output = process.readAllStandardOutput();
+    QByteArray error = process.readAllStandardError();
+
+
+    if (!output.isEmpty())
+        qDebug().noquote() << output;
+
+
+    if (!error.isEmpty())
+        qDebug().noquote() << error;
+
+
+    qDebug() << "Exit Code:" << process.exitCode();
+
+
+    if (process.exitStatus() != QProcess::NormalExit ||
+        process.exitCode() != 0)
     {
-        qDebug() << "There was a problem with the release!";
+        qDebug() << "FAILED!";
+        return false;
     }
+
+
+    qDebug() << "SUCCESS!";
+    return true;
 }
 
-void CleanProject()
-{
-    QString path = "./../";
 
-    try
-    {
-        path = path.replace('\\', '/');
-
-        QProcess process;
-        QString command = "cmake";
-        QStringList arguments = {"--build", "./../build-Q1ORM-Desktop_Qt_5_15_2_MSVC2019_64bit-Release", "--target", "clean", "--config", "release"};
-
-        process.setWorkingDirectory(path);
-        process.start(command, arguments);
-
-        if (process.waitForStarted())
-        {
-            if (process.waitForFinished())
-            {
-                QByteArray output = process.readAllStandardOutput();
-                qDebug() << output;
-
-                qDebug() << "";
-                qDebug() << "clean successfully!";
-            }
-            else
-            {
-                qDebug() << "Command execution failed!";
-            }
-        }
-        else
-        {
-            qDebug() << "Failed to start the command!";
-        }
-    }
-    catch (...)
-    {
-        qDebug() << "There was a problem with the release!";
-    }
-}
-
-void BuildProject()
-{
-    QString path = "./../";
-
-    try
-    {
-        path = path.replace('\\', '/');
-
-        QProcess process;
-        QString command = "cmake";
-        QStringList arguments = {"--build", "./../build-Q1ORM-Desktop_Qt_5_15_2_MSVC2019_64bit-Release", "--target", "Src", "--config", "release"};
-
-        process.setWorkingDirectory(path);
-        process.start(command, arguments);
-
-        if (process.waitForStarted())
-        {
-            if (process.waitForFinished())
-            {
-                QByteArray output = process.readAllStandardOutput();
-                qDebug() << output;
-
-                qDebug() << "";
-                qDebug() << "build successfully!";
-            }
-            else
-            {
-                qDebug() << "Command execution failed!";
-            }
-        }
-        else
-        {
-            qDebug() << "Failed to start the command!";
-        }
-    }
-    catch (...)
-    {
-        qDebug() << "There was a problem with the release!";
-    }
-}
-
-void InstallRelease()
-{
-    QString path = "./../../build-Q1ORM-Desktop_Qt_5_15_2_MSVC2019_64bit-Release/Src";
-
-    try
-    {
-        path = path.replace('\\', '/');
-
-        QProcess process;
-        QString command = "cmake";
-        QStringList arguments = {"--install", "./"};
-
-        process.setWorkingDirectory(path);
-        process.start(command, arguments);
-
-        if (process.waitForStarted())
-        {
-            if (process.waitForFinished())
-            {
-                QByteArray output = process.readAllStandardOutput();
-                qDebug() << output;
-
-                qDebug() << "";
-                qDebug() << "installed successfully!";
-            }
-            else
-            {
-                qDebug() << "Command execution failed!";
-            }
-        }
-        else
-        {
-            qDebug() << "Failed to start the command!";
-        }
-    }
-    catch (...)
-    {
-        qDebug() << "There was a problem with the release!";
-    }
-}
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QCoreApplication app(argc, argv);
 
-    ConfigReleaseFolder();
-    CleanProject();
-    BuildProject();
-    InstallRelease();
 
-    QThread::msleep(1500);
+    /*
+        Example structure:
 
-    a.exit();
+        Q1ORM
+        |
+        |-- CMakeLists.txt
+        |-- Src
+        |-- Builder
+             |
+             |-- Q1ORMBuilder.exe
+
+    */
+
+
+    // Locate the Qt installation this program was built with.
+    qtBinPath =
+        QLibraryInfo::path(QLibraryInfo::BinariesPath);
+    qtPrefixPath =
+        QDir(QDir(qtBinPath).absoluteFilePath("..")).canonicalPath();
+
+    qDebug() << "Qt Bin Path:" << qtBinPath;
+    qDebug() << "Qt Prefix Path:" << qtPrefixPath;
+
+
+    QString builderPath =
+        QCoreApplication::applicationDirPath();
+
+
+    QString projectPath =
+        QDir(builderPath)
+            .absoluteFilePath("../");
+
+
+    projectPath =
+        QDir(projectPath)
+            .canonicalPath();
+
+
+
+    QString buildPath =
+        QDir(projectPath)
+            .absoluteFilePath(
+                "build-Q1ORM-Qt6-MSVC2022-Release"
+                );
+
+
+
+    qDebug() << "Project Path:";
+    qDebug() << projectPath;
+
+
+    qDebug() << "Build Path:";
+    qDebug() << buildPath;
+
+
+
+    /*
+        1. CMake Configure
+    */
+
+    if(!RunProcess(
+            "cmake",
+            {
+                "-S",
+                projectPath,
+
+                "-B",
+                buildPath,
+
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_PREFIX_PATH=" + QDir::toNativeSeparators(qtPrefixPath)
+            },
+            projectPath))
+    {
+        qDebug() << "CONFIGURE FAILED!";
+        return 1;
+    }
+
+
+
+    /*
+        2. Clean
+    */
+
+    if(!RunProcess(
+            "cmake",
+            {
+                "--build",
+                buildPath,
+
+                "--target",
+                "clean",
+
+                "--config",
+                "Release"
+            },
+            projectPath))
+    {
+        qDebug() << "CLEAN FAILED!";
+        return 1;
+    }
+
+
+
+
+    /*
+        3. Build Library / DLL + Example executables
+    */
+
+    if(!RunProcess(
+            "cmake",
+            {
+                "--build",
+                buildPath,
+
+                "--target",
+                "Src",
+
+                "--target",
+                "DatabaseInstallExample",
+
+                "--target",
+                "SoloExample",
+
+                "--target",
+                "UnitTestExample",
+
+                "--config",
+                "Release"
+            },
+            projectPath))
+    {
+        qDebug() << "BUILD FAILED!";
+        return 1;
+    }
+
+
+
+
+    /*
+        5. Install
+    */
+
+    if(!RunProcess(
+            "cmake",
+            {
+                "--install",
+                buildPath,
+
+                "--config",
+                "Release",
+
+                "--component",
+                "Q1ORM_Library"
+            },
+            projectPath))
+    {
+        qDebug() << "INSTALL FAILED!";
+        return 1;
+    }
+
+
+
+    /*
+        6. Deploy example executables into the release bin directory
+    */
+
+    QString releaseBinPath =
+        QDir(QDir(QDir(projectPath).absoluteFilePath("Releases"))
+                 .absoluteFilePath("Release-0.1"))
+            .absoluteFilePath("bin");
+
+    QDir releaseBinDir(releaseBinPath);
+    if (!releaseBinDir.exists())
+    {
+        qDebug() << "RELEASE BIN DIRECTORY MISSING!";
+        qDebug() << releaseBinPath;
+        return 1;
+    }
+
+    QStringList exampleExecutables = {};
+
+    struct ExeDeploy
+    {
+        QString source;
+        QString fileName;
+    };
+
+    QList<ExeDeploy> deployList =
+    {
+        {
+            QDir(buildPath).absoluteFilePath("src/Release/Q1ORM.dll"),
+            "Q1ORM.dll"
+        },
+        {
+            QDir(buildPath)
+                .absoluteFilePath("Examples/DatabaseInstallExample/Release/DatabaseInstallExample.exe"),
+            "DatabaseInstallExample.exe"
+        },
+        {
+            QDir(buildPath)
+                .absoluteFilePath("Examples/SoloExample/Release/SoloExample.exe"),
+            "SoloExample.exe"
+        },
+        {
+            QDir(buildPath)
+                .absoluteFilePath("bin/Release/UnitTestExample.exe"),
+            "UnitTestExample.exe"
+        }
+    };
+
+    for (const ExeDeploy &entry : deployList)
+    {
+        if (!QFile::exists(entry.source))
+        {
+            qDebug() << "DEPLOY SOURCE MISSING:" << entry.source;
+            return 1;
+        }
+
+        QString destination =
+            QDir(releaseBinDir).absoluteFilePath(entry.fileName);
+        QDir().remove(destination);
+        if (!QFile::copy(entry.source, destination))
+        {
+            qDebug() << "DEPLOY COPY FAILED:"
+                     << entry.source << "->" << destination;
+            return 1;
+        }
+        qDebug() << "Deployed:" << destination;
+    }
+
+
+
+    /*
+        7. Deploy Qt runtime (Qt6Core, Qt6Sql, SQL plugins) via windeployqt
+    */
+
+    QString windeployqt = QDir(qtBinPath).absoluteFilePath("windeployqt.exe");
+
+    QString deployTarget =
+        QDir(releaseBinDir).absoluteFilePath("DatabaseInstallExample.exe");
+
+    if(!RunProcess(
+            windeployqt,
+            {
+                "--no-translations",
+                "--no-opengl-sw",
+                "--force",
+                deployTarget
+            },
+            projectPath))
+    {
+        qDebug() << "QT RUNTIME DEPLOY FAILED!";
+        return 1;
+    }
+
+
+
+    qDebug() << "\n==============================";
+    qDebug() << "Q1ORM BUILD COMPLETED";
+    qDebug() << "==============================";
+
+
     return 0;
 }

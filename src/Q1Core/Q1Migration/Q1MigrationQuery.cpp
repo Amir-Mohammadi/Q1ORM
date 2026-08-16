@@ -13,8 +13,9 @@ QString Q1MigrationQuery::GetDatabasesSQL()
     {
     case DatabaseType::SQLServer:
         return "SELECT name FROM sys.databases ORDER BY name";
-    case DatabaseType::PostgreSQL:
     case DatabaseType::MySQL:
+        return "SHOW DATABASES";
+    case DatabaseType::PostgreSQL:
     case DatabaseType::SQLite:
     default:
         return "SELECT datname FROM pg_database WHERE datistemplate = false";
@@ -47,7 +48,21 @@ QString Q1MigrationQuery::GetColumnsSQL(QString table_name)
                    "ORDER BY c.ORDINAL_POSITION")
             .arg(EscapeSqlString(table_name));
     case DatabaseType::PostgreSQL:
+        return QString(
+                   "SELECT column_name, data_type, character_maximum_length, is_nullable, column_default, is_identity, ordinal_position, "
+                   "(SELECT constraint_name FROM information_schema.key_column_usage "
+                   "WHERE table_name='%1' AND column_name = c.column_name) AS constraint_name "
+                   "FROM information_schema.columns c WHERE table_name='%1' ORDER BY ordinal_position")
+            .arg(EscapeSqlString(table_name));
     case DatabaseType::MySQL:
+        return QString(
+                   "SELECT column_name, data_type, character_maximum_length, is_nullable, column_default, "
+                   "IF(extra LIKE '%auto_increment%', 1, 0) AS is_identity, ordinal_position, "
+                   "(SELECT constraint_name FROM information_schema.key_column_usage "
+                   "WHERE table_schema = DATABASE() AND table_name='%1' AND column_name = c.column_name) AS constraint_name "
+                   "FROM information_schema.columns c "
+                   "WHERE table_schema = DATABASE() AND table_name='%1' ORDER BY ordinal_position")
+            .arg(EscapeSqlString(table_name));
     case DatabaseType::SQLite:
     default:
         return QString(
@@ -87,10 +102,14 @@ QString Q1MigrationQuery::AddDatabaseSQL(QString database_name)
         return QString("IF DB_ID(N'%1') IS NULL CREATE DATABASE %2")
             .arg(EscapeSqlString(database_name), QuoteIdentifier(database_name));
     case DatabaseType::PostgreSQL:
+        return QString("CREATE DATABASE %1 WITH ENCODING='UTF8' CONNECTION LIMIT=-1")
+            .arg(QuoteIdentifier(database_name));
     case DatabaseType::MySQL:
+        return QString("CREATE DATABASE %1 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+            .arg(QuoteIdentifier(database_name));
     case DatabaseType::SQLite:
     default:
-        return QString("CREATE DATABASE \"%1\" WITH ENCODING='UTF8' CONNECTION LIMIT=-1").arg(database_name);
+        return QString("");
     }
 }
 
@@ -118,10 +137,12 @@ QString Q1MigrationQuery::AddTableSQL(Q1Table &q1table)
                  QuoteIdentifier(q1table.table_name),
                  column_defs.join(", "));
     case DatabaseType::PostgreSQL:
-    case DatabaseType::MySQL:
     case DatabaseType::SQLite:
     default:
         return QString("CREATE TABLE IF NOT EXISTS \"%1\" (%2)")
+            .arg(q1table.table_name, column_defs.join(", "));
+    case DatabaseType::MySQL:
+        return QString("CREATE TABLE IF NOT EXISTS `%1` (%2)")
             .arg(q1table.table_name, column_defs.join(", "));
     }
 }
@@ -133,8 +154,9 @@ QString Q1MigrationQuery::AddColumnSQL(QString table_name, const Q1Column &colum
     case DatabaseType::SQLServer:
         return QString("ALTER TABLE %1 ADD %2")
             .arg(QuoteIdentifier(table_name), ColumnProperty(column));
-    case DatabaseType::PostgreSQL:
     case DatabaseType::MySQL:
+        return QString("ALTER TABLE `%1` ADD COLUMN %2").arg(table_name, ColumnProperty(column));
+    case DatabaseType::PostgreSQL:
     case DatabaseType::SQLite:
     default:
         return QString("ALTER TABLE \"%1\" ADD COLUMN %2").arg(table_name, ColumnProperty(column));
@@ -204,6 +226,19 @@ QString Q1MigrationQuery::AddRelationSQL(const Q1Relation &relation)
                      QuoteIdentifier(relation.reference_key));
         }
 
+        if (db_type == DatabaseType::MySQL)
+        {
+            return QString(
+                       "CREATE TABLE IF NOT EXISTS `%1` ("
+                       "`%2` INTEGER NOT NULL, "
+                       "`%3` INTEGER NOT NULL, "
+                       "PRIMARY KEY (`%2`, `%3`), "
+                       "CONSTRAINT fk_%1_%2 FOREIGN KEY (`%2`) REFERENCES `%4`(`%5`) ON DELETE CASCADE, "
+                       "CONSTRAINT fk_%1_%3 FOREIGN KEY (`%3`) REFERENCES `%6`(`%7`) ON DELETE CASCADE)")
+                .arg(junction, base_col, top_col, relation.base_table, relation.foreign_key,
+                     relation.top_table, relation.reference_key);
+        }
+
         return QString(
                    "CREATE TABLE IF NOT EXISTS \"%1\" ("
                    "\"%2\" INTEGER NOT NULL, "
@@ -242,6 +277,26 @@ QString Q1MigrationQuery::AddRelationSQL(const Q1Relation &relation)
                  relation.GetOnDeleteString(), relation.GetOnUpdateString());
     }
 
+    if (db_type == DatabaseType::MySQL)
+    {
+        if (relation.type == ONE_TO_ONE)
+        {
+            const QString uqName = QString("uq_%1_%2").arg(fkBase, fkColumn).toLower();
+            const QString uqSql = QString("ALTER TABLE `%1` ADD CONSTRAINT `%2` UNIQUE (`%3`)")
+                                      .arg(fkBase, uqName, fkColumn);
+            const QString fkSql = QString("ALTER TABLE `%1` ADD CONSTRAINT `%2` FOREIGN KEY (`%3`) "
+                                          "REFERENCES `%4`(`%5`) ON DELETE %6 ON UPDATE %7")
+                                      .arg(fkBase, fkName, fkColumn, fkTop, fkRefCol,
+                                           relation.GetOnDeleteString(), relation.GetOnUpdateString());
+            return uqSql + "; " + fkSql;
+        }
+
+        return QString("ALTER TABLE `%1` ADD CONSTRAINT `%2` FOREIGN KEY (`%3`) "
+                       "REFERENCES `%4`(`%5`) ON DELETE %6 ON UPDATE %7")
+            .arg(fkBase, fkName, fkColumn, fkTop, fkRefCol,
+                 relation.GetOnDeleteString(), relation.GetOnUpdateString());
+    }
+
     if (relation.type == ONE_TO_ONE)
     {
         const QString uqName = QString("uq_%1_%2").arg(fkBase, fkColumn).toLower();
@@ -267,8 +322,9 @@ QString Q1MigrationQuery::DropTableSQL(QString table_name)
     case DatabaseType::SQLServer:
         return QString("IF OBJECT_ID(N'%1', N'U') IS NOT NULL DROP TABLE %2")
             .arg(EscapeSqlString(table_name), QuoteIdentifier(table_name));
-    case DatabaseType::PostgreSQL:
     case DatabaseType::MySQL:
+        return QString("DROP TABLE IF EXISTS `%1`").arg(table_name);
+    case DatabaseType::PostgreSQL:
     case DatabaseType::SQLite:
     default:
         return QString("DROP TABLE IF EXISTS \"%1\" CASCADE").arg(table_name);
@@ -288,8 +344,9 @@ QString Q1MigrationQuery::DropColumnSQL(QString table_name, QString column_name)
                  EscapeSqlString(column_name),
                  QuoteIdentifier(table_name),
                  QuoteIdentifier(column_name));
-    case DatabaseType::PostgreSQL:
     case DatabaseType::MySQL:
+        return QString("ALTER TABLE `%1` DROP COLUMN `%2`").arg(table_name, column_name);
+    case DatabaseType::PostgreSQL:
     case DatabaseType::SQLite:
     default:
         return QString("ALTER TABLE \"%1\" DROP COLUMN IF EXISTS \"%2\" CASCADE").arg(table_name, column_name);
@@ -301,6 +358,9 @@ QString Q1MigrationQuery::DropColumnNullableSQL(QString table_name, QString colu
     if (db_type == DatabaseType::SQLServer)
         return AlterColumnNullabilitySQL(table_name, column_name, false);
 
+    if (db_type == DatabaseType::MySQL)
+        return QString("ALTER TABLE `%1` MODIFY COLUMN `%2` INT NOT NULL").arg(table_name, column_name);
+
     return QString("ALTER TABLE \"%1\" ALTER COLUMN \"%2\" SET NOT NULL").arg(table_name, column_name);
 }
 
@@ -309,6 +369,9 @@ QString Q1MigrationQuery::DropColumnDefaultSQL(QString table_name, QString colum
     if (db_type == DatabaseType::SQLServer)
         return DropDefaultConstraintSQL(table_name, column_name);
 
+    if (db_type == DatabaseType::MySQL)
+        return QString("ALTER TABLE `%1` ALTER COLUMN `%2` DROP DEFAULT").arg(table_name, column_name);
+
     return QString("ALTER TABLE \"%1\" ALTER COLUMN \"%2\" DROP DEFAULT").arg(table_name, column_name);
 }
 
@@ -316,6 +379,9 @@ QString Q1MigrationQuery::SetColumnNullableSQL(QString table_name, QString colum
 {
     if (db_type == DatabaseType::SQLServer)
         return AlterColumnNullabilitySQL(table_name, column_name, true);
+
+    if (db_type == DatabaseType::MySQL)
+        return QString("ALTER TABLE `%1` MODIFY COLUMN `%2` INT NULL").arg(table_name, column_name);
 
     return QString("ALTER TABLE \"%1\" ALTER COLUMN \"%2\" DROP NOT NULL").arg(table_name, column_name);
 }
@@ -331,6 +397,9 @@ QString Q1MigrationQuery::SetColumnDefaultSQL(QString table_name, QString column
                  FormatDefaultExpression(default_value),
                  QuoteIdentifier(column_name));
     }
+
+    if (db_type == DatabaseType::MySQL)
+        return QString("ALTER TABLE `%1` ALTER COLUMN `%2` SET DEFAULT %3").arg(table_name, column_name, default_value);
 
     return QString("ALTER TABLE \"%1\" ALTER COLUMN \"%2\" SET DEFAULT %3").arg(table_name, column_name, default_value);
 }
@@ -351,6 +420,9 @@ QString Q1MigrationQuery::UpdateColumnSizeSQL(QString table_name, QString column
                  QString::number(size));
     }
 
+    if (db_type == DatabaseType::MySQL)
+        return QString("ALTER TABLE `%1` MODIFY COLUMN `%2` VARCHAR(%3)").arg(table_name, column_name).arg(size);
+
     return QString("ALTER TABLE \"%1\" ALTER COLUMN \"%2\" TYPE VARCHAR(%3)").arg(table_name, column_name).arg(size);
 }
 
@@ -361,8 +433,9 @@ QString Q1MigrationQuery::HasNullDataSQL(QString table_name, QString column_name
     case DatabaseType::SQLServer:
         return QString("SELECT COUNT(*) FROM %1 WHERE %2 IS NULL")
             .arg(QuoteIdentifier(table_name), QuoteIdentifier(column_name));
-    case DatabaseType::PostgreSQL:
     case DatabaseType::MySQL:
+        return QString("SELECT COUNT(*) FROM `%1` WHERE `%2` IS NULL").arg(table_name, column_name);
+    case DatabaseType::PostgreSQL:
     case DatabaseType::SQLite:
     default:
         return QString("SELECT COUNT(*) FROM \"%1\" WHERE \"%2\" IS NULL").arg(table_name, column_name);
@@ -395,6 +468,31 @@ QString Q1MigrationQuery::ColumnProperty(const Q1Column &column) const
     }
 
     QString type = ColumnTypeSql(column);
+
+    if (db_type == DatabaseType::MySQL)
+    {
+        if (column.primary_key && Q1Column::IsIdentityDefault(column.default_value))
+        {
+            return QString("`%1` %2 AUTO_INCREMENT PRIMARY KEY")
+                .arg(column.name, ColumnTypeSql(column));
+        }
+
+        QStringList parts;
+        parts << QString("`%1`").arg(column.name);
+        parts << type;
+
+        if (!column.nullable)
+            parts << "NOT NULL";
+
+        if (column.primary_key)
+            parts << "PRIMARY KEY";
+
+        const QString default_clause = NormalizeDefaultValue(column);
+        if (!default_clause.isEmpty())
+            parts << QString("DEFAULT %1").arg(default_clause);
+
+        return parts.join(" ");
+    }
 
     if (column.primary_key && Q1Column::IsIdentityDefault(column.default_value))
     {
@@ -432,6 +530,13 @@ QString Q1MigrationQuery::QuoteIdentifier(const QString &identifier) const
         QString escaped = identifier;
         escaped.replace(']', "]]");
         return QString("[%1]").arg(escaped);
+    }
+
+    if (db_type == DatabaseType::MySQL)
+    {
+        QString escaped = identifier;
+        escaped.replace('`', "``");
+        return QString("`%1`").arg(escaped);
     }
 
     QString escaped = identifier;
