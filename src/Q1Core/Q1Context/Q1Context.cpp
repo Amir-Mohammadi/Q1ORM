@@ -62,6 +62,16 @@ void Q1Context::InitialDatabase()
 {
     if (!connection || !query) return;
 
+    if (connection->IsSqlite())
+    {
+        if (!connection->Connect())
+        {
+            qCritical() << "Failed to open SQLite database" << database_name
+                        << "-" << connection->ErrorMessage();
+        }
+        return;
+    }
+
     if (!connection->RootConnect())
     {
         qCritical() << "Cannot connect to server:" << connection->ErrorMessage();

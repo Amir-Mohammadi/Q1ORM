@@ -12,11 +12,19 @@ Q1Migration::Q1Migration(Q1Connection &connection)
         translator = Q1MigrationQuery(DatabaseType::SQLServer);
     else if (connection.GetDriver() == Q1Driver::MYSQL)
         translator = Q1MigrationQuery(DatabaseType::MySQL);
+    else if (connection.GetDriver() == Q1Driver::SQLITE)
+        translator = Q1MigrationQuery(DatabaseType::SQLite);
 }
 
 QStringList Q1Migration::GetDatabases()
 {
     QStringList databases;
+
+    if (connection.IsSqlite())
+    {
+        databases.append(connection.GetDatabaseName());
+        return databases;
+    }
 
     if (!connection.RootConnect())
     {
@@ -106,6 +114,12 @@ QList<Q1Column> Q1Migration::GetColumns(QString table_name)
 
 bool Q1Migration::AddDatabase(QString database_name)
 {
+    if (connection.IsSqlite())
+    {
+        Q_UNUSED(database_name);
+        return connection.Connect();
+    }
+
     if (!connection.RootConnect())
     {
         m_lastError = "Cannot connect to server: " + connection.ErrorMessage();
@@ -271,7 +285,7 @@ bool Q1Migration::AddRelation(const Q1Relation &relation)
         qWarning() << "[Warning]" << m_lastError;
         return false;
     }
-
+    translator.SetDatabase(connection.database);
     QString sql = translator.AddRelationSQL(relation);
     if (sql.isEmpty())
     {
@@ -391,6 +405,12 @@ bool Q1Migration::DropColumnNullable(QString table_name, QString column_name)
     }
 
     QString query = translator.DropColumnNullableSQL(table_name, column_name);
+    if (query.isEmpty())
+    {
+        connection.Disconnect();
+        return true;
+    }
+
     QSqlQuery sql(connection.database);
 
     bool success = sql.exec(query);
@@ -413,6 +433,12 @@ bool Q1Migration::DropColumnDefault(QString table_name, QString column_name)
     }
 
     QString query = translator.DropColumnDefaultSQL(table_name, column_name);
+    if (query.isEmpty())
+    {
+        connection.Disconnect();
+        return true;
+    }
+
     QSqlQuery sql(connection.database);
 
     bool success = sql.exec(query);
@@ -435,6 +461,12 @@ bool Q1Migration::SetColumnNullable(QString table_name, QString column_name)
     }
 
     QString query = translator.SetColumnNullableSQL(table_name, column_name);
+    if (query.isEmpty())
+    {
+        connection.Disconnect();
+        return true;
+    }
+
     QSqlQuery sql(connection.database);
 
     bool success = sql.exec(query);
@@ -457,6 +489,12 @@ bool Q1Migration::setColumnDefault(QString table_name, QString column_name, QStr
     }
 
     QString query = translator.SetColumnDefaultSQL(table_name, column_name, default_value);
+    if (query.isEmpty())
+    {
+        connection.Disconnect();
+        return true;
+    }
+
     QSqlQuery sql(connection.database);
 
     bool success = sql.exec(query);
@@ -479,6 +517,12 @@ bool Q1Migration::UpdateColumnSize(QString table_name, QString column_name, int 
     }
 
     QString query = translator.UpdateColumnSizeSQL(table_name, column_name, size);
+    if (query.isEmpty())
+    {
+        connection.Disconnect();
+        return true;
+    }
+
     QSqlQuery sql(connection.database);
 
     bool success = sql.exec(query);
