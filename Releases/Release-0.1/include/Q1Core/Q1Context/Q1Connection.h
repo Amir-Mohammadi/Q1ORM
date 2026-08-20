@@ -16,7 +16,8 @@ enum Q1Driver
 {
     POSTGRE_SQL,
     SQLSERVER,
-    MYSQL
+    MYSQL,
+    SQLITE
 };
 
 class Q1ORM_EXPORT Q1Connection
@@ -112,6 +113,11 @@ public: // Getter
     bool IsMySql() const
     {
         return driver == MYSQL;
+    }
+
+    bool IsSqlite() const
+    {
+        return driver == SQLITE;
     }
 
     QString GetHostName() const
@@ -324,9 +330,9 @@ private: // Connection Parameters
     bool root_is_open = false;
 
 private: // Defaults
-    QStringList default_databases = {"postgres", "master", ""};
-    QStringList drivers = {"QPSQL", "QODBC", "QMYSQL"};
-    QList<int> ports = {5432, 1433, 3306};
+    QStringList default_databases = {"postgres", "master", "", ""};
+    QStringList drivers = {"QPSQL", "QODBC", "QMYSQL", "QSQLITE"};
+    QList<int> ports = {5432, 1433, 3306, 0};
 };
 
 #endif // Q1CONNECTION_H

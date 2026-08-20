@@ -16,7 +16,8 @@ enum Q1Driver
 {
     POSTGRE_SQL,
     SQLSERVER,
-    MYSQL
+    MYSQL,
+    SQLITE
 };
 
 class Q1ORM_EXPORT Q1Connection
@@ -31,6 +32,11 @@ public:
         this->database_name = database_name;
         this->username = username;
         this->password = password;
+
+        if (IsSqlite() && this->database_name.isEmpty())
+        {
+            this->database_name = "sqlite_test.db";
+        }
 
         if(port != 0)
         {
@@ -55,6 +61,10 @@ public: // Setter
         this->driver = driver;
         driver_name = drivers[driver];
         port = ports[driver];
+        if (IsSqlite() && this->database_name.isEmpty())
+        {
+            this->database_name = "sqlite_test.db";
+        }
         ApplyConnectionSettings();
     }
 
@@ -73,6 +83,10 @@ public: // Setter
     void SetDatabaseName(QString database_name)
     {
         this->database_name = database_name;
+        if (IsSqlite() && this->database_name.isEmpty())
+        {
+            this->database_name = "sqlite_test.db";
+        }
         ApplyConnectionSettings();
     }
 
@@ -112,6 +126,11 @@ public: // Getter
     bool IsMySql() const
     {
         return driver == MYSQL;
+    }
+
+    bool IsSqlite() const
+    {
+        return driver == SQLITE;
     }
 
     QString GetHostName() const
@@ -324,9 +343,9 @@ private: // Connection Parameters
     bool root_is_open = false;
 
 private: // Defaults
-    QStringList default_databases = {"postgres", "master", ""};
-    QStringList drivers = {"QPSQL", "QODBC", "QMYSQL"};
-    QList<int> ports = {5432, 1433, 3306};
+    QStringList default_databases = {"postgres", "master", "", ""};
+    QStringList drivers = {"QPSQL", "QODBC", "QMYSQL", "QSQLITE"};
+    QList<int> ports = {5432, 1433, 3306, 0};
 };
 
 #endif // Q1CONNECTION_H

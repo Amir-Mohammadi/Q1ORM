@@ -17,6 +17,7 @@ QString Q1MigrationQuery::GetDatabasesSQL()
         return "SHOW DATABASES";
     case DatabaseType::PostgreSQL:
     case DatabaseType::SQLite:
+        return "PRAGMA database_list";
     default:
         return "SELECT datname FROM pg_database WHERE datistemplate = false";
     }
@@ -64,6 +65,19 @@ QString Q1MigrationQuery::GetColumnsSQL(QString table_name)
                    "WHERE table_schema = DATABASE() AND table_name='%1' ORDER BY ordinal_position")
             .arg(EscapeSqlString(table_name));
     case DatabaseType::SQLite:
+        return QString(
+                   "SELECT "
+                   "name AS column_name, "
+                   "type AS data_type, "
+                   "NULL AS character_maximum_length, "
+                   "CASE WHEN \"notnull\" = 0 THEN 'YES' ELSE 'NO' END AS is_nullable, "
+                   "dflt_value AS column_default, "
+                   "CASE WHEN pk > 0 THEN 1 ELSE 0 END AS is_identity, "
+                   "cid + 1 AS ordinal_position, "
+                   "NULL AS constraint_name "
+                   "FROM pragma_table_info('%1') "
+                   "ORDER BY cid")
+            .arg(EscapeSqlString(table_name));
     default:
         return QString(
                    "SELECT column_name, data_type, character_maximum_length, is_nullable, column_default, is_identity, ordinal_position, "
@@ -85,7 +99,17 @@ QString Q1MigrationQuery::ConstraintExistsSQL(const QString &constraint_name)
             .arg(EscapeSqlString(constraint_name));
     case DatabaseType::PostgreSQL:
     case DatabaseType::MySQL:
+        return QString(
+                   "SELECT COUNT(*) FROM information_schema.table_constraints "
+                   "WHERE LOWER(constraint_name) = LOWER('%1')")
+            .arg(EscapeSqlString(constraint_name));
     case DatabaseType::SQLite:
+        return QString(
+                   "SELECT COUNT(*) "
+                   "FROM sqlite_master "
+                   "WHERE type IN ('table', 'index') "
+                   "AND LOWER(sql) LIKE LOWER('%%CONSTRAINT %1%%')")
+            .arg(EscapeSqlString(constraint_name));
     default:
         return QString(
                    "SELECT COUNT(*) FROM information_schema.table_constraints "
@@ -108,6 +132,7 @@ QString Q1MigrationQuery::AddDatabaseSQL(QString database_name)
         return QString("CREATE DATABASE %1 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
             .arg(QuoteIdentifier(database_name));
     case DatabaseType::SQLite:
+        return QString();
     default:
         return QString("");
     }
@@ -138,11 +163,13 @@ QString Q1MigrationQuery::AddTableSQL(Q1Table &q1table)
                  column_defs.join(", "));
     case DatabaseType::PostgreSQL:
     case DatabaseType::SQLite:
-    default:
         return QString("CREATE TABLE IF NOT EXISTS \"%1\" (%2)")
-            .arg(q1table.table_name, column_defs.join(", "));
+            .arg(q1table.table_name,column_defs.join(", "));
     case DatabaseType::MySQL:
         return QString("CREATE TABLE IF NOT EXISTS `%1` (%2)")
+            .arg(q1table.table_name, column_defs.join(", "));
+    default:
+        return QString("CREATE TABLE IF NOT EXISTS \"%1\" (%2)")
             .arg(q1table.table_name, column_defs.join(", "));
     }
 }
@@ -158,6 +185,7 @@ QString Q1MigrationQuery::AddColumnSQL(QString table_name, const Q1Column &colum
         return QString("ALTER TABLE `%1` ADD COLUMN %2").arg(table_name, ColumnProperty(column));
     case DatabaseType::PostgreSQL:
     case DatabaseType::SQLite:
+        return QString("ALTER TABLE \"%1\" ADD COLUMN %2").arg(table_name,ColumnProperty(column));
     default:
         return QString("ALTER TABLE \"%1\" ADD COLUMN %2").arg(table_name, ColumnProperty(column));
     }
@@ -297,6 +325,18 @@ QString Q1MigrationQuery::AddRelationSQL(const Q1Relation &relation)
                  relation.GetOnDeleteString(), relation.GetOnUpdateString());
     }
 
+    if(db_type == DatabaseType::SQLite)
+    {
+        return BuildSqliteAddRelationSQL(fkBase,
+                                         fkTop,
+                                         fkColumn,
+                                         fkRefCol,
+                                         fkName,
+                                         relation.type == ONE_TO_ONE,
+                                         relation);
+    }
+
+
     if (relation.type == ONE_TO_ONE)
     {
         const QString uqName = QString("uq_%1_%2").arg(fkBase, fkColumn).toLower();
@@ -324,8 +364,9 @@ QString Q1MigrationQuery::DropTableSQL(QString table_name)
             .arg(EscapeSqlString(table_name), QuoteIdentifier(table_name));
     case DatabaseType::MySQL:
         return QString("DROP TABLE IF EXISTS `%1`").arg(table_name);
-    case DatabaseType::PostgreSQL:
     case DatabaseType::SQLite:
+        return QString("DROP TABLE IF EXISTS \"%1\"").arg(table_name);
+    case DatabaseType::PostgreSQL:
     default:
         return QString("DROP TABLE IF EXISTS \"%1\" CASCADE").arg(table_name);
     }
@@ -346,8 +387,9 @@ QString Q1MigrationQuery::DropColumnSQL(QString table_name, QString column_name)
                  QuoteIdentifier(column_name));
     case DatabaseType::MySQL:
         return QString("ALTER TABLE `%1` DROP COLUMN `%2`").arg(table_name, column_name);
-    case DatabaseType::PostgreSQL:
     case DatabaseType::SQLite:
+        return QString("ALTER TABLE \"%1\" DROP COLUMN \"%2\"").arg(table_name, column_name);
+    case DatabaseType::PostgreSQL:
     default:
         return QString("ALTER TABLE \"%1\" DROP COLUMN IF EXISTS \"%2\" CASCADE").arg(table_name, column_name);
     }
@@ -361,6 +403,9 @@ QString Q1MigrationQuery::DropColumnNullableSQL(QString table_name, QString colu
     if (db_type == DatabaseType::MySQL)
         return QString("ALTER TABLE `%1` MODIFY COLUMN `%2` INT NOT NULL").arg(table_name, column_name);
 
+    if (db_type == DatabaseType::SQLite)
+        return QString();
+
     return QString("ALTER TABLE \"%1\" ALTER COLUMN \"%2\" SET NOT NULL").arg(table_name, column_name);
 }
 
@@ -372,6 +417,9 @@ QString Q1MigrationQuery::DropColumnDefaultSQL(QString table_name, QString colum
     if (db_type == DatabaseType::MySQL)
         return QString("ALTER TABLE `%1` ALTER COLUMN `%2` DROP DEFAULT").arg(table_name, column_name);
 
+    if (db_type == DatabaseType::SQLite)
+        return QString();
+
     return QString("ALTER TABLE \"%1\" ALTER COLUMN \"%2\" DROP DEFAULT").arg(table_name, column_name);
 }
 
@@ -382,6 +430,9 @@ QString Q1MigrationQuery::SetColumnNullableSQL(QString table_name, QString colum
 
     if (db_type == DatabaseType::MySQL)
         return QString("ALTER TABLE `%1` MODIFY COLUMN `%2` INT NULL").arg(table_name, column_name);
+
+    if (db_type == DatabaseType::SQLite)
+        return QString();
 
     return QString("ALTER TABLE \"%1\" ALTER COLUMN \"%2\" DROP NOT NULL").arg(table_name, column_name);
 }
@@ -400,6 +451,9 @@ QString Q1MigrationQuery::SetColumnDefaultSQL(QString table_name, QString column
 
     if (db_type == DatabaseType::MySQL)
         return QString("ALTER TABLE `%1` ALTER COLUMN `%2` SET DEFAULT %3").arg(table_name, column_name, default_value);
+
+    if (db_type == DatabaseType::SQLite)
+        return QString();
 
     return QString("ALTER TABLE \"%1\" ALTER COLUMN \"%2\" SET DEFAULT %3").arg(table_name, column_name, default_value);
 }
@@ -422,6 +476,12 @@ QString Q1MigrationQuery::UpdateColumnSizeSQL(QString table_name, QString column
 
     if (db_type == DatabaseType::MySQL)
         return QString("ALTER TABLE `%1` MODIFY COLUMN `%2` VARCHAR(%3)").arg(table_name, column_name).arg(size);
+
+    if (db_type == DatabaseType::SQLite)
+    {
+        Q_UNUSED(size);
+        return QString();
+    }
 
     return QString("ALTER TABLE \"%1\" ALTER COLUMN \"%2\" TYPE VARCHAR(%3)").arg(table_name, column_name).arg(size);
 }
@@ -479,6 +539,28 @@ QString Q1MigrationQuery::ColumnProperty(const Q1Column &column) const
 
         QStringList parts;
         parts << QString("`%1`").arg(column.name);
+        parts << type;
+
+        if (!column.nullable)
+            parts << "NOT NULL";
+
+        if (column.primary_key)
+            parts << "PRIMARY KEY";
+
+        const QString default_clause = NormalizeDefaultValue(column);
+        if (!default_clause.isEmpty())
+            parts << QString("DEFAULT %1").arg(default_clause);
+
+        return parts.join(" ");
+    }
+
+    if (db_type == DatabaseType::SQLite)
+    {
+        if (column.primary_key && Q1Column::IsIdentityDefault(column.default_value))
+            return QString("\"%1\" INTEGER PRIMARY KEY AUTOINCREMENT").arg(column.name);
+
+        QStringList parts;
+        parts << QString("\"%1\"").arg(column.name);
         parts << type;
 
         if (!column.nullable)
@@ -699,4 +781,133 @@ QString Q1MigrationQuery::FormatDefaultExpression(const QString &default_value) 
         return normalized;
 
     return QuoteLiteral(normalized);
+}
+
+
+
+// SQLite has no ALTER TABLE ADD CONSTRAINT. The only way to add a FK or
+// UNIQUE constraint to an existing table is to rebuild it: create a new
+// table with the constraint baked into CREATE TABLE, copy the data, drop
+// the old table, rename the new one into place.
+//
+// NOTE: this returns a batch of statements WITHOUT its own
+// BEGIN TRANSACTION/COMMIT or PRAGMA foreign_keys toggling, because
+// Q1Migration::AddRelation() already wraps whatever AddRelationSQL()
+// returns in a single connection.database.transaction()/commit(), and
+// splits the result on ';' itself. Nesting a raw "BEGIN TRANSACTION"
+// inside that would error, and PRAGMA foreign_keys is a documented no-op
+// once a transaction is already open, so it would silently do nothing.
+//
+// m_db must be set (via SetDatabase) and open before this runs —
+// Q1Migration::AddRelation() guarantees that.
+QString Q1MigrationQuery::BuildSqliteAddRelationSQL(const QString &fkBase,
+                                                    const QString &fkTop,
+                                                    const QString &fkColumn,
+                                                    const QString &fkRefCol,
+                                                    const QString &fkName,
+                                                    bool addUnique,
+                                                    const Q1Relation &relation)
+{
+    if(!m_db.isValid() || !m_db.isOpen())
+    {
+        m_lastError = QString("BuildSqliteAddRelationSQL: no open database connection to read schema for '%1'")
+                        .arg(fkBase);
+
+        return "";
+    }
+
+    //1.Column definitions via PRAGMA table_info
+    QSqlQuery colQuery(m_db);
+    if(!colQuery.exec(QString("PRAGMA table_info(%1)").arg(QuoteIdentifier(fkBase))))
+    {
+        m_lastError = QString("BuildSqliteAddRelationSQL: could not read columns for '%1': %2")
+        .arg(fkBase, colQuery.lastError().text());
+
+        return "";
+    }
+
+
+    QStringList columnDefs;
+    QStringList columnNames;
+    bool sawAnyColumn = false;
+    while(colQuery.next())
+    {
+        sawAnyColumn = true;
+        const QString colName = colQuery.value("name").toString();
+        const QString colType = colQuery.value("type").toString();
+        const bool notNull    = colQuery.value("notnull").toInt() != 0;
+        const bool isPk       = colQuery.value("pk").toInt() != 0;
+        const QVariant dflt   = colQuery.value("dflt_value");
+
+
+        QString def = QString("\"%1\" %2").arg(colName, colType.isEmpty() ? "TEXT" : colType);
+        if(isPk)
+            def += " PRIMARY KEY";
+        if(notNull && !isPk)
+            def += " NOT NULL";
+        if(dflt.isValid() && !dflt.isNull())
+            def += QString(" DEFAULT %1").arg(dflt.toString());
+
+        columnDefs << def;
+        columnNames << colName;
+    }
+
+    if(!sawAnyColumn)
+    {
+        m_lastError = QString("BuildSqliteAddRelationSQL: table '%1' not found or has no columns").arg(fkBase);
+        return "";
+    }
+
+
+    // 2. Existing FKs on fkBase, so the rebuild doesn't silently drop them
+    QSqlQuery fkQuery(m_db);
+    QStringList existingFkClauses;
+    if (fkQuery.exec(QString("PRAGMA foreign_key_list(%1)").arg(QuoteIdentifier(fkBase))))
+    {
+        while (fkQuery.next())
+        {
+            const QString from     = fkQuery.value("from").toString();
+            const QString to       = fkQuery.value("to").toString();
+            const QString refTable = fkQuery.value("table").toString();
+            const QString onDelete = fkQuery.value("on_delete").toString();
+            const QString onUpdate = fkQuery.value("on_update").toString();
+
+            // Skip if this is the relation we're about to (re)add
+            if (from.compare(fkColumn, Qt::CaseInsensitive) == 0 &&
+                refTable.compare(fkTop, Qt::CaseInsensitive) == 0)
+                continue;
+
+            existingFkClauses << QString(
+                                     "FOREIGN KEY (\"%1\") REFERENCES \"%2\"(\"%3\") ON DELETE %4 ON UPDATE %5")
+                                     .arg(from, refTable, to, onDelete, onUpdate);
+        }
+    }
+
+    // 3. New constraint clauses
+    QStringList constraintClauses = existingFkClauses;
+    if (addUnique)
+    {
+        const QString uqName = QString("uq_%1_%2").arg(fkBase, fkColumn).toLower();
+        constraintClauses << QString("CONSTRAINT \"%1\" UNIQUE (\"%2\")").arg(uqName, fkColumn);
+    }
+    constraintClauses << QString(
+                             "CONSTRAINT \"%1\" FOREIGN KEY (\"%2\") REFERENCES \"%3\"(\"%4\") ON DELETE %5 ON UPDATE %6")
+                             .arg(fkName, fkColumn, fkTop, fkRefCol,
+                                  relation.GetOnDeleteString(), relation.GetOnUpdateString());
+
+    const QString tmpTable = fkBase + "_new";
+    const QString colList = columnNames.join(", ");
+
+    // Statements only — no BEGIN/COMMIT/PRAGMA foreign_keys (see note above).
+    // Q1Migration::AddRelation() splits this on ';' and execs each piece
+    // inside its own transaction.
+    QStringList statements;
+    statements << QString("CREATE TABLE \"%1\" (%2, %3)")
+                      .arg(tmpTable, columnDefs.join(", "), constraintClauses.join(", "));
+    statements << QString("INSERT INTO \"%1\" (%2) SELECT %2 FROM \"%3\"")
+                      .arg(tmpTable, colList, fkBase);
+    statements << QString("DROP TABLE \"%1\"").arg(fkBase);
+    statements << QString("ALTER TABLE \"%1\" RENAME TO \"%2\"").arg(tmpTable, fkBase);
+
+    return statements.join("; ");
 }

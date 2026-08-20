@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(MySqlTestExample VERSION 0.1 LANGUAGES CXX)
+project(SqliteTestExample VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -21,10 +21,15 @@ else()
     set_property(TARGET Q1ORM PROPERTY IMPORTED_LOCATION "${Q1ORM_PATH}/bin/Q1ORM.dll")
     set_property(TARGET Q1ORM PROPERTY IMPORTED_IMPLIB "${Q1ORM_PATH}/lib/Q1ORM.lib")
     target_include_directories(Q1ORM INTERFACE "${Q1ORM_PATH}/include")
-    set(Q1ORM_TARGET Q1ORM)
+
+target_sources(SqliteTestExample
+  PRIVATE
+    applicationdbcontext.h
+)
+set(Q1ORM_TARGET Q1ORM)
 endif()
 
-add_executable(MySqlTestExample
+add_executable(SqliteTestExample
     main.cpp
     applicationdbcontext.cpp
     applicationdbcontext.h
@@ -44,10 +49,10 @@ add_executable(MySqlTestExample
 )
 
 
-target_link_libraries(MySqlTestExample Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql ${Q1ORM_TARGET})
+target_link_libraries(SqliteTestExample Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql ${Q1ORM_TARGET})
 
 include(GNUInstallDirs)
-install(TARGETS MySqlTestExample
+install(TARGETS SqliteTestExample
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

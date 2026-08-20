@@ -3,6 +3,8 @@
 
 #include <QList>
 #include <QDebug>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
 
 #include "../../Q1Core/Q1Entity/Q1Column.h"
 #include "../../Q1Core/Q1Entity/Q1Table.h"
@@ -43,6 +45,7 @@ public:
     QString HasNullDataSQL(QString table_name, QString column_name);
 
     QString lastError() const { return m_lastError; }
+    void SetDatabase(const QSqlDatabase &db) { m_db = db; }
 
 private:
     QString ColumnProperty(const Q1Column &column) const;
@@ -54,8 +57,16 @@ private:
     QString DropDefaultConstraintSQL(const QString &table_name, const QString &column_name) const;
     QString NormalizeDefaultValue(const Q1Column &column) const;
     QString FormatDefaultExpression(const QString &default_value) const;
+    QString BuildSqliteAddRelationSQL(const QString &fkBase,
+                                      const QString &fkTop,
+                                      const QString &fkColumn,
+                                      const QString &fkRefCol,
+                                      const QString &fkName,
+                                      bool addUnique,
+                                      const Q1Relation &relation);
     QString m_lastError;
     DatabaseType db_type;
+    QSqlDatabase m_db;
 };
 
 #endif // Q1MIGRATIONQUERY_H

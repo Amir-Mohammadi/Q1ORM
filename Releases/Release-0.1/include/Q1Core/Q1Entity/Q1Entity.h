@@ -209,6 +209,11 @@ public:
         return connection && connection->IsMySql();
     }
 
+    bool UsesSqlite() const
+    {
+        return connection && connection->IsSqlite();
+    }
+
     QString QuoteIdentifier(const QString &identifier) const
     {
         if (!connection)
@@ -264,6 +269,14 @@ public:
                                   "FROM information_schema.columns "
                                   "WHERE table_name = '%1' "
                                   "ORDER BY ordinal_position"
+                                : UsesSqlite()
+                                ? "SELECT "
+                                  "name AS column_name, "
+                                  "dflt_value AS column_default, "
+                                  "CASE WHEN \"notnull\" = 0 THEN 'YES' ELSE 'NO' END AS is_nullable, "
+                                  "CASE WHEN pk = 1 THEN 1 ELSE 0 END AS is_identity "
+                                  "FROM pragma_table_info('%1') "
+                                  "ORDER BY cid"
                                 : "SELECT column_name, column_default, is_nullable, is_identity "
                                   "FROM information_schema.columns "
                                   "WHERE table_name = '%1' "
@@ -338,6 +351,7 @@ public:
                 }
                 else if (col.default_value.contains("IDENTITY", Qt::CaseInsensitive) ||
                          col.default_value.contains("SERIAL", Qt::CaseInsensitive) ||
+                         col.default_value.contains("AUTOINCREMENT", Qt::CaseInsensitive) ||
                          col.default_value.contains("nextval", Qt::CaseInsensitive) ||
                          col.default_value.contains("GENERATED", Qt::CaseInsensitive))
                 {
@@ -386,6 +400,13 @@ public:
                                     columns.join(", "),
                                     placeholders.join(", "));
             }
+            else if (UsesSqlite())
+            {
+                queryStr = QString("INSERT INTO %1 (%2) VALUES (%3)")
+                               .arg(QuoteIdentifier(table.table_name),
+                                    columns.join(", "),
+                                    placeholders.join(", "));
+            }
             else
             {
                 queryStr = QString("INSERT INTO %1 (%2) VALUES (%3) RETURNING %4")
@@ -428,6 +449,7 @@ public:
                 }
                 else if (col.default_value.contains("IDENTITY", Qt::CaseInsensitive) ||
                          col.default_value.contains("SERIAL", Qt::CaseInsensitive) ||
+                         col.default_value.contains("AUTOINCREMENT", Qt::CaseInsensitive) ||
                          col.default_value.contains("nextval", Qt::CaseInsensitive) ||
                          col.default_value.contains("GENERATED", Qt::CaseInsensitive))
                 {
@@ -502,7 +524,7 @@ public:
         {
             QVariant new_id;
 
-            if (UsesMySql())
+            if (UsesMySql() || UsesSqlite())
             {
                 new_id = sql_query.lastInsertId();
                 qDebug() << "✓ Retrieved generated PK (lastInsertId):" << new_id;

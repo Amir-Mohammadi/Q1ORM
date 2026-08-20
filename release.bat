@@ -24,6 +24,10 @@ if not defined QT (
     if not errorlevel 1 for /f "delims=" %%p in ('qmake -query QT_INSTALL_PREFIX') do set "QT=%%p"
 )
 if not defined QT echo WARNING: Qt not found. Set QTDIR or run from a Qt-enabled prompt.
+set "QT_BIN="
+if defined QT set "QT_BIN=%QT%\bin"
+set "WINDEPLOYQT="
+if defined QT_BIN if exist "%QT_BIN%\windeployqt.exe" set "WINDEPLOYQT=%QT_BIN%\windeployqt.exe"
 
 rem ---- Auto-detect MSVC (validated: vcvars must expose MSVC toolset headers) ----
 set "VCVARS="
@@ -61,7 +65,7 @@ echo Build   : %BUILD%
 echo.
 
 echo.
-echo [1/7] Configuring project...
+echo [1/6] Configuring project...
 if defined QT (
     cmake -S "%PROJECT%" -B "%BUILD%" -DCMAKE_PREFIX_PATH="%QT%"
 ) else (
@@ -75,7 +79,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/7] Building library...
+echo [2/6] Building library...
 cmake --build "%BUILD%" --target Src --config Release
 
 if errorlevel 1 (
@@ -85,15 +89,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/7] Building tools...
-cmake --build "%BUILD%" --target ReleaseInstaller --config Release
-
-if errorlevel 1 (
-    echo RELEASE INSTALLER BUILD FAILED!
-    pause
-    exit /b 1
-)
-
+echo [3/6] Building tools...
 cmake --build "%BUILD%" --target ExampleProjectModifier --config Release
 
 if errorlevel 1 (
@@ -103,7 +99,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [4/7] Building examples (all registered example projects)...
+echo [4/6] Building examples (all registered example projects)...
 cmake --build "%BUILD%" --config Release
 
 if errorlevel 1 (
@@ -113,7 +109,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [5/7] Copying fresh Q1ORM.dll next to released example executables...
+echo [5/6] Copying fresh Q1ORM.dll next to released example executables...
 for /d %%E in ("%BUILD%\Examples\*") do (
     if exist "%%E\Release" (
         copy /y "%BUILD%\src\Release\Q1ORM.dll" "%%E\Release\Q1ORM.dll" >nul
@@ -121,7 +117,7 @@ for /d %%E in ("%BUILD%\Examples\*") do (
 )
 
 echo.
-echo [6/7] Syncing Qt Creator build trees (Debug and Release)...
+echo [6/6] Syncing Qt Creator build trees (Debug and Release)...
 set "QT_DEBUG_BUILD="
 set "QT_RELEASE_BUILD="
 for /d %%D in ("%BUILD%\Desktop_Qt_*_Debug") do set "QT_DEBUG_BUILD=%%D"
@@ -163,7 +159,7 @@ if defined QT_RELEASE_BUILD (
 )
 
 echo.
-echo [7/7] Installing library and examples...
+echo Installing library and examples...
 cmake --install "%BUILD%" --config Release --prefix "%RELEASE%"
 
 if errorlevel 1 (
@@ -179,6 +175,23 @@ if not exist "%RELEASE%" (
     echo RELEASE DIRECTORY NOT FOUND!
     pause
     exit /b 1
+)
+
+echo.
+echo Deploying Qt runtime...
+if defined WINDEPLOYQT (
+    if exist "%RELEASE%\bin\DatabaseInstallExample.exe" (
+        "%WINDEPLOYQT%" --no-translations --no-opengl-sw --force "%RELEASE%\bin\DatabaseInstallExample.exe"
+        if errorlevel 1 (
+            echo QT RUNTIME DEPLOY FAILED!
+            pause
+            exit /b 1
+        )
+    ) else (
+        echo WARNING: DatabaseInstallExample.exe not found in release bin. Skipping Qt runtime deploy.
+    )
+) else (
+    echo WARNING: windeployqt.exe not found. Skipping Qt runtime deploy.
 )
 
 echo.
