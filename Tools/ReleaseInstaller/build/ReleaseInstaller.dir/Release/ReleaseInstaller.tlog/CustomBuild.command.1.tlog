@@ -1,0 +1,10 @@
+^C:\USERS\ARM\DESKTOP\Q1ORM\TOOLS\RELEASEINSTALLER\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/ARM/Desktop/Q1ORM/Tools/ReleaseInstaller -BC:/Users/ARM/Desktop/Q1ORM/Tools/ReleaseInstaller/build --check-stamp-file C:/Users/ARM/Desktop/Q1ORM/Tools/ReleaseInstaller/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

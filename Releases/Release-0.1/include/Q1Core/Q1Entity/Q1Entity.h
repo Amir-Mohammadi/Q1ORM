@@ -204,6 +204,11 @@ public:
         return connection && connection->IsSqlServer();
     }
 
+    bool UsesMySql() const
+    {
+        return connection && connection->IsMySql();
+    }
+
     QString QuoteIdentifier(const QString &identifier) const
     {
         if (!connection)
@@ -253,6 +258,12 @@ public:
                                   "FROM INFORMATION_SCHEMA.COLUMNS "
                                   "WHERE TABLE_NAME = '%1' "
                                   "ORDER BY ORDINAL_POSITION"
+                                : UsesMySql()
+                                ? "SELECT column_name, column_default, is_nullable, "
+                                  "IF(extra LIKE '%auto_increment%', 1, 0) AS is_identity "
+                                  "FROM information_schema.columns "
+                                  "WHERE table_name = '%1' "
+                                  "ORDER BY ordinal_position"
                                 : "SELECT column_name, column_default, is_nullable, is_identity "
                                   "FROM information_schema.columns "
                                   "WHERE table_name = '%1' "
@@ -366,6 +377,13 @@ public:
                                .arg(QuoteIdentifier(table.table_name),
                                     columns.join(", "),
                                     QuoteIdentifier(pk_column_name),
+                                    placeholders.join(", "));
+            }
+            else if (UsesMySql())
+            {
+                queryStr = QString("INSERT INTO %1 (%2) VALUES (%3)")
+                               .arg(QuoteIdentifier(table.table_name),
+                                    columns.join(", "),
                                     placeholders.join(", "));
             }
             else
@@ -482,10 +500,21 @@ public:
         // Retrieve auto-generated PK
         if (has_auto_pk)
         {
-            if (sql_query.next())
+            QVariant new_id;
+
+            if (UsesMySql())
             {
-                QVariant new_id = sql_query.value(0);
+                new_id = sql_query.lastInsertId();
+                qDebug() << "✓ Retrieved generated PK (lastInsertId):" << new_id;
+            }
+            else if (sql_query.next())
+            {
+                new_id = sql_query.value(0);
                 qDebug() << "✓ Retrieved generated PK:" << new_id;
+            }
+
+            if (new_id.isValid() && !new_id.isNull())
+            {
 
                 auto it = property_map.find(pk_column_name);
                 if (it != property_map.end())
@@ -522,10 +551,6 @@ public:
                         qDebug() << "✓ Set entity." << pk_column_name << "=" << new_id;
                     }
                 }
-            }
-            else
-            {
-                qDebug() << "⚠ Warning: Expected RETURNING value but got none";
             }
         }
 

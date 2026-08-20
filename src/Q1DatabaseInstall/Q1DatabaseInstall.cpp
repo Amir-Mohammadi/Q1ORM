@@ -77,17 +77,23 @@ void Q1DatabaseInstall::CreateBatchFile()
 
 void Q1DatabaseInstall::InstallEventHandler(QString output)
 {
-    int offset = process_output_regx.indexIn(output);
 
-    if (offset == -1)
-    {
+    QRegularExpressionMatch match = process_output_regx.match(output);
+
+    if(!match.hasMatch())
         return;
-    }
+
+    int offset = match.capturedStart();
+
 
     QStringList output_args = output.split('|');
+
+    if(output_args.size() < 2)
+        return;
+
     int index_of = process_output_numbers.indexOf(output_args[0]);
 
-    emit InstallingStatus((Q1DatabaseInstallationStatus)index_of, output_args[1]);
+    emit InstallingStatus(static_cast<Q1DatabaseInstallationStatus>(index_of), output_args[1]);
 
     switch(index_of)
     {

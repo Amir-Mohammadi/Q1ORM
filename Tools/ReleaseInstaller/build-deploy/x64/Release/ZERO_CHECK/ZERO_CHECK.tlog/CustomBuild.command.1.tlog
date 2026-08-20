@@ -1,0 +1,10 @@
+^C:\USERS\ARM\DESKTOP\Q1ORM\TOOLS\RELEASEINSTALLER\BUILD-DEPLOY\CMAKEFILES\6D777A2624367C415E03C302B4A20AFC\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/ARM/Desktop/Q1ORM/Tools/ReleaseInstaller -BC:/Users/ARM/Desktop/Q1ORM/Tools/ReleaseInstaller/build-deploy --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/ARM/Desktop/Q1ORM/Tools/ReleaseInstaller/build-deploy/ReleaseInstaller.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

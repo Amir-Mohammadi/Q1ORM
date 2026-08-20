@@ -15,7 +15,8 @@
 enum Q1Driver
 {
     POSTGRE_SQL,
-    SQLSERVER
+    SQLSERVER,
+    MYSQL
 };
 
 class Q1ORM_EXPORT Q1Connection
@@ -108,6 +109,11 @@ public: // Getter
         return driver == SQLSERVER;
     }
 
+    bool IsMySql() const
+    {
+        return driver == MYSQL;
+    }
+
     QString GetHostName() const
     {
         return host_name;
@@ -135,6 +141,13 @@ public: // Getter
             QString escaped = identifier;
             escaped.replace(']', "]]");
             return QString("[%1]").arg(escaped);
+        }
+
+        if (IsMySql())
+        {
+            QString escaped = identifier;
+            escaped.replace('`', "``");
+            return QString("`%1`").arg(escaped);
         }
 
         QString escaped = identifier;
@@ -260,7 +273,8 @@ private: // Connection Parameters
 
         db.setHostName(host_name);
         db.setPort(port);
-        db.setDatabaseName(target_database_name);
+        if (!target_database_name.isEmpty())
+            db.setDatabaseName(target_database_name);
     }
 
     QString BuildSqlServerConnectionString(const QString &target_database_name) const
@@ -310,9 +324,9 @@ private: // Connection Parameters
     bool root_is_open = false;
 
 private: // Defaults
-    QStringList default_databases = {"postgres", "master"};
-    QStringList drivers = {"QPSQL", "QODBC"};
-    QList<int> ports = {5432, 1433};
+    QStringList default_databases = {"postgres", "master", ""};
+    QStringList drivers = {"QPSQL", "QODBC", "QMYSQL"};
+    QList<int> ports = {5432, 1433, 3306};
 };
 
 #endif // Q1CONNECTION_H

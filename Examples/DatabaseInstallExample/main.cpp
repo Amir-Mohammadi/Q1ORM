@@ -1,8 +1,15 @@
+#include "Q1DatabaseInstall/Q1DatabaseInstall.h"
 #include <QCoreApplication>
 #include <QObject>
 #include <QDir>
+using namespace std;
 
-#include <Q1DatabaseInstall/Q1DatabaseInstall.h>
+#include <QtSql/QSqlDatabase>
+
+// #include <Q1DatabaseInstall/Q1DatabaseInstall.h>
+
+#include <Q1Core/Q1Context/Q1Connection.h>
+
 
 class ExampleProcess : public QObject
 {
@@ -25,6 +32,14 @@ private:
 };
 
 
+
+class appContext
+{
+public:
+    appContext(Q1Connection* conn);
+};
+
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -35,8 +50,8 @@ int main(int argc, char *argv[])
     database_install.InstallPostgreSql("C:/", "C:/", "admin", "Admin-123");
 
 
-
     return a.exec();
 }
 
 #include "main.moc"
+
