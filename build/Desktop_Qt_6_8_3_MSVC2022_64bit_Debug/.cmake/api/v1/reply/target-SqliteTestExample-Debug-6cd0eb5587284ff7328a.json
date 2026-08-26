@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Tools/ExampleProjectModifier/EPModifier.exe"
+			"path" : "Examples/SqliteTestExample/SqliteTestExample.exe"
 		},
 		{
-			"path" : "Tools/ExampleProjectModifier/EPModifier.pdb"
+			"path" : "Examples/SqliteTestExample/SqliteTestExample.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -24,7 +24,7 @@
 		],
 		"files" : 
 		[
-			"Tools/ExampleProjectModifier/CMakeLists.txt",
+			"Examples/SqliteTestExample/CMakeLists.txt",
 			"C:/Qt/6.8.3/msvc2022_64/lib/cmake/Qt6Core/Qt6CoreTargets.cmake",
 			"C:/Qt/6.8.3/msvc2022_64/lib/cmake/Qt6Core/Qt6CoreConfig.cmake",
 			"build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/.qtcreator/cmake-helper/maintenance_tool_provider.cmake",
@@ -39,25 +39,25 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 19,
+				"line" : 28,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 25,
+				"line" : 51,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 22,
+				"line" : 48,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 17,
+				"line" : 13,
 				"parent" : 0
 			},
 			{
@@ -140,6 +140,10 @@
 				},
 				{
 					"backtrace" : 3,
+					"define" : "QT_SQL_LIB"
+				},
+				{
+					"backtrace" : 3,
 					"define" : "UNICODE"
 				},
 				{
@@ -167,7 +171,11 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Tools/ExampleProjectModifier/ExampleProjectModifier_autogen/include"
+					"path" : "C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/SqliteTestExample/SqliteTestExample_autogen/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "C:/Users/ARM/Desktop/Q1ORM/src"
 				},
 				{
 					"backtrace" : 3,
@@ -183,6 +191,11 @@
 					"backtrace" : 3,
 					"isSystem" : true,
 					"path" : "C:/Qt/6.8.3/msvc2022_64/mkspecs/win32-msvc"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "C:/Qt/6.8.3/msvc2022_64/include/QtSql"
 				}
 			],
 			"language" : "CXX",
@@ -198,76 +211,7 @@
 			"sourceIndexes" : 
 			[
 				0,
-				1
-			]
-		},
-		{
-			"compileCommandFragments" : 
-			[
-				{
-					"fragment" : "-DWIN32 -D_DEBUG"
-				}
-			],
-			"defines" : 
-			[
-				{
-					"backtrace" : 3,
-					"define" : "QT_CORE_LIB"
-				},
-				{
-					"backtrace" : 13,
-					"define" : "QT_QML_DEBUG"
-				},
-				{
-					"backtrace" : 3,
-					"define" : "UNICODE"
-				},
-				{
-					"backtrace" : 3,
-					"define" : "WIN32"
-				},
-				{
-					"backtrace" : 3,
-					"define" : "WIN64"
-				},
-				{
-					"backtrace" : 3,
-					"define" : "_ENABLE_EXTENDED_ALIGNED_STORAGE"
-				},
-				{
-					"backtrace" : 3,
-					"define" : "_UNICODE"
-				},
-				{
-					"backtrace" : 3,
-					"define" : "_WIN64"
-				}
-			],
-			"includes" : 
-			[
-				{
-					"backtrace" : 0,
-					"path" : "C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Tools/ExampleProjectModifier/ExampleProjectModifier_autogen/include"
-				},
-				{
-					"backtrace" : 3,
-					"isSystem" : true,
-					"path" : "C:/Qt/6.8.3/msvc2022_64/include/QtCore"
-				},
-				{
-					"backtrace" : 3,
-					"isSystem" : true,
-					"path" : "C:/Qt/6.8.3/msvc2022_64/include"
-				},
-				{
-					"backtrace" : 3,
-					"isSystem" : true,
-					"path" : "C:/Qt/6.8.3/msvc2022_64/mkspecs/win32-msvc"
-				}
-			],
-			"language" : "RC",
-			"sourceIndexes" : 
-			[
+				1,
 				2
 			]
 		}
@@ -275,14 +219,18 @@
 	"dependencies" : 
 	[
 		{
-			"id" : "ExampleProjectModifier_autogen_timestamp_deps::@5b5cf0d17ee0c3bcea92"
+			"backtrace" : 3,
+			"id" : "Src::@145eef247bfb46b6828c"
+		},
+		{
+			"id" : "SqliteTestExample_autogen_timestamp_deps::@8b7026c17fcaaddb4f1d"
 		},
 		{
 			"backtrace" : 0,
-			"id" : "ExampleProjectModifier_autogen::@5b5cf0d17ee0c3bcea92"
+			"id" : "SqliteTestExample_autogen::@8b7026c17fcaaddb4f1d"
 		}
 	],
-	"id" : "ExampleProjectModifier::@5b5cf0d17ee0c3bcea92",
+	"id" : "SqliteTestExample::@8b7026c17fcaaddb4f1d",
 	"install" : 
 	{
 		"destinations" : 
@@ -311,6 +259,16 @@
 			},
 			{
 				"backtrace" : 3,
+				"fragment" : "C:\\Qt\\6.8.3\\msvc2022_64\\lib\\Qt6Sqld.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "..\\..\\src\\Q1ORM.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
 				"fragment" : "C:\\Qt\\6.8.3\\msvc2022_64\\lib\\Qt6Cored.lib",
 				"role" : "libraries"
 			},
@@ -331,12 +289,12 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "ExampleProjectModifier",
-	"nameOnDisk" : "EPModifier.exe",
+	"name" : "SqliteTestExample",
+	"nameOnDisk" : "SqliteTestExample.exe",
 	"paths" : 
 	{
-		"build" : "Tools/ExampleProjectModifier",
-		"source" : "Tools/ExampleProjectModifier"
+		"build" : "Examples/SqliteTestExample",
+		"source" : "Examples/SqliteTestExample"
 	},
 	"sourceGroups" : 
 	[
@@ -350,17 +308,37 @@
 			]
 		},
 		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16
+			]
+		},
+		{
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				3
+				17
 			]
 		},
 		{
 			"name" : "CMake Rules",
 			"sourceIndexes" : 
 			[
-				4
+				18
 			]
 		}
 	],
@@ -370,32 +348,102 @@
 			"backtrace" : 0,
 			"compileGroupIndex" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Tools/ExampleProjectModifier/ExampleProjectModifier_autogen/mocs_compilation.cpp",
+			"path" : "build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/SqliteTestExample/SqliteTestExample_autogen/mocs_compilation.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "Tools/ExampleProjectModifier/main.cpp",
+			"path" : "Examples/SqliteTestExample/main.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"compileGroupIndex" : 1,
-			"path" : "Tools/ExampleProjectModifier/icon.rc",
+			"compileGroupIndex" : 0,
+			"path" : "Examples/SqliteTestExample/applicationdbcontext.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 0,
-			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Tools/ExampleProjectModifier/ExampleProjectModifier_autogen/timestamp",
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/applicationdbcontext.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Models/Country.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Models/City.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Models/Club.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Models/Court.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Models/User.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Mapping/CountryMap.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Mapping/CityMap.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Mapping/ClubMap.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Mapping/CourtMap.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Mapping/UserMap.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Repository/IRepository.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Repository/Repository.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Examples/SqliteTestExample/Services/InsertService.h",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Tools/ExampleProjectModifier/ExampleProjectModifier_autogen/timestamp.rule",
+			"path" : "build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/SqliteTestExample/SqliteTestExample_autogen/timestamp",
 			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/SqliteTestExample/SqliteTestExample_autogen/timestamp.rule",
+			"sourceGroupIndex" : 3
 		}
 	],
 	"type" : "EXECUTABLE"

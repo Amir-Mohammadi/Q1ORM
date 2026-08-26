@@ -24,12 +24,15 @@ set(Q1ORM_HEADERS
     Q1DatabaseInstall/Q1DatabaseInstall.h
     Q1Core/Q1Context/Q1Context.h
     Q1Core/Q1Context/Q1Connection.h
-
     Q1Core/Q1Entity/Q1Entity.h
     Q1Core/Q1Entity/Q1Table.h
     Q1Core/Q1Migration/Q1MigrationQuery.h
     Q1Core/Q1Migration/Q1Migration.h
     Q1Core/Q1Entity/Q1Relation.h
+    Q1Core/Q1Query/Q1Query.h
+    Q1Core/Q1Entity/Q1Column.h
+
+
 )
 
 set(Q1ORM_SOURCES
@@ -39,14 +42,11 @@ set(Q1ORM_SOURCES
     Q1Core/Q1Entity/Q1Entity.cpp
     Q1Core/Q1Migration/Q1MigrationQuery.cpp
     Q1Core/Q1Migration/Q1Migration.cpp
-)
 
-add_library(Src SHARED ${Q1ORM_HEADERS} ${Q1ORM_SOURCES} ${Q1ORM_SCRIPTS}
-    Q1Core/Q1Query/Q1Query.h
-    Q1Core/Q1Entity/Q1Column.h
     Q1Core/Q1Entity/Q1Column.cpp
-
 )
+
+add_library(Src SHARED ${Q1ORM_HEADERS} ${Q1ORM_SOURCES} ${Q1ORM_SCRIPTS})
 
 target_include_directories(Src
     PUBLIC

@@ -188,6 +188,150 @@ public:
     }
 
 
+/* ############################################################################### */
+/* ***************************** Change Tracking ********************************* */
+/* ############################################################################### */
+
+    // Stores a snapshot of the entity keyed by its primary key value.
+    // Called automatically after Insert and after every row loaded by SelectExec.
+    void TrackEntity(const Entity& entity)
+    {
+        const QString pk_name = FindPrimaryKeyName();
+        if (pk_name.isEmpty())
+            return;
+
+        const QString key = ReadPropertyValue(entity, pk_name).toString();
+        if (key.isEmpty())
+            return;
+
+        QVariantMap snapshot;
+        for (const Q1Column& col : table.columns)
+        {
+            if (property_map.contains(col.name))
+                snapshot.insert(col.name, ReadPropertyValue(entity, col.name));
+        }
+
+        tracked_entities[key] = snapshot;
+    }
+
+    // Column names whose current value differs from the tracked snapshot.
+    // An untracked entity is reported as fully dirty.
+    QStringList GetChangedColumns(const Entity& entity) const
+    {
+        QStringList changed;
+        const QString pk_name = FindPrimaryKeyName();
+        if (pk_name.isEmpty())
+            return changed;
+
+        const QString key = ReadPropertyValue(entity, pk_name).toString();
+        auto tracked = tracked_entities.constFind(key);
+
+        for (const Q1Column& col : table.columns)
+        {
+            if (col.primary_key || !property_map.contains(col.name))
+                continue;
+
+            if (tracked == tracked_entities.constEnd() ||
+                !tracked.value().contains(col.name) ||
+                tracked.value().value(col.name) != ReadPropertyValue(entity, col.name))
+            {
+                changed.append(col.name);
+            }
+        }
+
+        return changed;
+    }
+
+    bool IsDirty(const Entity& entity) const
+    {
+        return !GetChangedColumns(entity).isEmpty();
+    }
+
+    bool IsTracked(const Entity& entity) const
+    {
+        const QString pk_name = FindPrimaryKeyName();
+        if (pk_name.isEmpty())
+            return false;
+        return tracked_entities.contains(ReadPropertyValue(entity, pk_name).toString());
+    }
+
+    void ClearTracking()
+    {
+        tracked_entities.clear();
+    }
+
+    int TrackedCount() const
+    {
+        return tracked_entities.size();
+    }
+
+    // UPDATE that writes only the columns which actually changed since the
+    // snapshot. Returns true without touching the database when nothing is
+    // dirty, so callers can use it as a drop-in replacement for UpdateById.
+    bool UpdateChangedById(Entity& entity, int id)
+    {
+        const QString pk_name = FindPrimaryKeyName();
+        if (pk_name.isEmpty())
+        {
+            last_error = "No primary key defined for this table";
+            return false;
+        }
+
+        const QStringList changed = GetChangedColumns(entity);
+        if (changed.isEmpty())
+        {
+            qDebug() << "UpdateChangedById - no dirty columns, skipping UPDATE";
+            return true;
+        }
+
+        if (!connection || !connection->Connect())
+        {
+            last_error = "Database connection failed";
+            return false;
+        }
+
+        QStringList set_clauses;
+        QList<QVariant> values;
+        for (const QString& column_name : changed)
+        {
+            set_clauses.append(QuoteIdentifier(column_name) + " = ?");
+            values.append(ReadPropertyValue(entity, column_name));
+        }
+
+        const QString query = QString("UPDATE %1 SET %2 WHERE %3 = ?")
+                                  .arg(QuoteIdentifier(table.table_name),
+                                       set_clauses.join(", "),
+                                       QuoteIdentifier(pk_name));
+
+        qDebug() << "UpdateChangedById - dirty columns:" << changed;
+        qDebug() << "Query:" << query;
+
+        QSqlQuery sql_query(connection->database);
+        if (!sql_query.prepare(query))
+        {
+            last_error = sql_query.lastError().text();
+            connection->Disconnect();
+            return false;
+        }
+
+        for (const QVariant& value : values)
+            sql_query.addBindValue(value);
+        sql_query.addBindValue(id);
+
+        if (!sql_query.exec())
+        {
+            last_error = sql_query.lastError().text();
+            qDebug() << "UpdateChangedById failed:" << last_error;
+            connection->Disconnect();
+            return false;
+        }
+
+        connection->Disconnect();
+        TrackEntity(entity);
+        return true;
+    }
+
+
     const QList<Q1Column>& GetTableColumns() const
     {
         return table.columns;
@@ -1623,6 +1767,16 @@ private:
                (column.is_identity || Q1Column::IsIdentityDefault(column.default_value));
     }
 
+    QString FindPrimaryKeyName() const
+    {
+        for (const Q1Column& col : table.columns)
+        {
+            if (col.primary_key)
+                return col.name;
+        }
+        return QString();
+    }
+
     QVariant ReadPropertyValue(const Entity& entity, const QString& columnName) const
     {
         auto it = property_map.find(columnName);
@@ -1693,6 +1847,7 @@ private:
     QMap<QString, PropertyInfo> property_map;
     QString last_error;
     QJsonArray lastJson;
+    QMap<QString, QVariantMap> tracked_entities;
 };
 
 

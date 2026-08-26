@@ -223,11 +223,11 @@
 			"id" : "Src::@145eef247bfb46b6828c"
 		},
 		{
-			"backtrace" : 0,
-			"id" : "MySqlTestExample_autogen::@65439ddc6f27851b1cca"
+			"id" : "MySqlTestExample_autogen_timestamp_deps::@65439ddc6f27851b1cca"
 		},
 		{
-			"id" : "MySqlTestExample_autogen_timestamp_deps::@65439ddc6f27851b1cca"
+			"backtrace" : 0,
+			"id" : "MySqlTestExample_autogen::@65439ddc6f27851b1cca"
 		}
 	],
 	"id" : "MySqlTestExample::@65439ddc6f27851b1cca",

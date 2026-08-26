@@ -428,17 +428,20 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Migration\Q1MigrationQuery.h" />
     <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Migration\Q1Migration.h" />
     <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Entity\Q1Relation.h" />
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Query\Q1Query.h" />
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Entity\Q1Column.h" />
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Context\Q1ConnectionPool.h" />
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Context\Q1TransactionScope.h" />
     <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1ORM.cpp" />
     <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1DatabaseInstall\Q1DatabaseInstall.cpp" />
     <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Context\Q1Context.cpp" />
     <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Entity\Q1Entity.cpp" />
     <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Migration\Q1MigrationQuery.cpp" />
     <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Migration\Q1Migration.cpp" />
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Context\Q1ConnectionPool.cpp" />
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Entity\Q1Column.cpp" />
     <None Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1DatabaseInstall\postgresql_install.bat">
     </None>
-    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Query\Q1Query.h" />
-    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Entity\Q1Column.h" />
-    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Entity\Q1Column.cpp" />
     <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\src\Src_autogen\mocs_compilation_Release.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>

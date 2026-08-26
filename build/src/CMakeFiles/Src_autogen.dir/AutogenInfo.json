@@ -191,9 +191,21 @@
 			null
 		],
 		[
+			"C:/Users/ARM/Desktop/Q1ORM/src/Q1Core/Q1Context/Q1ConnectionPool.h",
+			"MU",
+			"N7RHR7JIJS/moc_Q1ConnectionPool.cpp",
+			null
+		],
+		[
 			"C:/Users/ARM/Desktop/Q1ORM/src/Q1Core/Q1Context/Q1Context.h",
 			"MU",
 			"N7RHR7JIJS/moc_Q1Context.cpp",
+			null
+		],
+		[
+			"C:/Users/ARM/Desktop/Q1ORM/src/Q1Core/Q1Context/Q1TransactionScope.h",
+			"MU",
+			"N7RHR7JIJS/moc_Q1TransactionScope.cpp",
 			null
 		],
 		[
@@ -405,6 +417,11 @@
 	"SETTINGS_FILE_Release" : "C:/Users/ARM/Desktop/Q1ORM/build/src/CMakeFiles/Src_autogen.dir/AutogenUsed_Release.txt",
 	"SOURCES" : 
 	[
+		[
+			"C:/Users/ARM/Desktop/Q1ORM/src/Q1Core/Q1Context/Q1ConnectionPool.cpp",
+			"MU",
+			null
+		],
 		[
 			"C:/Users/ARM/Desktop/Q1ORM/src/Q1Core/Q1Context/Q1Context.cpp",
 			"MU",

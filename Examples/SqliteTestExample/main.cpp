@@ -4,7 +4,7 @@
 #include <QTextStream>
 
 #include "applicationdbcontext.h"
-
+#include "Q1ORM.h"
 
 // ============================================================
 // MAIN
@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
 
     const QString dbPath = QCoreApplication::applicationDirPath() + "/sqlite3_test.db";
 
+
+
     auto conn = new Q1Connection(
         Q1Driver::SQLITE,
         QString(),
@@ -30,6 +32,7 @@ int main(int argc, char *argv[])
         QString(),
         0
         );
+
 
     ApplicationDbContext ctx(conn);
 

@@ -1,7 +1,9 @@
 C:/Users/ARM/Desktop/Q1ORM/src/../Releases/Release-0.1/lib/Q1ORM.lib
 C:/Users/ARM/Desktop/Q1ORM/src/../Releases/Release-0.1/bin/Q1ORM.dll
 C:/Users/ARM/Desktop/Q1ORM/src/../Releases/Release-0.1/include/Q1Core/Q1Context/Q1Connection.h
+C:/Users/ARM/Desktop/Q1ORM/src/../Releases/Release-0.1/include/Q1Core/Q1Context/Q1ConnectionPool.h
 C:/Users/ARM/Desktop/Q1ORM/src/../Releases/Release-0.1/include/Q1Core/Q1Context/Q1Context.h
+C:/Users/ARM/Desktop/Q1ORM/src/../Releases/Release-0.1/include/Q1Core/Q1Context/Q1TransactionScope.h
 C:/Users/ARM/Desktop/Q1ORM/src/../Releases/Release-0.1/include/Q1Core/Q1Entity/Q1Column.h
 C:/Users/ARM/Desktop/Q1ORM/src/../Releases/Release-0.1/include/Q1Core/Q1Entity/Q1Entity.h
 C:/Users/ARM/Desktop/Q1ORM/src/../Releases/Release-0.1/include/Q1Core/Q1Entity/Q1Relation.h
