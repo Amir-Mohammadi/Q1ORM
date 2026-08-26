@@ -1,0 +1,71 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Examples/MySqlTestExample/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "MySqlTestExample_autogen_timestamp_deps::@65439ddc6f27851b1cca"
+		}
+	],
+	"id" : "MySqlTestExample_autogen::@65439ddc6f27851b1cca",
+	"isGeneratorProvided" : true,
+	"name" : "MySqlTestExample_autogen",
+	"paths" : 
+	{
+		"build" : "Examples/MySqlTestExample",
+		"source" : "Examples/MySqlTestExample"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1,
+				2
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/MySqlTestExample/CMakeFiles/MySqlTestExample_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/MySqlTestExample/CMakeFiles/MySqlTestExample_autogen.rule",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/MySqlTestExample/MySqlTestExample_autogen/timestamp.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

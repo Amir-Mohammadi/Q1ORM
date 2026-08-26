@@ -2,6 +2,7 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QRegularExpression>
+#include <QDateTime>
 
 Q1Migration::Q1Migration(Q1Connection &connection)
     : connection(connection)
@@ -14,6 +15,65 @@ Q1Migration::Q1Migration(Q1Connection &connection)
         translator = Q1MigrationQuery(DatabaseType::MySQL);
     else if (connection.GetDriver() == Q1Driver::SQLITE)
         translator = Q1MigrationQuery(DatabaseType::SQLite);
+}
+
+bool Q1Migration::EnsureHistoryTable()
+{
+    if (!connection.Connect())
+    {
+        m_lastError = connection.ErrorMessage();
+        return false;
+    }
+
+    const QString sql = connection.IsSqlServer()
+        ? "IF OBJECT_ID(N'__q1_migrations', N'U') IS NULL "
+          "CREATE TABLE __q1_migrations (id INT IDENTITY(1,1) PRIMARY KEY, "
+          "migration_name NVARCHAR(255) NOT NULL UNIQUE, model_hash NVARCHAR(128), "
+          "applied_at DATETIME2 NOT NULL)"
+        : "CREATE TABLE IF NOT EXISTS __q1_migrations ("
+          "id INTEGER PRIMARY KEY, migration_name VARCHAR(255) NOT NULL UNIQUE, "
+          "model_hash VARCHAR(128), applied_at TIMESTAMP NOT NULL)";
+
+    QSqlQuery query(connection.database);
+    if (!query.exec(sql))
+    {
+        m_lastError = query.lastError().text();
+        connection.Disconnect();
+        return false;
+    }
+    connection.Disconnect();
+    return true;
+}
+
+bool Q1Migration::RecordMigration(const QString &migration_name,
+                                   const QString &model_hash)
+{
+    if (!connection.Connect())
+    {
+        m_lastError = connection.ErrorMessage();
+        return false;
+    }
+
+    QSqlQuery query(connection.database);
+    if (!query.prepare("INSERT INTO __q1_migrations "
+                      "(migration_name, model_hash, applied_at) VALUES (?, ?, ?)"))
+    {
+        m_lastError = query.lastError().text();
+        connection.Disconnect();
+        return false;
+    }
+    query.addBindValue(migration_name);
+    query.addBindValue(model_hash);
+    query.addBindValue(QDateTime::currentDateTimeUtc());
+
+    if (!query.exec())
+    {
+        m_lastError = query.lastError().text();
+        connection.Disconnect();
+        return false;
+    }
+    connection.Disconnect();
+    return true;
 }
 
 QStringList Q1Migration::GetDatabases()

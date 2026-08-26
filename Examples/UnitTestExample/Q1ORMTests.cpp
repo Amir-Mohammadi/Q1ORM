@@ -4,12 +4,75 @@
 int usaId = 0;
 int canadaId = 0;
 
+namespace
+{
+QString ReadEnv(const char* name, const QString& fallback = QString())
+{
+    const QByteArray value = qgetenv(name);
+    return value.isEmpty() ? fallback : QString::fromLocal8Bit(value);
+}
+
+int ReadEnvInt(const char* name, int fallback)
+{
+    bool ok = false;
+    const int value = ReadEnv(name, QString::number(fallback)).toInt(&ok);
+    return ok ? value : fallback;
+}
+}
+
+Q1ORMTests::Q1ORMTests(Q1Driver driver,
+                       QString host,
+                       QString databaseName,
+                       QString username,
+                       QString password,
+                       int port,
+                       QObject* parent)
+    : QObject(parent),
+      configuredDriver(driver),
+      configuredHost(std::move(host)),
+      configuredDatabaseName(std::move(databaseName)),
+      configuredUsername(std::move(username)),
+      configuredPassword(std::move(password)),
+      configuredPort(port)
+{
+}
+
+Q1Driver Q1ORMTests::TestDriver() const
+{
+    return configuredDriver;
+}
+
+QString Q1ORMTests::DriverLabel() const
+{
+    switch (configuredDriver)
+    {
+    case Q1Driver::POSTGRE_SQL: return QStringLiteral("PostgreSQL");
+    case Q1Driver::SQLSERVER: return QStringLiteral("SQL Server");
+    case Q1Driver::MYSQL: return QStringLiteral("MySQL");
+    case Q1Driver::SQLITE: return QStringLiteral("SQLite");
+    }
+    return QStringLiteral("Database");
+}
+
+QString Q1ORMTests::Host() const { return configuredHost; }
+QString Q1ORMTests::DatabaseName() const { return configuredDatabaseName; }
+QString Q1ORMTests::Username() const { return configuredUsername; }
+QString Q1ORMTests::Password() const { return configuredPassword; }
+int Q1ORMTests::Port() const { return configuredPort; }
+
 void Q1ORMTests::initTestCase()
 {
     qDebug() << "\n=== Initializing Q1ORM Test Suite ===\n";
 
     const Q1Driver driver = TestDriver();
-    const QString qtDriver = driver == Q1Driver::SQLSERVER ? QStringLiteral("QODBC") : QStringLiteral("QPSQL");
+    QString qtDriver;
+    switch (driver)
+    {
+    case Q1Driver::POSTGRE_SQL: qtDriver = QStringLiteral("QPSQL"); break;
+    case Q1Driver::SQLSERVER: qtDriver = QStringLiteral("QODBC"); break;
+    case Q1Driver::MYSQL: qtDriver = QStringLiteral("QMYSQL"); break;
+    case Q1Driver::SQLITE: qtDriver = QStringLiteral("QSQLITE"); break;
+    }
 
     if (!QSqlDatabase::drivers().contains(qtDriver))
     {
@@ -176,6 +239,68 @@ void Q1ORMTests::test_limitWithOrderBy()
         .ToList();
 
     QCOMPARE(cities.size(), 2);
+}
+
+void Q1ORMTests::test_skipTakePagination()
+{
+    QList<City> cities = ctx->cities.Select()
+                              .OrderByAsc("id")
+                              .Skip(1)
+                              .Take(1)
+                              .ToList();
+    QCOMPARE(cities.size(), 1);
+    QVERIFY(cities.first().id > 0);
+}
+
+void Q1ORMTests::test_transactionHelpers()
+{
+    QVERIFY(conn->Connect());
+    QVERIFY(conn->BeginTransaction());
+
+    QSqlQuery query(conn->database);
+    QVERIFY(query.exec("SELECT 1"));
+    QVERIFY(conn->RollbackTransaction());
+    conn->Disconnect();
+}
+
+void Q1ORMTests::test_migrationHistoryTable()
+{
+    QVERIFY(conn->Connect());
+    QSqlQuery query(conn->database);
+    QVERIFY(query.exec("SELECT COUNT(*) FROM __q1_migrations"));
+    QVERIFY(query.next());
+    QCOMPARE(query.value(0).toInt(), 0);
+    conn->Disconnect();
+}
+
+void Q1ORMTests::test_bulkInsertUpdateDelete()
+{
+    ctx->countries.Delete("name LIKE 'Bulk-%'");
+
+    QList<Country> countries;
+    Country first;
+    first.name = "Bulk-1";
+    countries.append(first);
+    Country second;
+    second.name = "Bulk-2";
+    countries.append(second);
+
+    QVERIFY(ctx->countries.InsertRange(countries));
+    QVERIFY(countries[0].id > 0);
+    QVERIFY(countries[1].id > 0);
+
+    countries[0].name = "Bulk-1-updated";
+    countries[1].name = "Bulk-2-updated";
+    QVERIFY(ctx->countries.UpdateRange(countries));
+
+    QCOMPARE(ctx->countries.Select()
+                 .Where("name LIKE 'Bulk-%-updated'")
+                 .Count(), 2);
+
+    QVERIFY(ctx->countries.DeleteRange(countries));
+    QCOMPARE(ctx->countries.Select()
+                 .Where("name LIKE 'Bulk-%-updated'")
+                 .Count(), 0);
 }
 
 // ================= AGGREGATE =================

@@ -1,0 +1,34 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Examples/SqliteTestExample/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "Src::@145eef247bfb46b6828c"
+		}
+	],
+	"id" : "SqliteTestExample_autogen_timestamp_deps::@8b7026c17fcaaddb4f1d",
+	"isGeneratorProvided" : true,
+	"name" : "SqliteTestExample_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "Examples/SqliteTestExample",
+		"source" : "Examples/SqliteTestExample"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

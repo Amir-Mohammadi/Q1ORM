@@ -59,6 +59,7 @@ protected:
     QList<Q1Table*> tables;
 
     bool check_columns = true;
+    bool allow_destructive_migrations = false;
     bool owns_connection = false;
 };
 

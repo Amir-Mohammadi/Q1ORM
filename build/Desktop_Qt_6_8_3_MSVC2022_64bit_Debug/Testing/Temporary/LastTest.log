@@ -1,0 +1,18 @@
+Start testing: Aug 22 21:25 Iran Standard Time
+----------------------------------------------------------
+1/1 Testing: Q1ORM_UnitTests
+1/1 Test: Q1ORM_UnitTests
+Command: "C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/bin/UnitTestExample.exe"
+Directory: C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/UnitTestExample
+"Q1ORM_UnitTests" start time: Aug 22 21:25 Iran Standard Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Failed.
+"Q1ORM_UnitTests" end time: Aug 22 21:25 Iran Standard Time
+"Q1ORM_UnitTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Aug 22 21:25 Iran Standard Time

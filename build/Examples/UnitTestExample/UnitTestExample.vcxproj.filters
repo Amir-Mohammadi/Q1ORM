@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\UnitTestExample\UnitTestExample_autogen\mocs_compilation_Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SoloExample\applicationdbcontext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\Q1ORMTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\PostgreSqlTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\SqlGenerationTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\SqlServerTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\UnitTestExample\UnitTestExample_autogen\mocs_compilation_Release.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\UnitTestExample\UnitTestExample_autogen\mocs_compilation_MinSizeRel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\UnitTestExample\UnitTestExample_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\Q1ORMTests.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\PostgreSqlTests.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\SqlGenerationTests.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\SqlServerTests.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{B85199EA-6587-3E29-A1B0-6C55821C2E31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{1FC1D41A-E74C-3AED-B5F1-7575966FB1CA}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

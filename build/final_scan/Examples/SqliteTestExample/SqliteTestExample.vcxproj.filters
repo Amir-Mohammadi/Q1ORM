@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\final_scan\Examples\SqliteTestExample\SqliteTestExample_autogen\mocs_compilation_Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\applicationdbcontext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\final_scan\Examples\SqliteTestExample\SqliteTestExample_autogen\mocs_compilation_Release.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\final_scan\Examples\SqliteTestExample\SqliteTestExample_autogen\mocs_compilation_MinSizeRel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\final_scan\Examples\SqliteTestExample\SqliteTestExample_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\applicationdbcontext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Models\Country.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Models\City.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Models\Club.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Models\Court.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Models\User.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Mapping\CountryMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Mapping\CityMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Mapping\ClubMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Mapping\CourtMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Mapping\UserMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Repository\IRepository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Repository\Repository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\Services\InsertService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SqliteTestExample\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{DA194300-251B-3EBC-ACF5-8800F3602C7D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{BDB4FF90-89B8-3ABC-91F6-682C6B321840}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

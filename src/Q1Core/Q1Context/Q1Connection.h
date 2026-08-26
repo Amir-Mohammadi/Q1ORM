@@ -9,6 +9,7 @@
 #include <QtGlobal>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
 
 #include "../../Q1ORM_global.h"
 
@@ -251,6 +252,24 @@ public:
         }
 
         is_open = true;
+        error = QSqlError();
+        error_type = QSqlError::ErrorType::NoError;
+
+        if (IsSqlite())
+        {
+            QSqlQuery pragma(database);
+            if (!pragma.exec(QStringLiteral("PRAGMA foreign_keys = ON")))
+            {
+                error = pragma.lastError();
+                error_type = error.type();
+                database.close();
+                is_open = false;
+                qCritical() << "Q1Connection::Connect failed to enable SQLite foreign keys:"
+                            << error.text();
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -261,6 +280,23 @@ public:
             database.close();
             is_open = false;
         }
+    }
+
+    bool BeginTransaction()
+    {
+        if (!IsOpen() && !Connect())
+            return false;
+        return database.transaction();
+    }
+
+    bool CommitTransaction()
+    {
+        return database.commit();
+    }
+
+    bool RollbackTransaction()
+    {
+        return database.rollback();
     }
 
 public:

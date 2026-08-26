@@ -22,10 +22,6 @@ else()
     set_property(TARGET Q1ORM PROPERTY IMPORTED_IMPLIB "${Q1ORM_PATH}/lib/Q1ORM.lib")
     target_include_directories(Q1ORM INTERFACE "${Q1ORM_PATH}/include")
 
-target_sources(SqliteTestExample
-  PRIVATE
-    applicationdbcontext.h
-)
 set(Q1ORM_TARGET Q1ORM)
 endif()
 

@@ -9,6 +9,7 @@
 #include <QtGlobal>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
 
 #include "../../Q1ORM_global.h"
 
@@ -33,6 +34,11 @@ public:
         this->username = username;
         this->password = password;
 
+        if (IsSqlite() && this->database_name.isEmpty())
+        {
+            this->database_name = "sqlite_test.db";
+        }
+
         if(port != 0)
         {
             this->port = port;
@@ -56,6 +62,10 @@ public: // Setter
         this->driver = driver;
         driver_name = drivers[driver];
         port = ports[driver];
+        if (IsSqlite() && this->database_name.isEmpty())
+        {
+            this->database_name = "sqlite_test.db";
+        }
         ApplyConnectionSettings();
     }
 
@@ -74,6 +84,10 @@ public: // Setter
     void SetDatabaseName(QString database_name)
     {
         this->database_name = database_name;
+        if (IsSqlite() && this->database_name.isEmpty())
+        {
+            this->database_name = "sqlite_test.db";
+        }
         ApplyConnectionSettings();
     }
 
@@ -238,6 +252,24 @@ public:
         }
 
         is_open = true;
+        error = QSqlError();
+        error_type = QSqlError::ErrorType::NoError;
+
+        if (IsSqlite())
+        {
+            QSqlQuery pragma(database);
+            if (!pragma.exec(QStringLiteral("PRAGMA foreign_keys = ON")))
+            {
+                error = pragma.lastError();
+                error_type = error.type();
+                database.close();
+                is_open = false;
+                qCritical() << "Q1Connection::Connect failed to enable SQLite foreign keys:"
+                            << error.text();
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -248,6 +280,23 @@ public:
             database.close();
             is_open = false;
         }
+    }
+
+    bool BeginTransaction()
+    {
+        if (!IsOpen() && !Connect())
+            return false;
+        return database.transaction();
+    }
+
+    bool CommitTransaction()
+    {
+        return database.commit();
+    }
+
+    bool RollbackTransaction()
+    {
+        return database.rollback();
     }
 
 public:

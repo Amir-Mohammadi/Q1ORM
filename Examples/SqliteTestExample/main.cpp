@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QByteArray>
+#include <QTextStream>
 
 #include "applicationdbcontext.h"
 
@@ -34,11 +35,14 @@ int main(int argc, char *argv[])
 
     if (!ctx.Initialize())
     {
-        qWarning()
-            << "SQLite initialization failed:"
-            << conn->ErrorMessage();
+        const QString initializationError = conn->ErrorMessage().isEmpty()
+                                                 ? ctx.GetLastError()
+                                                 : conn->ErrorMessage();
+        qWarning() << "SQLite initialization failed:" << initializationError;
+        QTextStream(stderr) << "SQLite initialization failed: "
+                            << initializationError << Qt::endl;
 
-        return -1;
+        return -10;
     }
 
     qDebug()
@@ -73,7 +77,7 @@ int main(int argc, char *argv[])
             << "Country insert failed:"
             << conn->ErrorMessage();
 
-        return -1;
+        return -11;
     }
 
     qDebug()
@@ -99,7 +103,7 @@ int main(int argc, char *argv[])
             << "City insert failed:"
             << conn->ErrorMessage();
 
-        return -1;
+        return -12;
     }
 
     qDebug()
@@ -125,7 +129,7 @@ int main(int argc, char *argv[])
             << "Club insert failed:"
             << conn->ErrorMessage();
 
-        return -1;
+        return -13;
     }
 
     qDebug()
@@ -151,7 +155,7 @@ int main(int argc, char *argv[])
             << "Court insert failed:"
             << conn->ErrorMessage();
 
-        return -1;
+        return -14;
     }
 
     qDebug()
@@ -178,7 +182,7 @@ int main(int argc, char *argv[])
             << "User insert failed:"
             << conn->ErrorMessage();
 
-        return -1;
+        return -15;
     }
 
     qDebug()

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\after_fetch_scan\Examples\DatabaseInstallExample\DatabaseInstallExample_autogen\mocs_compilation_Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\DatabaseInstallExample\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\after_fetch_scan\Examples\DatabaseInstallExample\DatabaseInstallExample_autogen\mocs_compilation_Release.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\after_fetch_scan\Examples\DatabaseInstallExample\DatabaseInstallExample_autogen\mocs_compilation_MinSizeRel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\after_fetch_scan\Examples\DatabaseInstallExample\DatabaseInstallExample_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\ARM\Desktop\Q1ORM\Examples\DatabaseInstallExample\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7F5BEC2D-553A-39D5-9B52-844CDF7CB725}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

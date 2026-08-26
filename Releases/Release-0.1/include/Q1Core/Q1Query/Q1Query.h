@@ -163,7 +163,30 @@ public:
     // Query builders
     Q1Query& Where(const QString& clause)
     {
-        where_clause = clause;
+        if (clause.trimmed().isEmpty())
+            return *this;
+        where_clause = where_clause.isEmpty()
+                           ? clause
+                           : QString("(%1) AND (%2)").arg(where_clause, clause);
+        Invalidate();
+        return *this;
+    }
+
+    Q1Query& OrWhere(const QString& clause)
+    {
+        if (clause.trimmed().isEmpty())
+            return *this;
+        where_clause = where_clause.isEmpty()
+                           ? clause
+                           : QString("(%1) OR (%2)").arg(where_clause, clause);
+        Invalidate();
+        return *this;
+    }
+
+    Q1Query& Bind(const QString& name, const QVariant& value)
+    {
+        parameters.insert(name, value);
+        Invalidate();
         return *this;
     }
 
@@ -176,6 +199,21 @@ public:
     Q1Query& Limit(int l)
     {
         limit_val = l;
+        Invalidate();
+        return *this;
+    }
+
+    Q1Query& Take(int count)
+    {
+        limit_val = count;
+        Invalidate();
+        return *this;
+    }
+
+    Q1Query& Skip(int count)
+    {
+        offset_val = qMax(0, count);
+        Invalidate();
         return *this;
     }
 
@@ -269,7 +307,7 @@ public:
             return results;
         }
 
-        if (results.isEmpty())
+        if (!executed)
         {
             results = repository->SelectExec(where_clause,
                                              order_by,
@@ -277,7 +315,10 @@ public:
                                              joins,
                                              selected_columns,
                                              group_by,
-                                             having_clause);
+                                             having_clause,
+                                             parameters,
+                                             offset_val);
+            executed = true;
         }
 
         QJsonArray array = repository->GetLastJson();
@@ -313,7 +354,7 @@ public:
             return results;
         }
 
-        if (results.isEmpty())
+        if (!executed)
         {
             results = repository->SelectExec(where_clause,
                                              order_by,
@@ -321,7 +362,10 @@ public:
                                              joins,
                                              selected_columns,
                                              group_by,
-                                             having_clause);
+                                             having_clause,
+                                             parameters,
+                                             offset_val);
+            executed = true;
         }
 
         QJsonArray array = repository->GetLastJson();
@@ -355,7 +399,7 @@ public:
             return {};
         }
 
-        if (results.isEmpty())
+        if (!executed)
         {
             results = repository->SelectExec(where_clause,
                                              order_by,
@@ -363,7 +407,10 @@ public:
                                              joins,
                                              selected_columns,
                                              group_by,
-                                             having_clause);
+                                             having_clause,
+                                             parameters,
+                                             offset_val);
+            executed = true;
 
             if (!included_relations.isEmpty())
             {
@@ -379,7 +426,7 @@ public:
 
     QByteArray ToJson()
     {
-        if (results.isEmpty())
+        if (!executed)
         {
             if (!repository)
             {
@@ -392,7 +439,10 @@ public:
                                              joins,
                                              selected_columns,
                                              group_by,
-                                             having_clause);
+                                             having_clause,
+                                             parameters,
+                                             offset_val);
+            executed = true;
 
             if (!included_relations.isEmpty())
             {
@@ -413,6 +463,13 @@ public:
     }
 
 private:
+    void Invalidate()
+    {
+        executed = false;
+        results.clear();
+        relation_cache.clear();
+    }
+
     // Helper methods
     QJsonArray AutoPrefixJoinedColumns(const QJsonArray& array)
     {
@@ -741,11 +798,11 @@ private:
         const QString sourceColumn = relationUsesLocalForeignKey ? relation.foreign_key : relation.reference_key;
         const QString targetColumn = relationUsesLocalForeignKey ? relation.reference_key : relation.foreign_key;
 
-        QStringList keyValues;
+        QVariantList keyValues;
         for (const Entity& entity : entities)
         {
-            QString keyValue = GetPropertyValue(entity, sourceColumn);
-            if (!keyValue.isEmpty() && !keyValues.contains(keyValue))
+            QVariant keyValue = GetPropertyValue(entity, sourceColumn);
+            if (keyValue.isValid() && !keyValues.contains(keyValue))
             {
                 keyValues.append(keyValue);
             }
@@ -756,18 +813,27 @@ private:
             return;
         }
 
+        QStringList placeholders;
+        QVariantMap relationParameters;
+        for (int i = 0; i < keyValues.size(); ++i)
+        {
+            const QString name = QString(":q1_relation_%1").arg(i);
+            placeholders.append(name);
+            relationParameters.insert(name, keyValues.at(i));
+        }
+
         QString query = QString("SELECT * FROM %1 WHERE %2 IN (%3)")
                             .arg(repository->QuoteIdentifier(relation.top_table),
                                  repository->QuoteIdentifier(targetColumn),
-                                 keyValues.join(", "));
+                                 placeholders.join(", "));
 
         qDebug() << "Eager Loading Query:" << query;
 
-        QList<QJsonObject> relatedData = repository->ExecuteRelationQuery(query);
+        QList<QJsonObject> relatedData = repository->ExecuteRelationQuery(query, relationParameters);
         relation_cache[relation.top_table] = relatedData;
     }
 
-    QString GetPropertyValue(const Entity& entity, const QString& columnName)
+    QVariant GetPropertyValue(const Entity& entity, const QString& columnName)
     {
         const QMap<QString, typename Q1Entity<Entity>::PropertyInfo>& propMap = repository->GetPropertyMap();
 
@@ -783,12 +849,12 @@ private:
             case SMALLINT:
             {
                 int v = *reinterpret_cast<const int*>(memberPtr);
-                return QString::number(v);
+                return v;
             }
             case BIGINT:
             {
                 qint64 v = *reinterpret_cast<const qint64*>(memberPtr);
-                return QString::number(v);
+                return v;
             }
             case VARCHAR:
             case TEXT:
@@ -796,16 +862,16 @@ private:
             {
                 const QString* s = reinterpret_cast<const QString*>(memberPtr);
                 if (!s)
-                    return QString();
+                    return QVariant();
 
-                return repository->QuoteStringLiteral(*s);
+                return *s;
             }
             default:
-                return QString();
+                return QVariant();
             }
         }
 
-        return QString();
+        return QVariant();
     }
 
     QJsonArray AppendRelatedDataToJson(const QJsonArray& originalArray)
@@ -878,8 +944,11 @@ private:
     QString having_clause;
     QStringList selected_columns;
     int limit_val;
+    int offset_val = 0;
     QList<Entity> results;
     bool distinct_flag;
     QStringList included_relations;
     QMap<QString, QList<QJsonObject>> relation_cache;
+    QVariantMap parameters;
+    bool executed = false;
 };

@@ -1,0 +1,514 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						6,
+						7,
+						9,
+						10
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "src",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-src-Debug-9e8a46da4c631d32ed5d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "src",
+					"targetIndexes" : 
+					[
+						15,
+						16,
+						17
+					]
+				},
+				{
+					"build" : "Examples",
+					"childIndexes" : 
+					[
+						3,
+						4,
+						5
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Examples-Debug-23a23bf6dc670584ea38.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "Examples"
+				},
+				{
+					"build" : "Examples/UnitTestExample",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Examples.UnitTestExample-Debug-fcf4a21e8d780ff136f5.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 3,
+					"source" : "Examples/UnitTestExample",
+					"targetIndexes" : 
+					[
+						18,
+						19,
+						20
+					]
+				},
+				{
+					"build" : "Examples/SoloExample",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Examples.SoloExample-Debug-5462f29eb6349a485579.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 4,
+					"source" : "Examples/SoloExample",
+					"targetIndexes" : 
+					[
+						9,
+						10,
+						11
+					]
+				},
+				{
+					"build" : "Examples/DatabaseInstallExample",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Examples.DatabaseInstallExample-Debug-513843e47c6c9497a1bc.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 5,
+					"source" : "Examples/DatabaseInstallExample",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				},
+				{
+					"build" : "Docs",
+					"jsonFile" : "directory-Docs-Debug-a27a374b610a211814b0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 6,
+					"source" : "Docs"
+				},
+				{
+					"build" : "Tools",
+					"childIndexes" : 
+					[
+						8
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Tools-Debug-8d97cb24eec6417dce43.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 7,
+					"source" : "Tools"
+				},
+				{
+					"build" : "Tools/ExampleProjectModifier",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Tools.ExampleProjectModifier-Debug-d8d63c7f201e4c227fae.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 7,
+					"projectIndex" : 8,
+					"source" : "Tools/ExampleProjectModifier",
+					"targetIndexes" : 
+					[
+						3,
+						4,
+						5
+					]
+				},
+				{
+					"build" : "Examples/MySqlTestExample",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Examples.MySqlTestExample-Debug-0e77d74665c6bab15990.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 9,
+					"source" : "Examples/MySqlTestExample",
+					"targetIndexes" : 
+					[
+						6,
+						7,
+						8
+					]
+				},
+				{
+					"build" : "Examples/SqliteTestExample",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Examples.SqliteTestExample-Debug-58db4f156fe8af339d44.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 10,
+					"source" : "Examples/SqliteTestExample",
+					"targetIndexes" : 
+					[
+						12,
+						13,
+						14
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						6,
+						7,
+						9,
+						10
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Q1ORM"
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "Src",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						15,
+						16,
+						17
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						3,
+						4,
+						5
+					],
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "Examples",
+					"parentIndex" : 0
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3
+					],
+					"name" : "UnitTestExample",
+					"parentIndex" : 2,
+					"targetIndexes" : 
+					[
+						18,
+						19,
+						20
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						4
+					],
+					"name" : "SoloExample",
+					"parentIndex" : 2,
+					"targetIndexes" : 
+					[
+						9,
+						10,
+						11
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5
+					],
+					"name" : "DatabaseInstallExample",
+					"parentIndex" : 2,
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						6
+					],
+					"name" : "Docs",
+					"parentIndex" : 0
+				},
+				{
+					"childIndexes" : 
+					[
+						8
+					],
+					"directoryIndexes" : 
+					[
+						7
+					],
+					"name" : "Tools",
+					"parentIndex" : 0
+				},
+				{
+					"directoryIndexes" : 
+					[
+						8
+					],
+					"name" : "ExampleProjectModifier",
+					"parentIndex" : 7,
+					"targetIndexes" : 
+					[
+						3,
+						4,
+						5
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						9
+					],
+					"name" : "MySqlTestExample",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						6,
+						7,
+						8
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						10
+					],
+					"name" : "SqliteTestExample",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						12,
+						13,
+						14
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 5,
+					"id" : "DatabaseInstallExample::@d18fab8dadd209ea8c5b",
+					"jsonFile" : "target-DatabaseInstallExample-Debug-06332ae5257c9abf7eae.json",
+					"name" : "DatabaseInstallExample",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "DatabaseInstallExample_autogen::@d18fab8dadd209ea8c5b",
+					"jsonFile" : "target-DatabaseInstallExample_autogen-Debug-77e989f3b0d96d975d0d.json",
+					"name" : "DatabaseInstallExample_autogen",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "DatabaseInstallExample_autogen_timestamp_deps::@d18fab8dadd209ea8c5b",
+					"jsonFile" : "target-DatabaseInstallExample_autogen_timestamp_deps-Debug-713073936839bbf54045.json",
+					"name" : "DatabaseInstallExample_autogen_timestamp_deps",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "ExampleProjectModifier::@5b5cf0d17ee0c3bcea92",
+					"jsonFile" : "target-ExampleProjectModifier-Debug-8bace6b676dd57739ab6.json",
+					"name" : "ExampleProjectModifier",
+					"projectIndex" : 8
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "ExampleProjectModifier_autogen::@5b5cf0d17ee0c3bcea92",
+					"jsonFile" : "target-ExampleProjectModifier_autogen-Debug-aadf643ad0c361c5f5df.json",
+					"name" : "ExampleProjectModifier_autogen",
+					"projectIndex" : 8
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "ExampleProjectModifier_autogen_timestamp_deps::@5b5cf0d17ee0c3bcea92",
+					"jsonFile" : "target-ExampleProjectModifier_autogen_timestamp_deps-Debug-c319d7d81ccb795e69eb.json",
+					"name" : "ExampleProjectModifier_autogen_timestamp_deps",
+					"projectIndex" : 8
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "MySqlTestExample::@65439ddc6f27851b1cca",
+					"jsonFile" : "target-MySqlTestExample-Debug-52c7e210f13a83095012.json",
+					"name" : "MySqlTestExample",
+					"projectIndex" : 9
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "MySqlTestExample_autogen::@65439ddc6f27851b1cca",
+					"jsonFile" : "target-MySqlTestExample_autogen-Debug-f640d33358c5a32348f6.json",
+					"name" : "MySqlTestExample_autogen",
+					"projectIndex" : 9
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "MySqlTestExample_autogen_timestamp_deps::@65439ddc6f27851b1cca",
+					"jsonFile" : "target-MySqlTestExample_autogen_timestamp_deps-Debug-1ad7d91fa5319546b63d.json",
+					"name" : "MySqlTestExample_autogen_timestamp_deps",
+					"projectIndex" : 9
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "SoloExample::@2a20e3d1804bca5c4537",
+					"jsonFile" : "target-SoloExample-Debug-d78947f89e828aaa915d.json",
+					"name" : "SoloExample",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "SoloExample_autogen::@2a20e3d1804bca5c4537",
+					"jsonFile" : "target-SoloExample_autogen-Debug-b4bff50fe221a7e3f306.json",
+					"name" : "SoloExample_autogen",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "SoloExample_autogen_timestamp_deps::@2a20e3d1804bca5c4537",
+					"jsonFile" : "target-SoloExample_autogen_timestamp_deps-Debug-012d1ec198ed906eec3b.json",
+					"name" : "SoloExample_autogen_timestamp_deps",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 10,
+					"id" : "SqliteTestExample::@8b7026c17fcaaddb4f1d",
+					"jsonFile" : "target-SqliteTestExample-Debug-ff99e3297406fd38a09c.json",
+					"name" : "SqliteTestExample",
+					"projectIndex" : 10
+				},
+				{
+					"directoryIndex" : 10,
+					"id" : "SqliteTestExample_autogen::@8b7026c17fcaaddb4f1d",
+					"jsonFile" : "target-SqliteTestExample_autogen-Debug-8c3a811381f94382c82d.json",
+					"name" : "SqliteTestExample_autogen",
+					"projectIndex" : 10
+				},
+				{
+					"directoryIndex" : 10,
+					"id" : "SqliteTestExample_autogen_timestamp_deps::@8b7026c17fcaaddb4f1d",
+					"jsonFile" : "target-SqliteTestExample_autogen_timestamp_deps-Debug-0cc662bf5a0dbb5e5fa5.json",
+					"name" : "SqliteTestExample_autogen_timestamp_deps",
+					"projectIndex" : 10
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "Src::@145eef247bfb46b6828c",
+					"jsonFile" : "target-Src-Debug-abb66edfc409ac83f590.json",
+					"name" : "Src",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "Src_autogen::@145eef247bfb46b6828c",
+					"jsonFile" : "target-Src_autogen-Debug-beeee522b42edfd634d2.json",
+					"name" : "Src_autogen",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "Src_autogen_timestamp_deps::@145eef247bfb46b6828c",
+					"jsonFile" : "target-Src_autogen_timestamp_deps-Debug-40145ced47961d1b3703.json",
+					"name" : "Src_autogen_timestamp_deps",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "UnitTestExample::@d7044e048e433e1e80ed",
+					"jsonFile" : "target-UnitTestExample-Debug-b8396bed0846549ca5f6.json",
+					"name" : "UnitTestExample",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "UnitTestExample_autogen::@d7044e048e433e1e80ed",
+					"jsonFile" : "target-UnitTestExample_autogen-Debug-df61403f824c7d10c618.json",
+					"name" : "UnitTestExample_autogen",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "UnitTestExample_autogen_timestamp_deps::@d7044e048e433e1e80ed",
+					"jsonFile" : "target-UnitTestExample_autogen_timestamp_deps-Debug-7129f3ae2c09684bc784.json",
+					"name" : "UnitTestExample_autogen_timestamp_deps",
+					"projectIndex" : 3
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug",
+		"source" : "C:/Users/ARM/Desktop/Q1ORM"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

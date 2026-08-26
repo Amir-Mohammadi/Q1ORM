@@ -38,7 +38,6 @@ bool Q1Context::Initialize()
     }
 
     query = new Q1Migration(*connection);
-
     InitialDatabase();
 
     if (!connection->IsOpen())
@@ -47,10 +46,22 @@ bool Q1Context::Initialize()
         return false;
     }
 
+    if (!query->EnsureHistoryTable())
+    {
+        qCritical() << "Q1Context::Initialize - failed to create migration history table:"
+                    << query->ErrorMessage();
+        return false;
+    }
+
     tables = OnTablesCreating();
 
     InitialTables();
+    if (!connection->Connect())
+        return false;
+
     InitialColumns();
+    if (!connection->Connect())
+        return false;
 
     QList<Q1Relation> allRelations = OnTableRelationCreating();
     InitialRelations(allRelations);
@@ -174,7 +185,7 @@ void Q1Context::InitialColumns()
                 }
             }
 
-            if (!found)
+            if (!found && allow_destructive_migrations)
             {
                 qDebug() << "InitialColumns - dropping column" << dbCol.name << "from" << table_name;
                 query->DropColumn(table_name, dbCol.name);

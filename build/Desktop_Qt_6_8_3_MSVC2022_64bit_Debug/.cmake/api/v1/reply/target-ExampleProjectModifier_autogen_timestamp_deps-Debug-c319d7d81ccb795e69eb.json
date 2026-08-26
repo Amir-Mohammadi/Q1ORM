@@ -1,0 +1,27 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Tools/ExampleProjectModifier/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"id" : "ExampleProjectModifier_autogen_timestamp_deps::@5b5cf0d17ee0c3bcea92",
+	"isGeneratorProvided" : true,
+	"name" : "ExampleProjectModifier_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "Tools/ExampleProjectModifier",
+		"source" : "Tools/ExampleProjectModifier"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

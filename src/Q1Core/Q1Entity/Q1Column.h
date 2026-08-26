@@ -28,7 +28,14 @@ enum Q1ColumnDataType
 class Q1ORM_EXPORT Q1Column
 {
 public:
-    Q1Column() {}
+    Q1Column()
+        : type(VARCHAR),
+          size(0),
+          nullable(true),
+          primary_key(false),
+          is_identity(false)
+    {
+    }
 
     inline Q1Column(QString name,
              Q1ColumnDataType type,

@@ -1,0 +1,34 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Examples/DatabaseInstallExample/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "Src::@145eef247bfb46b6828c"
+		}
+	],
+	"id" : "DatabaseInstallExample_autogen_timestamp_deps::@d18fab8dadd209ea8c5b",
+	"isGeneratorProvided" : true,
+	"name" : "DatabaseInstallExample_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "Examples/DatabaseInstallExample",
+		"source" : "Examples/DatabaseInstallExample"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

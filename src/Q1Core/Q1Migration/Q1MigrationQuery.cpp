@@ -16,6 +16,10 @@ QString Q1MigrationQuery::GetDatabasesSQL()
     case DatabaseType::MySQL:
         return "SHOW DATABASES";
     case DatabaseType::PostgreSQL:
+        return
+            "SELECT datname "
+            "FROM pg_database "
+            "WHERE datistemplate = false";
     case DatabaseType::SQLite:
         return "PRAGMA database_list";
     default:
@@ -72,7 +76,7 @@ QString Q1MigrationQuery::GetColumnsSQL(QString table_name)
                    "NULL AS character_maximum_length, "
                    "CASE WHEN \"notnull\" = 0 THEN 'YES' ELSE 'NO' END AS is_nullable, "
                    "dflt_value AS column_default, "
-                   "CASE WHEN pk > 0 THEN 1 ELSE 0 END AS is_identity, "
+                   "0 AS is_identity, "
                    "cid + 1 AS ordinal_position, "
                    "NULL AS constraint_name "
                    "FROM pragma_table_info('%1') "

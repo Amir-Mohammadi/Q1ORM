@@ -1,0 +1,71 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Examples/UnitTestExample/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "UnitTestExample_autogen_timestamp_deps::@d7044e048e433e1e80ed"
+		}
+	],
+	"id" : "UnitTestExample_autogen::@d7044e048e433e1e80ed",
+	"isGeneratorProvided" : true,
+	"name" : "UnitTestExample_autogen",
+	"paths" : 
+	{
+		"build" : "Examples/UnitTestExample",
+		"source" : "Examples/UnitTestExample"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1,
+				2
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/UnitTestExample/CMakeFiles/UnitTestExample_autogen",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/UnitTestExample/CMakeFiles/UnitTestExample_autogen.rule",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/UnitTestExample/UnitTestExample_autogen/timestamp.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

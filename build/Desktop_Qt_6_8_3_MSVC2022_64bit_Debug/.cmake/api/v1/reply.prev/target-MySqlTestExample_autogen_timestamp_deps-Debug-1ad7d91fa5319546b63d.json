@@ -1,0 +1,34 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Examples/MySqlTestExample/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "Src::@145eef247bfb46b6828c"
+		}
+	],
+	"id" : "MySqlTestExample_autogen_timestamp_deps::@65439ddc6f27851b1cca",
+	"isGeneratorProvided" : true,
+	"name" : "MySqlTestExample_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "Examples/MySqlTestExample",
+		"source" : "Examples/MySqlTestExample"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

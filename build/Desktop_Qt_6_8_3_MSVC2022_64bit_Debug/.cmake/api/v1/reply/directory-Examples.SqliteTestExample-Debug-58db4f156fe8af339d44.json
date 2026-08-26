@@ -1,0 +1,45 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"Examples/SqliteTestExample/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 51,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"Examples/SqliteTestExample/SqliteTestExample.exe"
+			],
+			"targetId" : "SqliteTestExample::@8b7026c17fcaaddb4f1d",
+			"targetIndex" : 12,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "Examples/SqliteTestExample",
+		"source" : "Examples/SqliteTestExample"
+	}
+}

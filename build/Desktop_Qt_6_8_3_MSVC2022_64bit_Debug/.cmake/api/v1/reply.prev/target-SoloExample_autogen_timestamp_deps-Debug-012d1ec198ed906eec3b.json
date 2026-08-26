@@ -1,0 +1,34 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"Examples/SoloExample/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "Src::@145eef247bfb46b6828c"
+		}
+	],
+	"id" : "SoloExample_autogen_timestamp_deps::@2a20e3d1804bca5c4537",
+	"isGeneratorProvided" : true,
+	"name" : "SoloExample_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "Examples/SoloExample",
+		"source" : "Examples/SoloExample"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

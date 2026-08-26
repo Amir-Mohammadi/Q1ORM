@@ -1,0 +1,45 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"Examples/UnitTestExample/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 81,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/UnitTestExample.exe"
+			],
+			"targetId" : "UnitTestExample::@d7044e048e433e1e80ed",
+			"targetIndex" : 18,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "Examples/UnitTestExample",
+		"source" : "Examples/UnitTestExample"
+	}
+}

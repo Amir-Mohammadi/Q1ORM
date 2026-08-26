@@ -12,19 +12,34 @@ class Q1ORMTests : public QObject
 {
     Q_OBJECT
 
+public:
+    explicit Q1ORMTests(Q1Driver driver,
+                        QString host,
+                        QString databaseName,
+                        QString username,
+                        QString password,
+                        int port,
+                        QObject* parent = nullptr);
+
 protected:
     Q1Connection* conn = nullptr;
     ApplicationDbContext* ctx = nullptr;
+    Q1Driver configuredDriver;
+    QString configuredHost;
+    QString configuredDatabaseName;
+    QString configuredUsername;
+    QString configuredPassword;
+    int configuredPort = 0;
 
     void setupTestData();
 
-    virtual Q1Driver TestDriver() const = 0;
-    virtual QString DriverLabel() const = 0;
-    virtual QString Host() const = 0;
-    virtual QString DatabaseName() const = 0;
-    virtual QString Username() const = 0;
-    virtual QString Password() const = 0;
-    virtual int Port() const = 0;
+    virtual Q1Driver TestDriver() const;
+    virtual QString DriverLabel() const;
+    virtual QString Host() const;
+    virtual QString DatabaseName() const;
+    virtual QString Username() const;
+    virtual QString Password() const;
+    virtual int Port() const;
 
 private slots:
     // Setup and cleanup
@@ -50,6 +65,10 @@ private slots:
     // Test 4: Limit
     void test_limit();
     void test_limitWithOrderBy();
+    void test_skipTakePagination();
+    void test_transactionHelpers();
+    void test_migrationHistoryTable();
+    void test_bulkInsertUpdateDelete();
 
     // Test 5: Aggregate Functions
     void test_count();

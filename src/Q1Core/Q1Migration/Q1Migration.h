@@ -40,12 +40,15 @@ public:
     bool ConstraintExists(QSqlDatabase &db, const QString &constraint_name);
 
     QStringList GetTables();
+    bool EnsureHistoryTable();
+    bool RecordMigration(const QString &migration_name,
+                         const QString &model_hash = QString());
 
 
     QString ErrorMessage() const { return m_lastError; }
 
 private:
-    Q1Connection connection;
+    Q1Connection &connection;
     Q1MigrationQuery translator;
     QString m_lastError;
 };
