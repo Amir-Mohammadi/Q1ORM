@@ -56,15 +56,33 @@ bool Q1Context::Initialize()
     tables = OnTablesCreating();
 
     InitialTables();
+    if (query && !query->ErrorMessage().isEmpty())
+    {
+        qCritical() << "Q1Context::Initialize - table initialization failed:"
+                    << query->ErrorMessage();
+        return false;
+    }
     if (!connection->Connect())
         return false;
 
     InitialColumns();
+    if (query && !query->ErrorMessage().isEmpty())
+    {
+        qCritical() << "Q1Context::Initialize - column initialization failed:"
+                    << query->ErrorMessage();
+        return false;
+    }
     if (!connection->Connect())
         return false;
 
     QList<Q1Relation> allRelations = OnTableRelationCreating();
     InitialRelations(allRelations);
+    if (query && !query->ErrorMessage().isEmpty())
+    {
+        qCritical() << "Q1Context::Initialize - relation initialization failed:"
+                    << query->ErrorMessage();
+        return false;
+    }
 
     return true;
 }
@@ -208,6 +226,13 @@ void Q1Context::InitialColumns()
 void Q1Context::CompareColumn(const QString &table_name, Q1Column &dbColumn, Q1Column &declColumn)
 {
     if (!query) return;
+
+    if (dbColumn.type != declColumn.type)
+    {
+        qWarning() << "Schema type change detected for" << table_name << dbColumn.name
+                   << "but automatic type conversion is not implemented";
+        return;
+    }
 
     if (dbColumn.size != declColumn.size)
         query->UpdateColumnSize(table_name, declColumn.name, declColumn.size);

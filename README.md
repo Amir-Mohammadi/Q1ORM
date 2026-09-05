@@ -31,9 +31,8 @@
 ## Project structure
 
 - `src/` - the main Q1ORM library
-- `Examples/SoloExample/` - a simple end-to-end usage example
-- `Examples/DatabaseInstallExample/` - database install helper example
-- `Examples/UnitTestExample/` - integration and SQL-generation tests
+- `Examples/UnitTestExample/` - the complete integration and SQL-generation test suite
+- `Examples/DockerTestExample/` - PostgreSQL Docker/Compose integration tests
 - `Docs/` - extra documentation
 - `Releases/Release-0.1/` - installed library layout used by the examples
 - `Tools/` - helper tools for release packaging and example setup
@@ -82,11 +81,7 @@ Releases/Release-0.1/
 
 ## Run examples and tests
 
-After building:
-
-- `SoloExample` shows normal ORM usage
-- `DatabaseInstallExample` shows the installer helper
-- `UnitTestExample` contains automated tests
+After building, `UnitTestExample` contains the complete automated test suite.
 
 If your generator supports CTest, you can run:
 
@@ -94,11 +89,22 @@ If your generator supports CTest, you can run:
 ctest --test-dir build --output-on-failure
 ```
 
+### Docker integration tests
+
+The Docker test project starts PostgreSQL 16 and runs the ORM integration and
+SQL-generation tests against the container:
+
+```bash
+docker compose -f Examples/DockerTestExample/docker-compose.yml up \
+  --build --abort-on-container-exit --exit-code-from q1orm-tests
+docker compose -f Examples/DockerTestExample/docker-compose.yml down -v
+```
+
 ## Database configuration
 
 ### Generic environment variables
 
-`Examples/SoloExample/` reads these variables:
+`Examples/UnitTestExample/` reads these variables:
 
 - `Q1ORM_DB_DRIVER=postgres` or `Q1ORM_DB_DRIVER=sqlserver`
 - `Q1ORM_DB_HOST`
@@ -575,7 +581,7 @@ target_link_libraries(MyApp PRIVATE Q1ORM Qt6::Core Qt6::Sql)
 
 - `Docs/GettingStarted.md`
 - `Docs/CRUDGuide.md`
-- `Examples/SoloExample/`
+- `Examples/DockerTestExample/`
 - `Examples/UnitTestExample/`
 
 ## License

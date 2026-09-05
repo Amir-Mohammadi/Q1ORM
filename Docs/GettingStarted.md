@@ -98,9 +98,8 @@ The examples in the repository demonstrate patterns such as:
 
 ## Example folders
 
-- `Examples/SoloExample/` is a lightweight usage example.
-- `Examples/DatabaseInstallExample/` demonstrates database installation support.
-- `Examples/UnitTestExample/` contains integration and SQL generation tests.
+- `Examples/UnitTestExample/` contains the complete integration and SQL generation tests.
+- `Examples/DockerTestExample/` runs the same tests against PostgreSQL in Docker.
 
 ## Notes
 
