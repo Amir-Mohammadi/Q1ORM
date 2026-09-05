@@ -330,10 +330,7 @@ C:/Qt/6.8.3/msvc2022_64/include/QtCore/qvarlengtharray.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qcontainertools_impl.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qcoreapplication_platform.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qcoreapplication.h
-C:/Qt/6.8.3/msvc2022_64/include/QtCore/QProcess
-C:/Qt/6.8.3/msvc2022_64/include/QtCore/qprocess.h
-C:/Qt/6.8.3/msvc2022_64/include/QtCore/qiodevice.h
-C:/Qt/6.8.3/msvc2022_64/include/QtCore/qstringlist.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/QTextStream
 C:/Qt/6.8.3/msvc2022_64/include/QtTest/QtTest
 C:/Qt/6.8.3/msvc2022_64/include/QtTest/QtTestDepends
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/QtCore
@@ -374,6 +371,7 @@ C:/Qt/6.8.3/msvc2022_64/include/QtCore/qcompilerdetection.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qbasictimer.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qbitarray.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qbuffer.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qiodevice.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qbytearraylist.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qbytearraymatcher.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qcache.h
@@ -485,6 +483,8 @@ C:/Qt/6.8.3/msvc2022_64/include/QtCore/qshareddata_impl.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qplugin.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qpointer.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qpluginloader.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qprocess.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qstringlist.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qprocessordetection.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qpropertyanimation.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qvariantanimation.h
@@ -596,10 +596,10 @@ C:/Qt/6.8.3/msvc2022_64/include/QtSql/QSqlQuery
 C:/Qt/6.8.3/msvc2022_64/include/QtSql/qsqlquery.h
 C:/Users/ARM/Desktop/Q1ORM/src/Q1Core/Q1Context/../../Q1ORM_global.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/QObject
-C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/applicationdbcontext.h
-C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/Models/City.h
+C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/applicationdbcontext.h
+C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Models/City.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/QString
-C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/Models/Country.h
+C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Models/Country.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/QString
 C:/Users/ARM/Desktop/Q1ORM/src/Q1Core/Q1Context/Q1Context.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/QList

@@ -473,7 +473,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SoloExample\applicationdbcontext.cpp" />
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\applicationdbcontext.cpp" />
     <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\Q1ORMTests.h" />
     <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\Q1ORMTests.cpp" />
     <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\PostgreSqlTests.h" />

@@ -180,15 +180,15 @@ if not exist "%RELEASE%" (
 echo.
 echo Deploying Qt runtime...
 if defined WINDEPLOYQT (
-    if exist "%RELEASE%\bin\DatabaseInstallExample.exe" (
-        "%WINDEPLOYQT%" --no-translations --no-opengl-sw --force "%RELEASE%\bin\DatabaseInstallExample.exe"
+    if exist "%RELEASE%\bin\UnitTestExample.exe" (
+        "%WINDEPLOYQT%" --no-translations --no-opengl-sw --force "%RELEASE%\bin\UnitTestExample.exe"
         if errorlevel 1 (
             echo QT RUNTIME DEPLOY FAILED!
             pause
             exit /b 1
         )
     ) else (
-        echo WARNING: DatabaseInstallExample.exe not found in release bin. Skipping Qt runtime deploy.
+        echo WARNING: UnitTestExample.exe not found in release bin. Skipping Qt runtime deploy.
     )
 ) else (
     echo WARNING: windeployqt.exe not found. Skipping Qt runtime deploy.

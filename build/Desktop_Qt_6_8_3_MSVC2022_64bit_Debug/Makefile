@@ -188,121 +188,17 @@ Src_autogen\fast:
 .PHONY : Src_autogen\fast
 
 #=============================================================================
-# Target rules for targets named UnitTestExample
+# Target rules for targets named OrmExample
 
 # Build rule for target.
-UnitTestExample: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) UnitTestExample
-.PHONY : UnitTestExample
+OrmExample: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) OrmExample
+.PHONY : OrmExample
 
 # fast build rule for target.
-UnitTestExample\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\build
-.PHONY : UnitTestExample\fast
-
-#=============================================================================
-# Target rules for targets named UnitTestExample_autogen_timestamp_deps
-
-# Build rule for target.
-UnitTestExample_autogen_timestamp_deps: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) UnitTestExample_autogen_timestamp_deps
-.PHONY : UnitTestExample_autogen_timestamp_deps
-
-# fast build rule for target.
-UnitTestExample_autogen_timestamp_deps\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\build
-.PHONY : UnitTestExample_autogen_timestamp_deps\fast
-
-#=============================================================================
-# Target rules for targets named UnitTestExample_autogen
-
-# Build rule for target.
-UnitTestExample_autogen: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) UnitTestExample_autogen
-.PHONY : UnitTestExample_autogen
-
-# fast build rule for target.
-UnitTestExample_autogen\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\build
-.PHONY : UnitTestExample_autogen\fast
-
-#=============================================================================
-# Target rules for targets named SoloExample
-
-# Build rule for target.
-SoloExample: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) SoloExample
-.PHONY : SoloExample
-
-# fast build rule for target.
-SoloExample\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\SoloExample\CMakeFiles\SoloExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample.dir\build
-.PHONY : SoloExample\fast
-
-#=============================================================================
-# Target rules for targets named SoloExample_autogen_timestamp_deps
-
-# Build rule for target.
-SoloExample_autogen_timestamp_deps: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) SoloExample_autogen_timestamp_deps
-.PHONY : SoloExample_autogen_timestamp_deps
-
-# fast build rule for target.
-SoloExample_autogen_timestamp_deps\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\build
-.PHONY : SoloExample_autogen_timestamp_deps\fast
-
-#=============================================================================
-# Target rules for targets named SoloExample_autogen
-
-# Build rule for target.
-SoloExample_autogen: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) SoloExample_autogen
-.PHONY : SoloExample_autogen
-
-# fast build rule for target.
-SoloExample_autogen\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\build
-.PHONY : SoloExample_autogen\fast
-
-#=============================================================================
-# Target rules for targets named DatabaseInstallExample
-
-# Build rule for target.
-DatabaseInstallExample: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) DatabaseInstallExample
-.PHONY : DatabaseInstallExample
-
-# fast build rule for target.
-DatabaseInstallExample\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\build
-.PHONY : DatabaseInstallExample\fast
-
-#=============================================================================
-# Target rules for targets named DatabaseInstallExample_autogen_timestamp_deps
-
-# Build rule for target.
-DatabaseInstallExample_autogen_timestamp_deps: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) DatabaseInstallExample_autogen_timestamp_deps
-.PHONY : DatabaseInstallExample_autogen_timestamp_deps
-
-# fast build rule for target.
-DatabaseInstallExample_autogen_timestamp_deps\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\build
-.PHONY : DatabaseInstallExample_autogen_timestamp_deps\fast
-
-#=============================================================================
-# Target rules for targets named DatabaseInstallExample_autogen
-
-# Build rule for target.
-DatabaseInstallExample_autogen: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) DatabaseInstallExample_autogen
-.PHONY : DatabaseInstallExample_autogen
-
-# fast build rule for target.
-DatabaseInstallExample_autogen\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\build
-.PHONY : DatabaseInstallExample_autogen\fast
+OrmExample\fast:
+	$(MAKE) $(MAKESILENT) -f Examples\OrmExample\CMakeFiles\OrmExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\OrmExample\CMakeFiles\OrmExample.dir\build
+.PHONY : OrmExample\fast
 
 #=============================================================================
 # Target rules for targets named ExampleProjectModifier
@@ -343,84 +239,6 @@ ExampleProjectModifier_autogen\fast:
 	$(MAKE) $(MAKESILENT) -f Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\build.make /nologo -$(MAKEFLAGS) Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\build
 .PHONY : ExampleProjectModifier_autogen\fast
 
-#=============================================================================
-# Target rules for targets named MySqlTestExample
-
-# Build rule for target.
-MySqlTestExample: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) MySqlTestExample
-.PHONY : MySqlTestExample
-
-# fast build rule for target.
-MySqlTestExample\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\build
-.PHONY : MySqlTestExample\fast
-
-#=============================================================================
-# Target rules for targets named MySqlTestExample_autogen_timestamp_deps
-
-# Build rule for target.
-MySqlTestExample_autogen_timestamp_deps: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) MySqlTestExample_autogen_timestamp_deps
-.PHONY : MySqlTestExample_autogen_timestamp_deps
-
-# fast build rule for target.
-MySqlTestExample_autogen_timestamp_deps\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\build
-.PHONY : MySqlTestExample_autogen_timestamp_deps\fast
-
-#=============================================================================
-# Target rules for targets named MySqlTestExample_autogen
-
-# Build rule for target.
-MySqlTestExample_autogen: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) MySqlTestExample_autogen
-.PHONY : MySqlTestExample_autogen
-
-# fast build rule for target.
-MySqlTestExample_autogen\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\build
-.PHONY : MySqlTestExample_autogen\fast
-
-#=============================================================================
-# Target rules for targets named SqliteTestExample
-
-# Build rule for target.
-SqliteTestExample: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) SqliteTestExample
-.PHONY : SqliteTestExample
-
-# fast build rule for target.
-SqliteTestExample\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\build
-.PHONY : SqliteTestExample\fast
-
-#=============================================================================
-# Target rules for targets named SqliteTestExample_autogen_timestamp_deps
-
-# Build rule for target.
-SqliteTestExample_autogen_timestamp_deps: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) SqliteTestExample_autogen_timestamp_deps
-.PHONY : SqliteTestExample_autogen_timestamp_deps
-
-# fast build rule for target.
-SqliteTestExample_autogen_timestamp_deps\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\build
-.PHONY : SqliteTestExample_autogen_timestamp_deps\fast
-
-#=============================================================================
-# Target rules for targets named SqliteTestExample_autogen
-
-# Build rule for target.
-SqliteTestExample_autogen: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) SqliteTestExample_autogen
-.PHONY : SqliteTestExample_autogen
-
-# fast build rule for target.
-SqliteTestExample_autogen\fast:
-	$(MAKE) $(MAKESILENT) -f Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\build
-.PHONY : SqliteTestExample_autogen\fast
-
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -433,27 +251,13 @@ help:
 	@echo ... list_install_components
 	@echo ... rebuild_cache
 	@echo ... test
-	@echo ... DatabaseInstallExample_autogen
-	@echo ... DatabaseInstallExample_autogen_timestamp_deps
 	@echo ... ExampleProjectModifier_autogen
 	@echo ... ExampleProjectModifier_autogen_timestamp_deps
-	@echo ... MySqlTestExample_autogen
-	@echo ... MySqlTestExample_autogen_timestamp_deps
-	@echo ... SoloExample_autogen
-	@echo ... SoloExample_autogen_timestamp_deps
-	@echo ... SqliteTestExample_autogen
-	@echo ... SqliteTestExample_autogen_timestamp_deps
 	@echo ... Src_autogen
 	@echo ... Src_autogen_timestamp_deps
-	@echo ... UnitTestExample_autogen
-	@echo ... UnitTestExample_autogen_timestamp_deps
-	@echo ... DatabaseInstallExample
 	@echo ... ExampleProjectModifier
-	@echo ... MySqlTestExample
-	@echo ... SoloExample
-	@echo ... SqliteTestExample
+	@echo ... OrmExample
 	@echo ... Src
-	@echo ... UnitTestExample
 .PHONY : help
 
 

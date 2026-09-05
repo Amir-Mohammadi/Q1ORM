@@ -595,10 +595,10 @@ C:/Qt/6.8.3/msvc2022_64/include/QtTest/qtestsystem.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/qtestsupport_core.h
 C:/Qt/6.8.3/msvc2022_64/include/QtTest/qtestassert.h
 C:/Qt/6.8.3/msvc2022_64/include/QtTest/qttestversion.h
-C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/applicationdbcontext.h
-C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/Models/City.h
+C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/applicationdbcontext.h
+C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Models/City.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/QString
-C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/Models/Country.h
+C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Models/Country.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/QString
 C:/Users/ARM/Desktop/Q1ORM/src/Q1Core/Q1Context/Q1Context.h
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/QList

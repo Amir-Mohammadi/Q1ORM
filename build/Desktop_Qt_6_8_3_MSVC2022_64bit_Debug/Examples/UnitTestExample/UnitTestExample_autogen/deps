@@ -436,11 +436,9 @@ UnitTestExample_autogen/timestamp: \
 	C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/FindPackageMessage.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/FindThreads.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/GNUInstallDirs.cmake \
-	C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/Models/City.h \
-	C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/Models/Country.h \
-	C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/applicationdbcontext.cpp \
-	C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/applicationdbcontext.h \
 	C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/CMakeLists.txt \
+	C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Models/City.h \
+	C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Models/Country.h \
 	C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/PostgreSqlTests.cpp \
 	C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/PostgreSqlTests.h \
 	C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.cpp \
@@ -449,6 +447,8 @@ UnitTestExample_autogen/timestamp: \
 	C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlGenerationTests.h \
 	C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlServerTests.cpp \
 	C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlServerTests.h \
+	C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/applicationdbcontext.cpp \
+	C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/applicationdbcontext.h \
 	C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/main.cpp \
 	C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/.qtcreator/cmake-helper/package-manager.cmake \
 	C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/.qtcreator/cmake-helper/qtcreator-project.cmake \

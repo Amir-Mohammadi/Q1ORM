@@ -44,29 +44,48 @@ public:
             this->port = port;
         }
 
-        database = QSqlDatabase::addDatabase(driver_name, name);
-        root_database = QSqlDatabase::addDatabase(driver_name, "root-" + name);
-
+        RegisterDatabases();
         ApplyConnectionSettings();
     }
 
     ~Q1Connection()
     {
-        Disconnect();
-        RootDisconnect();
+        UnregisterDatabases();
     }
+
+    Q1Connection(const Q1Connection&) = delete;
+    Q1Connection& operator=(const Q1Connection&) = delete;
 
 public: // Setter
     void SetDriver(Q1Driver driver)
     {
+        if(this->driver == driver)
+        {
+            ApplyConnectionSettings();
+            return;
+        }
+
+        // The QSqlDatabase handle is bound to a driver at creation time,
+        // so switching drivers requires re-creating both handles.
+        const bool was_open = database.isOpen();
+        const bool root_was_open = root_database.isOpen();
+
+        UnregisterDatabases();
+
         this->driver = driver;
         driver_name = drivers[driver];
         port = ports[driver];
+
         if (IsSqlite() && this->database_name.isEmpty())
         {
             this->database_name = "sqlite_test.db";
         }
+
+        RegisterDatabases();
         ApplyConnectionSettings();
+
+        if(was_open) Connect();
+        if(root_was_open) RootConnect();
     }
 
     void SetHostName(QString host_name)
@@ -193,7 +212,18 @@ public: // Error
         {
             return "";
         }
-        return error.databaseText();
+
+        // databaseText() is often empty for driver-level failures.
+        const QString database_text = error.databaseText().trimmed();
+        if(!database_text.isEmpty())
+            return database_text;
+
+        const QString driver_text = error.driverText().trimmed();
+        if(!driver_text.isEmpty())
+            return driver_text;
+
+
+        return error.text();
     }
 
     QSqlError::ErrorType ErrorType() const
@@ -204,99 +234,246 @@ public: // Error
 public:
     bool RootConnect()
     {
-        if(root_is_open) return true;
-
-        bool is_open = root_database.open();
-
-        if(!is_open)
+        if(root_is_open)
         {
-            error = root_database.lastError();
-            error_type = error.type();
+            ++root_open_count;
+            root_is_open = true;
+            return true;
+        }
+
+        root_open_count = 0;
+        root_is_open = false;
+
+        if(!EnsureDriverAvailable(root_database))
+            return false;
+
+        if(!root_database.open())
+        {
+            if (IsSqlServer() && TryOpenSqlServerWithFallbacks(root_database, default_databases[driver], true))
+            {
+                ClearError();
+                root_open_count = 1;
+                root_is_open = true;
+                return true;
+            }
+            RecordError(root_database.lastError());
             qCritical() << "Q1Connection::RootConnect failed:" << error.text();
             return false;
         }
 
+        ClearError();
+        root_open_count = 1;
         root_is_open = true;
         return true;
     }
 
     void RootDisconnect()
     {
-        if(root_is_open)
-        {
-            root_database.close();
-            root_is_open = false;
-        }
+        if(root_open_count > 0)
+            --root_open_count;
+
+        if(root_open_count > 0)
+            return;
+
+        CloseHandle(root_database);
+        root_is_open = false;
     }
 
     bool IsOpen() const
     {
-        return is_open;
+        return database.isOpen();
     }
 
     bool IsRootOpen() const
     {
-        return root_is_open;
+        return root_database.isOpen();
     }
 
     bool Connect()
     {
-        if(is_open) return true;
+        // Already open: just take a reference, so a nested Disconnect()
+        // from an inner scope cannot close a connection an outer scope owns.
+        if (database.isOpen())
+        {
+            ++open_count;
+            is_open = true;
+            return true;
+        }
+
+        open_count = 0;
+        is_open = false;
+        transaction_depth = 0;
+        rollback_requested = false;
+
+        if (!EnsureDriverAvailable(database))
+            return false;
 
         if (!database.open())
         {
-            error = database.lastError();
-            error_type = error.type();
+            if (IsSqlServer() && TryOpenSqlServerWithFallbacks(database, database_name, false))
+            {
+                ClearError();
+                open_count = 1;
+                is_open = true;
+                return true;
+            }
+            RecordError(database.lastError());
             qCritical() << "Q1Connection::Connect failed:" << error.text();
             return false;
         }
 
-        is_open = true;
-        error = QSqlError();
-        error_type = QSqlError::ErrorType::NoError;
+        ClearError();
 
-        if (IsSqlite())
+        if (!ApplySessionSettings())
         {
-            QSqlQuery pragma(database);
-            if (!pragma.exec(QStringLiteral("PRAGMA foreign_keys = ON")))
-            {
-                error = pragma.lastError();
-                error_type = error.type();
-                database.close();
-                is_open = false;
-                qCritical() << "Q1Connection::Connect failed to enable SQLite foreign keys:"
-                            << error.text();
-                return false;
-            }
+            database.close();
+            return false;
         }
 
+        open_count = 1;
+        is_open = true;
         return true;
     }
 
     void Disconnect()
     {
-        if(is_open)
+        if (open_count > 0)
+            --open_count;
+
+        // Still referenced by an outer scope.
+        if (open_count > 0)
+            return;
+
+        // An open transaction pins the connection until commit/rollback.
+        if (transaction_depth > 0)
         {
-            database.close();
-            is_open = false;
+            open_count = 1;
+            return;
         }
+
+        CloseHandle(database);
+        is_open = false;
     }
 
     bool BeginTransaction()
     {
-        if (!IsOpen() && !Connect())
+        const bool was_open = database.isOpen();
+
+        if(!was_open && !Connect())
             return false;
-        return database.transaction();
+
+        // Nested begin: join the ambient transaction instead of failing.
+        if(transaction_depth > 0)
+        {
+            ++transaction_depth;
+            if(was_open)
+                ++open_count;
+            return true;
+        }
+
+        if (!database.transaction())
+        {
+            RecordError(database.lastError());
+            qCritical() << "Q1Connection::BeginTransaction failed:" << error.text();
+            if (!was_open) Disconnect();
+            return false;
+        }
+
+        ClearError();
+        transaction_depth = 1;
+        rollback_requested = false;
+
+        // Pin the connection for the lifetime of the transaction.
+        if (was_open) ++open_count;
+
+        return true;
     }
 
     bool CommitTransaction()
     {
-        return database.commit();
+        // No tracked transaction (e.g. database.transaction() was used directly).
+        if (transaction_depth == 0)
+        {
+            if (database.commit())
+            {
+                ClearError();
+                return true;
+            }
+            RecordError(database.lastError());
+            return false;
+        }
+
+        // Inner scope: the outermost commit decides the real outcome.
+        if (transaction_depth > 1)
+        {
+            --transaction_depth;
+            ReleaseTransactionReference();
+            return !rollback_requested;
+        }
+
+        bool succeeded;
+
+        if (rollback_requested)
+        {
+            database.rollback();
+            succeeded = false;
+            qCritical() << "Q1Connection::CommitTransaction rolled back:"
+                        << "an inner operation requested a rollback";
+        }
+        else
+        {
+            succeeded = database.commit();
+            if (succeeded)
+                ClearError();
+            else
+            {
+                RecordError(database.lastError());
+                database.rollback();
+                qCritical() << "Q1Connection::CommitTransaction failed:" << error.text();
+            }
+        }
+
+        transaction_depth = 0;
+        rollback_requested = false;
+        ReleaseTransactionReference();
+        return succeeded;
     }
 
     bool RollbackTransaction()
     {
-        return database.rollback();
+        if (transaction_depth == 0)
+        {
+            if (database.rollback())
+            {
+                ClearError();
+                return true;
+            }
+            RecordError(database.lastError());
+            return false;
+        }
+
+        // Inner scope: mark the whole transaction as doomed.
+        if (transaction_depth > 1)
+        {
+            --transaction_depth;
+            rollback_requested = true;
+            ReleaseTransactionReference();
+            return true;
+        }
+
+        const bool succeeded = database.rollback();
+        if (succeeded)
+            ClearError();
+        else
+        {
+            RecordError(database.lastError());
+            qCritical() << "Q1Connection::RollbackTransaction failed:" << error.text();
+        }
+
+        transaction_depth = 0;
+        rollback_requested = false;
+        ReleaseTransactionReference();
+        return succeeded;
     }
 
 public:
@@ -307,22 +484,111 @@ public:
     QSqlError error;
 
 private: // Connection Parameters
+
+    void RegisterDatabases()
+    {
+        database = QSqlDatabase::addDatabase(driver_name, name);
+        root_database = QSqlDatabase::addDatabase(driver_name, root_name);
+    }
+
+    void UnregisterDatabases()
+    {
+        open_count = 0;
+        root_open_count = 0;
+        transaction_depth = 0;
+        rollback_requested = false;
+
+        CloseHandle(database);
+        CloseHandle(root_database);
+        is_open = false;
+        root_is_open = false;
+
+        // Drop our own copies first, otherwise removeDatabase() warns
+        // that the connection is still in use.
+        database = QSqlDatabase();
+        root_database = QSqlDatabase();
+
+        if(QSqlDatabase::contains(name))
+            QSqlDatabase::removeDatabase(name);
+        if(QSqlDatabase::contains(root_name))
+            QSqlDatabase::removeDatabase(root_name);
+    }
+
+    void CloseHandle(QSqlDatabase &db)
+    {
+        if(db.isValid() && db.isOpen())
+            db.close();
+    }
+
+
+    void ReleaseTransactionReference()
+    {
+        Disconnect();
+    }
+
+    bool EnsureDriverAvailable(const QSqlDatabase &db)
+    {
+        if(db.isValid())
+            return true;
+
+        error = QSqlError(QString("driver \"%1\" is not available").arg(driver_name),
+                          QString("Qt SQL driver \"%1\" could not be loaded").arg(driver_name),
+                          QSqlError::ConnectionError);
+        error_type = error.type();
+        qCritical() << "Q1Connection: driver not available:" << driver_name
+                    << "available drivers:" << QSqlDatabase::drivers();
+
+        return false;
+    }
+
+
+    void RecordError(const QSqlError &sql_error)
+    {
+        error = sql_error;
+        error_type = sql_error.type();
+    }
+
+    void ClearError()
+    {
+        error = QSqlError();
+        error_type = QSqlError::ErrorType::NoError;
+    }
+
     void ApplyConnectionSettings()
     {
         ConfigureDatabase(database, database_name);
         ConfigureDatabase(root_database, default_databases[driver]);
     }
 
+    bool ApplySessionSettings()
+    {
+        if (!IsSqlite())
+            return true;
+
+        QSqlQuery pragma(database);
+        if (pragma.exec(QStringLiteral("PRAGMA foreign_keys = ON")))
+            return true;
+
+        RecordError(pragma.lastError());
+        qCritical() << "Q1Connection::Connect failed to enable SQLite foreign keys:"
+                    << error.text();
+        return false;
+    }
+
     void ConfigureDatabase(QSqlDatabase &db, const QString &target_database_name)
     {
+        if (!db.isValid())
+            return;
+
         db.setUserName(username);
         db.setPassword(password);
 
         if (IsSqlServer())
         {
+            const QString odbc_driver_name = SqlServerOdbcDrivers().value(0, QStringLiteral("ODBC Driver 17 for SQL Server"));
             db.setHostName(QString());
             db.setPort(0);
-            db.setDatabaseName(BuildSqlServerConnectionString(target_database_name));
+            db.setDatabaseName(BuildSqlServerConnectionString(target_database_name, odbc_driver_name));
             return;
         }
 
@@ -332,7 +598,8 @@ private: // Connection Parameters
             db.setDatabaseName(target_database_name);
     }
 
-    QString BuildSqlServerConnectionString(const QString &target_database_name) const
+    QString BuildSqlServerConnectionString(const QString &target_database_name,
+                                           const QString &odbc_driver_name) const
     {
         QString connection_string = host_name.trimmed();
 
@@ -356,12 +623,44 @@ private: // Connection Parameters
         if (port > 0 && !server.contains(',') && !server.contains('\\'))
             server.append(QString(",%1").arg(port));
 
-        QString odbc_driver = qEnvironmentVariableIsSet("Q1ORM_SQLSERVER_ODBC_DRIVER")
-                                  ? qEnvironmentVariable("Q1ORM_SQLSERVER_ODBC_DRIVER")
-                                  : QString("ODBC Driver 17 for SQL Server");
-
         return QString("Driver={%1};Server=%2;Database=%3;")
-            .arg(odbc_driver, server, target_database_name);
+            .arg(odbc_driver_name, server, target_database_name);
+    }
+
+    QStringList SqlServerOdbcDrivers() const
+    {
+        QStringList driversToTry;
+
+        if (qEnvironmentVariableIsSet("Q1ORM_SQLSERVER_ODBC_DRIVER"))
+            driversToTry << qEnvironmentVariable("Q1ORM_SQLSERVER_ODBC_DRIVER");
+
+        driversToTry << "ODBC Driver 18 for SQL Server"
+                     << "ODBC Driver 17 for SQL Server"
+                     << "ODBC Driver 13 for SQL Server"
+                     << "SQL Server Native Client 11.0";
+
+        driversToTry.removeAll(QString());
+        driversToTry.removeDuplicates();
+        return driversToTry;
+    }
+
+    bool TryOpenSqlServerWithFallbacks(QSqlDatabase &db,
+                                       const QString &target_database_name,
+                                       bool is_root)
+    {
+        const QStringList driversToTry = SqlServerOdbcDrivers();
+
+        for (const QString &odbc_driver_name : driversToTry)
+        {
+            db.setDatabaseName(BuildSqlServerConnectionString(target_database_name, odbc_driver_name));
+            if (db.open())
+                return true;
+        }
+
+        RecordError(db.lastError());
+        qCritical() << (is_root ? "Q1Connection::RootConnect failed:" : "Q1Connection::Connect failed:")
+                    << error.text();
+        return false;
     }
 
     Q1Driver driver;
@@ -372,11 +671,17 @@ private: // Connection Parameters
 
     QString name = "conn_" + QUuid::createUuid().toString().remove('{').remove('}').remove('-');
     QString database_name;
+    QString root_name = "root-" + name;
     QString username;
     QString password;
 
     bool is_open = false;
     bool root_is_open = false;
+
+    int open_count = 0;
+    int root_open_count = 0;
+    int transaction_depth = 0;
+    bool rollback_requested = false;
 
 private: // Defaults
     QStringList default_databases = {"postgres", "master", "", ""};

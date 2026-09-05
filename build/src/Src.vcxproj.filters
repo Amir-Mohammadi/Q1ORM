@@ -22,9 +22,6 @@
     <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Migration\Q1Migration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Context\Q1ConnectionPool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Entity\Q1Column.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -73,12 +70,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Entity\Q1Column.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Context\Q1ConnectionPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Context\Q1TransactionScope.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

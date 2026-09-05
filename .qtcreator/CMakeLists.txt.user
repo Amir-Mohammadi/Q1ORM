@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 20.0.1, 2026-08-22T22:06:33. -->
+<!-- Written by QtCreator 20.0.1, 2026-09-05T21:09:04. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -47,63 +47,7 @@
     <value type="bool" key="AutoTest.Framework.QtTest">true</value>
    </valuemap>
    <value type="bool" key="AutoTest.ApplyFilter">false</value>
-   <valuemap type="QVariantMap" key="AutoTest.CheckStates">
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/PostgreSqlTests.h:PostgreSqlTests">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:cleanup">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:cleanupTestCase">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:init">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:initTestCase">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_avg">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_bulkInsertUpdateDelete">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_count">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_countWithWhere">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_customOrderBy">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_distinctCount">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_emptyResult">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_fullJoin">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_groupBy">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_groupByWithHaving">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_include_reverseCollection">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_include_showJson">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_include_showList">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_include_withWhere">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_innerJoin_basic">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_innerJoin_withAliases">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_innerJoin_withLimit">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_innerJoin_withOrderBy">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_innerJoin_withWhere">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_joinWhereOrderByLimit">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_leftJoin">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_limit">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_limitWithOrderBy">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_max">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_migrationHistoryTable">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_min">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_nullValues">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_orderByAsc">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_orderByDesc">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_reinitialize_is_clean">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_rightJoin">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_selectAll">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_selectAllCountries">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_selectSpecificColumns">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_showJson">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_skipTakePagination">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_sum">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_toJson">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_toList">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_toListWithWhere">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_transactionHelpers">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_whereClause_comparison">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_whereClause_simple">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Q1ORMTests.h:test_whereOrderByLimit">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlGenerationTests.h:SqlGenerationTests">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlGenerationTests.h:test_postgresqlTranslatorStillUsesPostgresDialect">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlGenerationTests.h:test_sqlServerTranslatorBuildsDefaultConstraintStatements">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlGenerationTests.h:test_sqlServerTranslatorBuildsIdentityTable">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlGenerationTests.h:test_sqlServerTranslatorUsesMetadataForNullabilityChanges">Unchecked</value>
-    <value type="Qt::CheckState" key="1@C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlServerTests.h:SqlServerTests">Unchecked</value>
-   </valuemap>
+   <valuemap type="QVariantMap" key="AutoTest.CheckStates"/>
    <valuelist type="QVariantList" key="AutoTest.PathFilters"/>
    <value type="int" key="AutoTest.RunAfterBuild">0</value>
    <value type="bool" key="AutoTest.UseGlobal">true</value>
@@ -124,9 +68,9 @@
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Desktop Qt 6.8.3 MSVC2022 64bit</value>
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Desktop Qt 6.8.3 MSVC2022 64bit</value>
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">qt.qt6.683.win64_msvc2022_64_kit</value>
-   <value type="qlonglong" key="ProjectExplorer.Target.ActiveBuildConfiguration">0</value>
+   <value type="qlonglong" key="ProjectExplorer.Target.ActiveBuildConfiguration">1</value>
    <value type="qlonglong" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
-   <value type="qlonglong" key="ProjectExplorer.Target.ActiveRunConfiguration">3</value>
+   <value type="qlonglong" key="ProjectExplorer.Target.ActiveRunConfiguration">1</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
     <value type="QString" key="CMake.Build.Type">Debug</value>
     <value type="int" key="CMake.Configure.BaseEnvironment">2</value>
@@ -254,7 +198,7 @@
      <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
-     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">DatabaseInstallExample</value>
+     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">ExampleProjectModifier</value>
      <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
      <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
      <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -263,6 +207,199 @@
      <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
     </valuemap>
     <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.1">
+     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
+     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
+     <value type="int" key="Analyzer.Valgrind.Callgrind.CostFormat">0</value>
+     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
+     <valuelist type="QVariantList" key="Analyzer.Valgrind.SuppressionFiles"/>
+     <valuelist type="QVariantList" key="CustomOutputParsers"/>
+     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
+     <valuemap type="QVariantMap" key="PE.EnvironmentAspect.Changes">
+      <value type="QString" key="File"></value>
+      <valuelist type="QVariantList" key="UserItems">
+       <value type="QString">Path=C:\Qt\6.8.3\msvc2022_64\lib;C:\Qt\6.8.3\msvc2022_64\bin;C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\src;C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\Examples\UnitTestExample;C:\Qt\Tools\Ninja;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\VC\VCPackages;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\FSharp\Tools;C:\Program Files\Microsoft Visual Studio\2022\Community\Team Tools\DiagnosticsHub\Collector;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\x64\bin;C:\Program Files (x86)\Windows Kits\10\bin\10.0.28000.0\\x64;C:\Program Files (x86)\Windows Kits\10\bin\\x64;C:\Program Files\Microsoft Visual Studio\2022\Community\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\;C:\Program Files (x86)\VMware\VMware Workstation\bin\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\VulkanSDK\1.3.296.0\Bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\CMake\bin;C:\pgsql\bin;C:\Users\ARM\AppData\Local\Programs\Python\Python312\Lib;C:\Users\ARM\AppData\Local\Programs\Python\Python312;C:\Users\ARM\AppData\Local\Programs\Python\Python312\Scripts;C:\ProgramData\chocolatey\bin;C:\ProgramData\anaconda3\Scripts;C:\ProgramData\anaconda3;C:\Program Files\Docker\Docker\resources\bin;C:\tools\Manim\Scripts;C:\VulkanSDK\1.3.296.0\Include;C:\VulkanSDK\1.3.296.0\Lib;C:\Program Files\Rust stable GNU 1.84\bin;C:\mingw64\bin;D:\apps\nats-server-v2.10.25-windows-amd64;C:\libs\vcpkg;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin;C:\mongo-cxx-driver\bin;C:\mongo-c-driver\bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Azure Data Studio\bin;C:\Program Files\Go\bin;C:\Program Files\PostgreSQL\9.6\bin;C:\Users\ARM\AppData\Local\nvm;C:\nvm4w\nodejs;C:\Program Files\nodejs\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\GitHub CLI\;C:\Program Files\PuTTY\;C:\Qt\5.15.2\msvc2019_64\bin;C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.29.30133\bin;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\ARM\.cargo\bin;C:\Users\ARM\AppData\Local\Programs\Python\Launcher\;C:\Users\ARM\AppData\Local\Microsoft\WindowsApps;C:\Users\ARM\.dotnet\tools;C:\Program Files\JetBrains\JetBrains Rider 2024.3.3\bin;C:\Users\ARM\AppData\Local\Programs\mongosh\;C:\Users\ARM\AppData\Local\Programs\Ollama;C:\Users\ARM\.lmstudio\bin;C:\Program Files\JetBrains\RustRover 2024.3.4\bin;C:\Program Files\JetBrains\DataGrip 2024.1.4\bin;C:\Program Files\JetBrains\WebStorm 2024.3.3\bin;C:\Program Files (x86)\Nmap;C:\Users\ARM\AppData\Local\Programs\Python\Python310\Scripts;C:\Program Files\Azure Data Studio\bin;C:\Program Files\JetBrains\CLion 2025.3\bin;C:\Users\ARM\go\bin;C:\Program Files\JetBrains\DataGrip 2025.3.5\bin;C:\Users\ARM\AppData\Local\nvm;C:\nvm4w\nodejs;C:\Users\ARM\AppData\Roaming\npm;c:\users\arm\.local\bin;c:\users\arm\appdata\roaming\python\python312\scripts;C:\Users\ARM\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\ARM\.dotnet\tools;C:\Users\ARM\AppData\Local\Microsoft\WinGet\Links;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\vcpkg;C:\Qt\Tools\QtCreator\bin;C:\Qt\Tools\QtCreator\bin\jom;C:\Program Files\MySQL\Connector C++ 8.0\bin;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Qt\6.8.3\msvc2022_64\bin;C:\Qt\6.8.3\msvc2022_64\plugins\sqldrivers;C:\Program Files\MySQL\MySQL Server 8.0\bin</value>
+      </valuelist>
+     </valuemap>
+     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
+     <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
+     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">UnitTestExample</value>
+     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
+     <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
+     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
+     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
+     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+     <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
+    </valuemap>
+    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.2">
+     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
+     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
+     <value type="int" key="Analyzer.Valgrind.Callgrind.CostFormat">0</value>
+     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
+     <valuelist type="QVariantList" key="Analyzer.Valgrind.SuppressionFiles"/>
+     <valuelist type="QVariantList" key="CustomOutputParsers"/>
+     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
+     <valuemap type="QVariantMap" key="PE.EnvironmentAspect.Changes">
+      <value type="QString" key="File"></value>
+      <valuelist type="QVariantList" key="UserItems">
+       <value type="QString">Path=C:\Qt\6.8.3\msvc2022_64\lib;C:\Qt\6.8.3\msvc2022_64\bin;C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\src;C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\Examples\AllTestExample;C:\Qt\Tools\Ninja;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\VC\VCPackages;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\FSharp\Tools;C:\Program Files\Microsoft Visual Studio\2022\Community\Team Tools\DiagnosticsHub\Collector;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\x64\bin;C:\Program Files (x86)\Windows Kits\10\bin\10.0.28000.0\\x64;C:\Program Files (x86)\Windows Kits\10\bin\\x64;C:\Program Files\Microsoft Visual Studio\2022\Community\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\;C:\Program Files (x86)\VMware\VMware Workstation\bin\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\VulkanSDK\1.3.296.0\Bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\CMake\bin;C:\pgsql\bin;C:\Users\ARM\AppData\Local\Programs\Python\Python312\Lib;C:\Users\ARM\AppData\Local\Programs\Python\Python312;C:\Users\ARM\AppData\Local\Programs\Python\Python312\Scripts;C:\ProgramData\chocolatey\bin;C:\ProgramData\anaconda3\Scripts;C:\ProgramData\anaconda3;C:\Program Files\Docker\Docker\resources\bin;C:\tools\Manim\Scripts;C:\VulkanSDK\1.3.296.0\Include;C:\VulkanSDK\1.3.296.0\Lib;C:\Program Files\Rust stable GNU 1.84\bin;C:\mingw64\bin;D:\apps\nats-server-v2.10.25-windows-amd64;C:\libs\vcpkg;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin;C:\mongo-cxx-driver\bin;C:\mongo-c-driver\bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Azure Data Studio\bin;C:\Program Files\Go\bin;C:\Program Files\PostgreSQL\9.6\bin;C:\Users\ARM\AppData\Local\nvm;C:\nvm4w\nodejs;C:\Program Files\nodejs\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\GitHub CLI\;C:\Program Files\PuTTY\;C:\Qt\5.15.2\msvc2019_64\bin;C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.29.30133\bin;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\ARM\.cargo\bin;C:\Users\ARM\AppData\Local\Programs\Python\Launcher\;C:\Users\ARM\AppData\Local\Microsoft\WindowsApps;C:\Users\ARM\.dotnet\tools;C:\Program Files\JetBrains\JetBrains Rider 2024.3.3\bin;C:\Users\ARM\AppData\Local\Programs\mongosh\;C:\Users\ARM\AppData\Local\Programs\Ollama;C:\Users\ARM\.lmstudio\bin;C:\Program Files\JetBrains\RustRover 2024.3.4\bin;C:\Program Files\JetBrains\DataGrip 2024.1.4\bin;C:\Program Files\JetBrains\WebStorm 2024.3.3\bin;C:\Program Files (x86)\Nmap;C:\Users\ARM\AppData\Local\Programs\Python\Python310\Scripts;C:\Program Files\Azure Data Studio\bin;C:\Program Files\JetBrains\CLion 2025.3\bin;C:\Users\ARM\go\bin;C:\Program Files\JetBrains\DataGrip 2025.3.5\bin;C:\Users\ARM\AppData\Local\nvm;C:\nvm4w\nodejs;C:\Users\ARM\AppData\Roaming\npm;c:\users\arm\.local\bin;c:\users\arm\appdata\roaming\python\python312\scripts;C:\Users\ARM\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\ARM\.dotnet\tools;C:\Users\ARM\AppData\Local\Microsoft\WinGet\Links;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\vcpkg;C:\Qt\Tools\QtCreator\bin;C:\Qt\Tools\QtCreator\bin\jom;C:\Program Files\MySQL\MySQL Server 8.0\bin</value>
+      </valuelist>
+     </valuemap>
+     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
+     <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
+     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">AllTestExample</value>
+     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
+     <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
+     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
+     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
+     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+     <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
+    </valuemap>
+    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.3">
+     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
+     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
+     <value type="int" key="Analyzer.Valgrind.Callgrind.CostFormat">0</value>
+     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
+     <valuelist type="QVariantList" key="Analyzer.Valgrind.SuppressionFiles"/>
+     <valuelist type="QVariantList" key="CustomOutputParsers"/>
+     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
+     <valuemap type="QVariantMap" key="PE.EnvironmentAspect.Changes">
+      <value type="QString" key="File"></value>
+      <valuelist type="QVariantList" key="UserItems">
+       <value type="QString">Path=C:\Program Files\MySQL\MySQL Server 8.0\bin</value>
+      </valuelist>
+     </valuemap>
+     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
+     <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
+     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">OrmExample</value>
+     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
+     <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
+     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
+     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
+     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+     <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
+    </valuemap>
+    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">4</value>
+   </valuemap>
+   <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.1">
+    <value type="QString" key="CMake.Build.Type">Release</value>
+    <value type="int" key="CMake.Configure.BaseEnvironment">2</value>
+    <value type="bool" key="CMake.Configure.ClearSystemEnvironment">false</value>
+    <value type="UnknownType" key="CMake.Configure.UserEnvironmentChanges"></value>
+    <value type="QString" key="CMake.Initial.Parameters">-DCMAKE_BUILD_TYPE:STRING=Release
+-DCMAKE_COLOR_DIAGNOSTICS:BOOL=ON
+-DCMAKE_CXX_COMPILER:FILEPATH=%{Compiler:Executable:Cxx}
+-DCMAKE_C_COMPILER:FILEPATH=%{Compiler:Executable:C}
+-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM
+-DCMAKE_PREFIX_PATH:PATH=%{Qt:QT_INSTALL_PREFIX}
+-DCMAKE_PROJECT_INCLUDE_BEFORE:FILEPATH=%{BuildConfig:BuildDirectory:NativeFilePath}/.qtcreator/cmake-helper/qtcreator-project.cmake
+-DQT_CREATOR_ENABLE_MAINTENANCE_TOOL_PROVIDER:BOOL=ON
+-DQT_CREATOR_ENABLE_PACKAGE_MANAGER_SETUP:BOOL=ON
+-DQT_ENABLE_QML_DEBUG:BOOL=%{Qt:QT_ENABLE_QML_DEBUG}
+-DQT_QMAKE_EXECUTABLE:FILEPATH=%{Qt:qmakeExecutable}</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">.\build\%{FileSystemFriendly:%{Kit:Name}_%{BuildConfig:Name}}</value>
+    <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
+     <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
+      <value type="QString" key="CMakeProjectManager.MakeStep.BuildPreset"></value>
+      <valuelist type="QVariantList" key="CMakeProjectManager.MakeStep.BuildTargets">
+       <value type="QString">all</value>
+      </valuelist>
+      <value type="bool" key="CMakeProjectManager.MakeStep.ClearSystemEnvironment">false</value>
+      <value type="UnknownType" key="CMakeProjectManager.MakeStep.UserEnvironmentChanges"></value>
+      <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
+      <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Build</value>
+      <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.MakeStep</value>
+     </valuemap>
+     <value type="qlonglong" key="ProjectExplorer.BuildStepList.StepsCount">1</value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Build</value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Build</value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.BuildSteps.Build</value>
+    </valuemap>
+    <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.1">
+     <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
+      <value type="QString" key="CMakeProjectManager.MakeStep.BuildPreset"></value>
+      <valuelist type="QVariantList" key="CMakeProjectManager.MakeStep.BuildTargets">
+       <value type="QString">clean</value>
+      </valuelist>
+      <value type="bool" key="CMakeProjectManager.MakeStep.ClearSystemEnvironment">false</value>
+      <value type="UnknownType" key="CMakeProjectManager.MakeStep.UserEnvironmentChanges"></value>
+      <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
+      <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Build</value>
+      <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.MakeStep</value>
+     </valuemap>
+     <value type="qlonglong" key="ProjectExplorer.BuildStepList.StepsCount">1</value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Clean</value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Clean</value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.BuildSteps.Clean</value>
+    </valuemap>
+    <value type="int" key="ProjectExplorer.BuildConfiguration.BuildStepListCount">2</value>
+    <value type="bool" key="ProjectExplorer.BuildConfiguration.ClearSystemEnvironment">false</value>
+    <valuelist type="QVariantList" key="ProjectExplorer.BuildConfiguration.CustomParsers"/>
+    <value type="bool" key="ProjectExplorer.BuildConfiguration.ParseStandardOutput">false</value>
+    <value type="UnknownType" key="ProjectExplorer.BuildConfiguration.UserEnvironmentChanges"></value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Release</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeBuildConfiguration</value>
+    <value type="qlonglong" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
+    <value type="qlonglong" key="ProjectExplorer.Target.ActiveRunConfiguration">1</value>
+    <valuemap type="QVariantMap" key="ProjectExplorer.Target.DeployConfiguration.0">
+     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
+      <value type="qlonglong" key="ProjectExplorer.BuildStepList.StepsCount">0</value>
+      <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Deploy</value>
+      <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Deploy</value>
+      <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.BuildSteps.Deploy</value>
+     </valuemap>
+     <value type="int" key="ProjectExplorer.BuildConfiguration.BuildStepListCount">1</value>
+     <valuemap type="QVariantMap" key="ProjectExplorer.DeployConfiguration.CustomData"/>
+     <value type="bool" key="ProjectExplorer.DeployConfiguration.CustomDataEnabled">false</value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.DefaultDeployConfiguration</value>
+    </valuemap>
+    <valuemap type="QVariantMap" key="ProjectExplorer.Target.DeployConfiguration.1">
+     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
+      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
+       <value type="QString" key="CMakeProjectManager.MakeStep.BuildPreset"></value>
+       <valuelist type="QVariantList" key="CMakeProjectManager.MakeStep.BuildTargets">
+        <value type="QString"></value>
+       </valuelist>
+       <value type="bool" key="CMakeProjectManager.MakeStep.ClearSystemEnvironment">false</value>
+       <value type="UnknownType" key="CMakeProjectManager.MakeStep.UserEnvironmentChanges"></value>
+       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
+       <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Build</value>
+       <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ApplicationManagerPlugin.Deploy.CMakePackageStep</value>
+      </valuemap>
+      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.1">
+       <value type="QString" key="ApplicationManagerPlugin.Deploy.InstallPackageStep.Arguments">install-package --acknowledge</value>
+       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
+       <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Install Application Manager package</value>
+       <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ApplicationManagerPlugin.Deploy.InstallPackageStep</value>
+       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedFiles"/>
+       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedHosts"/>
+       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedRemotePaths"/>
+       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedSysroots"/>
+       <valuelist type="QVariantList" key="RemoteLinux.LastDeployedLocalTimes"/>
+       <valuelist type="QVariantList" key="RemoteLinux.LastDeployedRemoteTimes"/>
+      </valuemap>
+      <value type="qlonglong" key="ProjectExplorer.BuildStepList.StepsCount">2</value>
+      <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Deploy</value>
+      <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Deploy</value>
+      <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.BuildSteps.Deploy</value>
+     </valuemap>
+     <value type="int" key="ProjectExplorer.BuildConfiguration.BuildStepListCount">1</value>
+     <valuemap type="QVariantMap" key="ProjectExplorer.DeployConfiguration.CustomData"/>
+     <value type="bool" key="ProjectExplorer.DeployConfiguration.CustomDataEnabled">false</value>
+     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ApplicationManagerPlugin.Deploy.Configuration</value>
+    </valuemap>
+    <value type="qlonglong" key="ProjectExplorer.Target.DeployConfigurationCount">2</value>
+    <valuemap type="QVariantMap" key="ProjectExplorer.Target.PluginSettings">
+     <value type="bool" key="AndroidBuildTargetDirSupport">false</value>
+     <valuelist type="QVariantList" key="ApplicationmanagerPackageTargets"/>
+     <value type="bool" key="UseAndroidBuildTargetDir">false</value>
+    </valuemap>
+    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.0">
      <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
      <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
      <value type="int" key="Analyzer.Valgrind.Callgrind.CostFormat">0</value>
@@ -283,7 +420,7 @@
      <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
      <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
     </valuemap>
-    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.2">
+    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.1">
      <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
      <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
      <value type="int" key="Analyzer.Valgrind.Callgrind.CostFormat">0</value>
@@ -291,85 +428,27 @@
      <valuelist type="QVariantList" key="Analyzer.Valgrind.SuppressionFiles"/>
      <valuelist type="QVariantList" key="CustomOutputParsers"/>
      <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-     <value type="UnknownType" key="PE.EnvironmentAspect.Changes"></value>
+     <valuemap type="QVariantMap" key="PE.EnvironmentAspect.Changes">
+      <value type="QString" key="File"></value>
+      <valuelist type="QVariantList" key="UserItems">
+       <value type="QString">Path=C:\Qt\6.8.3\msvc2022_64\lib;C:\Qt\6.8.3\msvc2022_64\bin;C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Release\src;C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Release\Examples\OrmExample;C:\Qt\Tools\Ninja;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\VC\VCPackages;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\FSharp\Tools;C:\Program Files\Microsoft Visual Studio\2022\Community\Team Tools\DiagnosticsHub\Collector;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\x64\bin;C:\Program Files (x86)\Windows Kits\10\bin\10.0.28000.0\\x64;C:\Program Files (x86)\Windows Kits\10\bin\\x64;C:\Program Files\Microsoft Visual Studio\2022\Community\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\;C:\Program Files (x86)\VMware\VMware Workstation\bin\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\VulkanSDK\1.3.296.0\Bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\CMake\bin;C:\pgsql\bin;C:\Users\ARM\AppData\Local\Programs\Python\Python312\Lib;C:\Users\ARM\AppData\Local\Programs\Python\Python312;C:\Users\ARM\AppData\Local\Programs\Python\Python312\Scripts;C:\ProgramData\chocolatey\bin;C:\ProgramData\anaconda3\Scripts;C:\ProgramData\anaconda3;C:\Program Files\Docker\Docker\resources\bin;C:\tools\Manim\Scripts;C:\VulkanSDK\1.3.296.0\Include;C:\VulkanSDK\1.3.296.0\Lib;C:\Program Files\Rust stable GNU 1.84\bin;C:\mingw64\bin;D:\apps\nats-server-v2.10.25-windows-amd64;C:\libs\vcpkg;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin;C:\mongo-cxx-driver\bin;C:\mongo-c-driver\bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Azure Data Studio\bin;C:\Program Files\Go\bin;C:\Program Files\PostgreSQL\9.6\bin;C:\Users\ARM\AppData\Local\nvm;C:\nvm4w\nodejs;C:\Program Files\nodejs\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\GitHub CLI\;C:\Program Files\PuTTY\;C:\Qt\5.15.2\msvc2019_64\bin;C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.29.30133\bin;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\ARM\.cargo\bin;C:\Users\ARM\AppData\Local\Programs\Python\Launcher\;C:\Users\ARM\AppData\Local\Microsoft\WindowsApps;C:\Users\ARM\.dotnet\tools;C:\Program Files\JetBrains\JetBrains Rider 2024.3.3\bin;C:\Users\ARM\AppData\Local\Programs\mongosh\;C:\Users\ARM\AppData\Local\Programs\Ollama;C:\Users\ARM\.lmstudio\bin;C:\Program Files\JetBrains\RustRover 2024.3.4\bin;C:\Program Files\JetBrains\DataGrip 2024.1.4\bin;C:\Program Files\JetBrains\WebStorm 2024.3.3\bin;C:\Program Files (x86)\Nmap;C:\Users\ARM\AppData\Local\Programs\Python\Python310\Scripts;C:\Program Files\Azure Data Studio\bin;C:\Program Files\JetBrains\CLion 2025.3\bin;C:\Users\ARM\go\bin;C:\Program Files\JetBrains\DataGrip 2025.3.5\bin;C:\Users\ARM\AppData\Local\nvm;C:\nvm4w\nodejs;C:\Users\ARM\AppData\Roaming\npm;c:\users\arm\.local\bin;c:\users\arm\appdata\roaming\python\python312\scripts;C:\Users\ARM\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\ARM\.dotnet\tools;C:\Users\ARM\AppData\Local\Microsoft\WinGet\Links;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\vcpkg;C:\Qt\Tools\QtCreator\bin;C:\Qt\Tools\QtCreator\bin\jom;C:\Program Files\MySQL\MySQL Server 8.0\lib\mecab</value>
+      </valuelist>
+     </valuemap>
      <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
      <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
-     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">SoloExample</value>
-     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">OrmExample</value>
+     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
      <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
      <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
      <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
      <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
      <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
     </valuemap>
-    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.3">
-     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-     <value type="int" key="Analyzer.Valgrind.Callgrind.CostFormat">0</value>
-     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-     <valuelist type="QVariantList" key="Analyzer.Valgrind.SuppressionFiles"/>
-     <valuelist type="QVariantList" key="CustomOutputParsers"/>
-     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-     <value type="UnknownType" key="PE.EnvironmentAspect.Changes"></value>
-     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-     <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
-     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
-     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">UnitTestExample</value>
-     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
-     <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
-     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
-     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-     <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
-    </valuemap>
-    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.4">
-     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-     <value type="int" key="Analyzer.Valgrind.Callgrind.CostFormat">0</value>
-     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-     <valuelist type="QVariantList" key="Analyzer.Valgrind.SuppressionFiles"/>
-     <valuelist type="QVariantList" key="CustomOutputParsers"/>
-     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-     <value type="UnknownType" key="PE.EnvironmentAspect.Changes"></value>
-     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-     <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
-     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
-     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">MySqlTestExample</value>
-     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
-     <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
-     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
-     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-     <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
-    </valuemap>
-    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.5">
-     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-     <value type="int" key="Analyzer.Valgrind.Callgrind.CostFormat">0</value>
-     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-     <valuelist type="QVariantList" key="Analyzer.Valgrind.SuppressionFiles"/>
-     <valuelist type="QVariantList" key="CustomOutputParsers"/>
-     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-     <value type="UnknownType" key="PE.EnvironmentAspect.Changes"></value>
-     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-     <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
-     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
-     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">SqliteTestExample</value>
-     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
-     <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
-     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
-     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-     <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
-    </valuemap>
-    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">6</value>
+    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">2</value>
    </valuemap>
-   <value type="qlonglong" key="ProjectExplorer.Target.BuildConfigurationCount">1</value>
+   <value type="qlonglong" key="ProjectExplorer.Target.BuildConfigurationCount">2</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.DeployConfiguration.0">
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <value type="qlonglong" key="ProjectExplorer.BuildStepList.StepsCount">0</value>
@@ -431,7 +510,7 @@
     <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">DatabaseInstallExample</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">ExampleProjectModifier</value>
     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -447,104 +526,25 @@
     <valuelist type="QVariantList" key="Analyzer.Valgrind.SuppressionFiles"/>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <value type="UnknownType" key="PE.EnvironmentAspect.Changes"></value>
+    <valuemap type="QVariantMap" key="PE.EnvironmentAspect.Changes">
+     <value type="QString" key="File"></value>
+     <valuelist type="QVariantList" key="UserItems">
+      <value type="QString">Path=C:\Qt\6.8.3\msvc2022_64\lib;C:\Qt\6.8.3\msvc2022_64\bin;C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Release\src;C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Release\Examples\OrmExample;C:\Qt\Tools\Ninja;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\VC\VCPackages;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\FSharp\Tools;C:\Program Files\Microsoft Visual Studio\2022\Community\Team Tools\DiagnosticsHub\Collector;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\x64\bin;C:\Program Files (x86)\Windows Kits\10\bin\10.0.28000.0\\x64;C:\Program Files (x86)\Windows Kits\10\bin\\x64;C:\Program Files\Microsoft Visual Studio\2022\Community\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\;C:\Program Files (x86)\VMware\VMware Workstation\bin\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\VulkanSDK\1.3.296.0\Bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\CMake\bin;C:\pgsql\bin;C:\Users\ARM\AppData\Local\Programs\Python\Python312\Lib;C:\Users\ARM\AppData\Local\Programs\Python\Python312;C:\Users\ARM\AppData\Local\Programs\Python\Python312\Scripts;C:\ProgramData\chocolatey\bin;C:\ProgramData\anaconda3\Scripts;C:\ProgramData\anaconda3;C:\Program Files\Docker\Docker\resources\bin;C:\tools\Manim\Scripts;C:\VulkanSDK\1.3.296.0\Include;C:\VulkanSDK\1.3.296.0\Lib;C:\Program Files\Rust stable GNU 1.84\bin;C:\mingw64\bin;D:\apps\nats-server-v2.10.25-windows-amd64;C:\libs\vcpkg;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin;C:\mongo-cxx-driver\bin;C:\mongo-c-driver\bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Azure Data Studio\bin;C:\Program Files\Go\bin;C:\Program Files\PostgreSQL\9.6\bin;C:\Users\ARM\AppData\Local\nvm;C:\nvm4w\nodejs;C:\Program Files\nodejs\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\GitHub CLI\;C:\Program Files\PuTTY\;C:\Qt\5.15.2\msvc2019_64\bin;C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.29.30133\bin;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\ARM\.cargo\bin;C:\Users\ARM\AppData\Local\Programs\Python\Launcher\;C:\Users\ARM\AppData\Local\Microsoft\WindowsApps;C:\Users\ARM\.dotnet\tools;C:\Program Files\JetBrains\JetBrains Rider 2024.3.3\bin;C:\Users\ARM\AppData\Local\Programs\mongosh\;C:\Users\ARM\AppData\Local\Programs\Ollama;C:\Users\ARM\.lmstudio\bin;C:\Program Files\JetBrains\RustRover 2024.3.4\bin;C:\Program Files\JetBrains\DataGrip 2024.1.4\bin;C:\Program Files\JetBrains\WebStorm 2024.3.3\bin;C:\Program Files (x86)\Nmap;C:\Users\ARM\AppData\Local\Programs\Python\Python310\Scripts;C:\Program Files\Azure Data Studio\bin;C:\Program Files\JetBrains\CLion 2025.3\bin;C:\Users\ARM\go\bin;C:\Program Files\JetBrains\DataGrip 2025.3.5\bin;C:\Users\ARM\AppData\Local\nvm;C:\nvm4w\nodejs;C:\Users\ARM\AppData\Roaming\npm;c:\users\arm\.local\bin;c:\users\arm\appdata\roaming\python\python312\scripts;C:\Users\ARM\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\ARM\.dotnet\tools;C:\Users\ARM\AppData\Local\Microsoft\WinGet\Links;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\vcpkg;C:\Qt\Tools\QtCreator\bin;C:\Qt\Tools\QtCreator\bin\jom;C:\Program Files\MySQL\MySQL Server 8.0\lib\mecab</value>
+     </valuelist>
+    </valuemap>
     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
     <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">ExampleProjectModifier</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">OrmExample</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
    </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.2">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="int" key="Analyzer.Valgrind.Callgrind.CostFormat">0</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.SuppressionFiles"/>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <value type="UnknownType" key="PE.EnvironmentAspect.Changes"></value>
-    <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">SoloExample</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
-   </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.3">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="int" key="Analyzer.Valgrind.Callgrind.CostFormat">0</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.SuppressionFiles"/>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <value type="UnknownType" key="PE.EnvironmentAspect.Changes"></value>
-    <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">UnitTestExample</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
-   </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.4">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="int" key="Analyzer.Valgrind.Callgrind.CostFormat">0</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.SuppressionFiles"/>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <value type="UnknownType" key="PE.EnvironmentAspect.Changes"></value>
-    <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">MySqlTestExample</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
-   </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.5">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="int" key="Analyzer.Valgrind.Callgrind.CostFormat">0</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.SuppressionFiles"/>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <value type="UnknownType" key="PE.EnvironmentAspect.Changes"></value>
-    <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="PerfRecordArgsId">-e cpu-cycles --call-graph &quot;dwarf,4096&quot; -F 250</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">SqliteTestExample</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.UniqueId"></value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">%{RunConfig:Executable:Path}</value>
-   </valuemap>
-   <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">6</value>
+   <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">2</value>
   </valuemap>
  </data>
  <data>

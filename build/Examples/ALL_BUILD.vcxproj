@@ -174,17 +174,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\DatabaseInstallExample\DatabaseInstallExample.vcxproj">
-      <Project>{5B09CBC9-351B-3532-9726-C90A0DA9262C}</Project>
-      <Name>DatabaseInstallExample</Name>
-    </ProjectReference>
-    <ProjectReference Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\SoloExample\SoloExample.vcxproj">
-      <Project>{A7BE102B-3B90-33D5-AE7D-59D01CD3C66E}</Project>
-      <Name>SoloExample</Name>
-    </ProjectReference>
-    <ProjectReference Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\UnitTestExample\UnitTestExample.vcxproj">
-      <Project>{E384CD41-2E56-33D4-835D-5D39584ABAEB}</Project>
-      <Name>UnitTestExample</Name>
+    <ProjectReference Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\OrmExample\OrmExample.vcxproj">
+      <Project>{B339CA40-DBF3-3726-9F9B-BC5C2176C8D3}</Project>
+      <Name>OrmExample</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

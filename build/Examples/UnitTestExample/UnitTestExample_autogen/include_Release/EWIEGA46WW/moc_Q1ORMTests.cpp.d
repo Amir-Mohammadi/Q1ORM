@@ -319,9 +319,9 @@ C:/Users/ARM/Desktop/Q1ORM/build/Examples/UnitTestExample/UnitTestExample_autoge
   C:/Qt/6.8.3/msvc2022_64/include/QtTest/qttestglobal.h \
   C:/Qt/6.8.3/msvc2022_64/include/QtTest/qttestlib-config.h \
   C:/Qt/6.8.3/msvc2022_64/include/QtTest/qttestversion.h \
-  C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/Models/City.h \
-  C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/Models/Country.h \
-  C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/applicationdbcontext.h \
+  C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Models/City.h \
+  C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/Models/Country.h \
+  C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/applicationdbcontext.h \
   C:/Users/ARM/Desktop/Q1ORM/src/Q1Core/Q1Context/Q1Connection.h \
   C:/Users/ARM/Desktop/Q1ORM/src/Q1Core/Q1Context/Q1Context.h \
   C:/Users/ARM/Desktop/Q1ORM/src/Q1Core/Q1Entity/Q1Column.h \

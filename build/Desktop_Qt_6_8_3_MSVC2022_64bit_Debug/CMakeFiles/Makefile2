@@ -56,8 +56,6 @@ all: src\all
 all: Examples\all
 all: Docs\all
 all: Tools\all
-all: Examples\MySqlTestExample\all
-all: Examples\SqliteTestExample\all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -65,8 +63,6 @@ preinstall: src\preinstall
 preinstall: Examples\preinstall
 preinstall: Docs\preinstall
 preinstall: Tools\preinstall
-preinstall: Examples\MySqlTestExample\preinstall
-preinstall: Examples\SqliteTestExample\preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
@@ -74,8 +70,6 @@ clean: src\clean
 clean: Examples\clean
 clean: Docs\clean
 clean: Tools\clean
-clean: Examples\MySqlTestExample\clean
-clean: Examples\SqliteTestExample\clean
 .PHONY : clean
 
 #=============================================================================
@@ -97,107 +91,31 @@ Docs\clean:
 # Directory level rules for directory Examples
 
 # Recursive "all" directory target.
-Examples\all: Examples\UnitTestExample\all
-Examples\all: Examples\SoloExample\all
-Examples\all: Examples\DatabaseInstallExample\all
+Examples\all: Examples\OrmExample\all
 .PHONY : Examples\all
 
 # Recursive "preinstall" directory target.
-Examples\preinstall: Examples\UnitTestExample\preinstall
-Examples\preinstall: Examples\SoloExample\preinstall
-Examples\preinstall: Examples\DatabaseInstallExample\preinstall
+Examples\preinstall: Examples\OrmExample\preinstall
 .PHONY : Examples\preinstall
 
 # Recursive "clean" directory target.
-Examples\clean: Examples\UnitTestExample\clean
-Examples\clean: Examples\SoloExample\clean
-Examples\clean: Examples\DatabaseInstallExample\clean
+Examples\clean: Examples\OrmExample\clean
 .PHONY : Examples\clean
 
 #=============================================================================
-# Directory level rules for directory Examples\DatabaseInstallExample
+# Directory level rules for directory Examples\OrmExample
 
 # Recursive "all" directory target.
-Examples\DatabaseInstallExample\all: Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\all
-.PHONY : Examples\DatabaseInstallExample\all
+Examples\OrmExample\all: Examples\OrmExample\CMakeFiles\OrmExample.dir\all
+.PHONY : Examples\OrmExample\all
 
 # Recursive "preinstall" directory target.
-Examples\DatabaseInstallExample\preinstall:
-.PHONY : Examples\DatabaseInstallExample\preinstall
+Examples\OrmExample\preinstall:
+.PHONY : Examples\OrmExample\preinstall
 
 # Recursive "clean" directory target.
-Examples\DatabaseInstallExample\clean: Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\clean
-Examples\DatabaseInstallExample\clean: Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\clean
-Examples\DatabaseInstallExample\clean: Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\clean
-.PHONY : Examples\DatabaseInstallExample\clean
-
-#=============================================================================
-# Directory level rules for directory Examples\MySqlTestExample
-
-# Recursive "all" directory target.
-Examples\MySqlTestExample\all: Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\all
-.PHONY : Examples\MySqlTestExample\all
-
-# Recursive "preinstall" directory target.
-Examples\MySqlTestExample\preinstall:
-.PHONY : Examples\MySqlTestExample\preinstall
-
-# Recursive "clean" directory target.
-Examples\MySqlTestExample\clean: Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\clean
-Examples\MySqlTestExample\clean: Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\clean
-Examples\MySqlTestExample\clean: Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\clean
-.PHONY : Examples\MySqlTestExample\clean
-
-#=============================================================================
-# Directory level rules for directory Examples\SoloExample
-
-# Recursive "all" directory target.
-Examples\SoloExample\all: Examples\SoloExample\CMakeFiles\SoloExample.dir\all
-.PHONY : Examples\SoloExample\all
-
-# Recursive "preinstall" directory target.
-Examples\SoloExample\preinstall:
-.PHONY : Examples\SoloExample\preinstall
-
-# Recursive "clean" directory target.
-Examples\SoloExample\clean: Examples\SoloExample\CMakeFiles\SoloExample.dir\clean
-Examples\SoloExample\clean: Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\clean
-Examples\SoloExample\clean: Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\clean
-.PHONY : Examples\SoloExample\clean
-
-#=============================================================================
-# Directory level rules for directory Examples\SqliteTestExample
-
-# Recursive "all" directory target.
-Examples\SqliteTestExample\all: Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\all
-.PHONY : Examples\SqliteTestExample\all
-
-# Recursive "preinstall" directory target.
-Examples\SqliteTestExample\preinstall:
-.PHONY : Examples\SqliteTestExample\preinstall
-
-# Recursive "clean" directory target.
-Examples\SqliteTestExample\clean: Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\clean
-Examples\SqliteTestExample\clean: Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\clean
-Examples\SqliteTestExample\clean: Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\clean
-.PHONY : Examples\SqliteTestExample\clean
-
-#=============================================================================
-# Directory level rules for directory Examples\UnitTestExample
-
-# Recursive "all" directory target.
-Examples\UnitTestExample\all: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\all
-.PHONY : Examples\UnitTestExample\all
-
-# Recursive "preinstall" directory target.
-Examples\UnitTestExample\preinstall:
-.PHONY : Examples\UnitTestExample\preinstall
-
-# Recursive "clean" directory target.
-Examples\UnitTestExample\clean: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\clean
-Examples\UnitTestExample\clean: Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\clean
-Examples\UnitTestExample\clean: Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\clean
-.PHONY : Examples\UnitTestExample\clean
+Examples\OrmExample\clean: Examples\OrmExample\CMakeFiles\OrmExample.dir\clean
+.PHONY : Examples\OrmExample\clean
 
 #=============================================================================
 # Directory level rules for directory Tools
@@ -256,7 +174,7 @@ src\CMakeFiles\Src.dir\all: src\CMakeFiles\Src_autogen_timestamp_deps.dir\all
 src\CMakeFiles\Src.dir\all: src\CMakeFiles\Src_autogen.dir\all
 	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\Src.dir\build.make /nologo -$(MAKEFLAGS) src\CMakeFiles\Src.dir\depend
 	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\Src.dir\build.make /nologo -$(MAKEFLAGS) src\CMakeFiles\Src.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=30,31,32,33,34,35,36,37,38,39 "Built target Src"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=9,10,11,12,13,14,15,16,17,18 "Built target Src"
 .PHONY : src\CMakeFiles\Src.dir\all
 
 # Build rule for subdir invocation for target.
@@ -308,7 +226,7 @@ src\CMakeFiles\Src_autogen_timestamp_deps.dir\clean:
 src\CMakeFiles\Src_autogen.dir\all: src\CMakeFiles\Src_autogen_timestamp_deps.dir\all
 	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\Src_autogen.dir\build.make /nologo -$(MAKEFLAGS) src\CMakeFiles\Src_autogen.dir\depend
 	$(MAKE) $(MAKESILENT) -f src\CMakeFiles\Src_autogen.dir\build.make /nologo -$(MAKEFLAGS) src\CMakeFiles\Src_autogen.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=40 "Built target Src_autogen"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=19 "Built target Src_autogen"
 .PHONY : src\CMakeFiles\Src_autogen.dir\all
 
 # Build rule for subdir invocation for target.
@@ -328,254 +246,40 @@ src\CMakeFiles\Src_autogen.dir\clean:
 .PHONY : src\CMakeFiles\Src_autogen.dir\clean
 
 #=============================================================================
-# Target rules for target Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir
+# Target rules for target Examples/OrmExample/CMakeFiles/OrmExample.dir
 
 # All Build rule for target.
-Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\all: src\CMakeFiles\Src.dir\all
-Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\all: Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\all
-Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\all: Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=41,42,43,44,45,46,47,48,49 "Built target UnitTestExample"
-.PHONY : Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\all
+Examples\OrmExample\CMakeFiles\OrmExample.dir\all: src\CMakeFiles\Src.dir\all
+	$(MAKE) $(MAKESILENT) -f Examples\OrmExample\CMakeFiles\OrmExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\OrmExample\CMakeFiles\OrmExample.dir\depend
+	$(MAKE) $(MAKESILENT) -f Examples\OrmExample\CMakeFiles\OrmExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\OrmExample\CMakeFiles\OrmExample.dir\build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=7,8 "Built target OrmExample"
+.PHONY : Examples\OrmExample\CMakeFiles\OrmExample.dir\all
 
 # Build rule for subdir invocation for target.
-Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 21
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\all
+Examples\OrmExample\CMakeFiles\OrmExample.dir\rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 13
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\OrmExample\CMakeFiles\OrmExample.dir\all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\rule
+.PHONY : Examples\OrmExample\CMakeFiles\OrmExample.dir\rule
 
 # Convenience name for target.
-UnitTestExample: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\rule
-.PHONY : UnitTestExample
+OrmExample: Examples\OrmExample\CMakeFiles\OrmExample.dir\rule
+.PHONY : OrmExample
 
 # clean rule for target.
-Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\clean
-.PHONY : Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/UnitTestExample/CMakeFiles/UnitTestExample_autogen_timestamp_deps.dir
-
-# All Build rule for target.
-Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\all: src\CMakeFiles\Src.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num= "Built target UnitTestExample_autogen_timestamp_deps"
-.PHONY : Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 11
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\rule
-
-# Convenience name for target.
-UnitTestExample_autogen_timestamp_deps: Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\rule
-.PHONY : UnitTestExample_autogen_timestamp_deps
-
-# clean rule for target.
-Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\clean
-.PHONY : Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/UnitTestExample/CMakeFiles/UnitTestExample_autogen.dir
-
-# All Build rule for target.
-Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\all: Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen_timestamp_deps.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=50 "Built target UnitTestExample_autogen"
-.PHONY : Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 12
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\rule
-
-# Convenience name for target.
-UnitTestExample_autogen: Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\rule
-.PHONY : UnitTestExample_autogen
-
-# clean rule for target.
-Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\clean
-.PHONY : Examples\UnitTestExample\CMakeFiles\UnitTestExample_autogen.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/SoloExample/CMakeFiles/SoloExample.dir
-
-# All Build rule for target.
-Examples\SoloExample\CMakeFiles\SoloExample.dir\all: src\CMakeFiles\Src.dir\all
-Examples\SoloExample\CMakeFiles\SoloExample.dir\all: Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\all
-Examples\SoloExample\CMakeFiles\SoloExample.dir\all: Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\SoloExample\CMakeFiles\SoloExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\SoloExample\CMakeFiles\SoloExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=18,19,20,21,22 "Built target SoloExample"
-.PHONY : Examples\SoloExample\CMakeFiles\SoloExample.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\SoloExample\CMakeFiles\SoloExample.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 17
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\SoloExample\CMakeFiles\SoloExample.dir\rule
-
-# Convenience name for target.
-SoloExample: Examples\SoloExample\CMakeFiles\SoloExample.dir\rule
-.PHONY : SoloExample
-
-# clean rule for target.
-Examples\SoloExample\CMakeFiles\SoloExample.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\SoloExample\CMakeFiles\SoloExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample.dir\clean
-.PHONY : Examples\SoloExample\CMakeFiles\SoloExample.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/SoloExample/CMakeFiles/SoloExample_autogen_timestamp_deps.dir
-
-# All Build rule for target.
-Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\all: src\CMakeFiles\Src.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num= "Built target SoloExample_autogen_timestamp_deps"
-.PHONY : Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 11
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\rule
-
-# Convenience name for target.
-SoloExample_autogen_timestamp_deps: Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\rule
-.PHONY : SoloExample_autogen_timestamp_deps
-
-# clean rule for target.
-Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\clean
-.PHONY : Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/SoloExample/CMakeFiles/SoloExample_autogen.dir
-
-# All Build rule for target.
-Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\all: Examples\SoloExample\CMakeFiles\SoloExample_autogen_timestamp_deps.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=23 "Built target SoloExample_autogen"
-.PHONY : Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 12
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\rule
-
-# Convenience name for target.
-SoloExample_autogen: Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\rule
-.PHONY : SoloExample_autogen
-
-# clean rule for target.
-Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\clean
-.PHONY : Examples\SoloExample\CMakeFiles\SoloExample_autogen.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/DatabaseInstallExample/CMakeFiles/DatabaseInstallExample.dir
-
-# All Build rule for target.
-Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\all: src\CMakeFiles\Src.dir\all
-Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\all: Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\all
-Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\all: Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=1,2,3,4 "Built target DatabaseInstallExample"
-.PHONY : Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 16
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\rule
-
-# Convenience name for target.
-DatabaseInstallExample: Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\rule
-.PHONY : DatabaseInstallExample
-
-# clean rule for target.
-Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\clean
-.PHONY : Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/DatabaseInstallExample/CMakeFiles/DatabaseInstallExample_autogen_timestamp_deps.dir
-
-# All Build rule for target.
-Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\all: src\CMakeFiles\Src.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num= "Built target DatabaseInstallExample_autogen_timestamp_deps"
-.PHONY : Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 11
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\rule
-
-# Convenience name for target.
-DatabaseInstallExample_autogen_timestamp_deps: Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\rule
-.PHONY : DatabaseInstallExample_autogen_timestamp_deps
-
-# clean rule for target.
-Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\clean
-.PHONY : Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/DatabaseInstallExample/CMakeFiles/DatabaseInstallExample_autogen.dir
-
-# All Build rule for target.
-Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\all: Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen_timestamp_deps.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=5 "Built target DatabaseInstallExample_autogen"
-.PHONY : Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 12
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\rule
-
-# Convenience name for target.
-DatabaseInstallExample_autogen: Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\rule
-.PHONY : DatabaseInstallExample_autogen
-
-# clean rule for target.
-Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\clean
-.PHONY : Examples\DatabaseInstallExample\CMakeFiles\DatabaseInstallExample_autogen.dir\clean
+Examples\OrmExample\CMakeFiles\OrmExample.dir\clean:
+	$(MAKE) $(MAKESILENT) -f Examples\OrmExample\CMakeFiles\OrmExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\OrmExample\CMakeFiles\OrmExample.dir\clean
+.PHONY : Examples\OrmExample\CMakeFiles\OrmExample.dir\clean
 
 #=============================================================================
 # Target rules for target Tools/ExampleProjectModifier/CMakeFiles/ExampleProjectModifier.dir
 
 # All Build rule for target.
-Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier.dir\all: Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen_timestamp_deps.dir\all
 Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier.dir\all: Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\all
+Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier.dir\all: Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen_timestamp_deps.dir\all
 	$(MAKE) $(MAKESILENT) -f Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier.dir\build.make /nologo -$(MAKEFLAGS) Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier.dir\depend
 	$(MAKE) $(MAKESILENT) -f Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier.dir\build.make /nologo -$(MAKEFLAGS) Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=6,7,8,9,10 "Built target ExampleProjectModifier"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=1,2,3,4,5 "Built target ExampleProjectModifier"
 .PHONY : Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier.dir\all
 
 # Build rule for subdir invocation for target.
@@ -627,7 +331,7 @@ Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen_timestamp
 Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\all: Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen_timestamp_deps.dir\all
 	$(MAKE) $(MAKESILENT) -f Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\build.make /nologo -$(MAKEFLAGS) Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\depend
 	$(MAKE) $(MAKESILENT) -f Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\build.make /nologo -$(MAKEFLAGS) Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=11 "Built target ExampleProjectModifier_autogen"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=6 "Built target ExampleProjectModifier_autogen"
 .PHONY : Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\all
 
 # Build rule for subdir invocation for target.
@@ -645,166 +349,6 @@ ExampleProjectModifier_autogen: Tools\ExampleProjectModifier\CMakeFiles\ExampleP
 Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\clean:
 	$(MAKE) $(MAKESILENT) -f Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\build.make /nologo -$(MAKEFLAGS) Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\clean
 .PHONY : Tools\ExampleProjectModifier\CMakeFiles\ExampleProjectModifier_autogen.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/MySqlTestExample/CMakeFiles/MySqlTestExample.dir
-
-# All Build rule for target.
-Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\all: src\CMakeFiles\Src.dir\all
-Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\all: Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\all
-Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\all: Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=12,13,14,15,16 "Built target MySqlTestExample"
-.PHONY : Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 17
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\rule
-
-# Convenience name for target.
-MySqlTestExample: Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\rule
-.PHONY : MySqlTestExample
-
-# clean rule for target.
-Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\clean
-.PHONY : Examples\MySqlTestExample\CMakeFiles\MySqlTestExample.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/MySqlTestExample/CMakeFiles/MySqlTestExample_autogen_timestamp_deps.dir
-
-# All Build rule for target.
-Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\all: src\CMakeFiles\Src.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num= "Built target MySqlTestExample_autogen_timestamp_deps"
-.PHONY : Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 11
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\rule
-
-# Convenience name for target.
-MySqlTestExample_autogen_timestamp_deps: Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\rule
-.PHONY : MySqlTestExample_autogen_timestamp_deps
-
-# clean rule for target.
-Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\clean
-.PHONY : Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/MySqlTestExample/CMakeFiles/MySqlTestExample_autogen.dir
-
-# All Build rule for target.
-Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\all: Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen_timestamp_deps.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=17 "Built target MySqlTestExample_autogen"
-.PHONY : Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 12
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\rule
-
-# Convenience name for target.
-MySqlTestExample_autogen: Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\rule
-.PHONY : MySqlTestExample_autogen
-
-# clean rule for target.
-Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\clean
-.PHONY : Examples\MySqlTestExample\CMakeFiles\MySqlTestExample_autogen.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/SqliteTestExample/CMakeFiles/SqliteTestExample.dir
-
-# All Build rule for target.
-Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\all: src\CMakeFiles\Src.dir\all
-Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\all: Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\all
-Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\all: Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=24,25,26,27,28 "Built target SqliteTestExample"
-.PHONY : Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 17
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\rule
-
-# Convenience name for target.
-SqliteTestExample: Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\rule
-.PHONY : SqliteTestExample
-
-# clean rule for target.
-Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\clean
-.PHONY : Examples\SqliteTestExample\CMakeFiles\SqliteTestExample.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/SqliteTestExample/CMakeFiles/SqliteTestExample_autogen_timestamp_deps.dir
-
-# All Build rule for target.
-Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\all: src\CMakeFiles\Src.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num= "Built target SqliteTestExample_autogen_timestamp_deps"
-.PHONY : Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 11
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\rule
-
-# Convenience name for target.
-SqliteTestExample_autogen_timestamp_deps: Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\rule
-.PHONY : SqliteTestExample_autogen_timestamp_deps
-
-# clean rule for target.
-Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\build.make /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\clean
-.PHONY : Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\clean
-
-#=============================================================================
-# Target rules for target Examples/SqliteTestExample/CMakeFiles/SqliteTestExample_autogen.dir
-
-# All Build rule for target.
-Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\all: Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen_timestamp_deps.dir\all
-	$(MAKE) $(MAKESILENT) -f Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\depend
-	$(MAKE) $(MAKESILENT) -f Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=29 "Built target SqliteTestExample_autogen"
-.PHONY : Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\all
-
-# Build rule for subdir invocation for target.
-Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 12
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles 0
-.PHONY : Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\rule
-
-# Convenience name for target.
-SqliteTestExample_autogen: Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\rule
-.PHONY : SqliteTestExample_autogen
-
-# clean rule for target.
-Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\clean:
-	$(MAKE) $(MAKESILENT) -f Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\build.make /nologo -$(MAKEFLAGS) Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\clean
-.PHONY : Examples\SqliteTestExample\CMakeFiles\SqliteTestExample_autogen.dir\clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

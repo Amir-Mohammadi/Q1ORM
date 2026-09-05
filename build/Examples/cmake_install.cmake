@@ -34,17 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/ARM/Desktop/Q1ORM/build/Examples/UnitTestExample/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("C:/Users/ARM/Desktop/Q1ORM/build/Examples/SoloExample/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("C:/Users/ARM/Desktop/Q1ORM/build/Examples/DatabaseInstallExample/cmake_install.cmake")
+  include("C:/Users/ARM/Desktop/Q1ORM/build/Examples/OrmExample/cmake_install.cmake")
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT

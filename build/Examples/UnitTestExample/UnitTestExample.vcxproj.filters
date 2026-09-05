@@ -4,7 +4,7 @@
     <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\UnitTestExample\UnitTestExample_autogen\mocs_compilation_Debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\SoloExample\applicationdbcontext.cpp">
+    <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\applicationdbcontext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\Q1ORMTests.cpp">

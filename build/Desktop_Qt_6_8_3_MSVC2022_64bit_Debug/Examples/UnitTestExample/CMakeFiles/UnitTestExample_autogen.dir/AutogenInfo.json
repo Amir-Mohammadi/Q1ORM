@@ -188,12 +188,6 @@
 	"HEADERS" : 
 	[
 		[
-			"C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/applicationdbcontext.h",
-			"MU",
-			"YVQWIY5ABJ/moc_applicationdbcontext.cpp",
-			null
-		],
-		[
 			"C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/PostgreSqlTests.h",
 			"MU",
 			"EWIEGA46WW/moc_PostgreSqlTests.cpp",
@@ -215,6 +209,12 @@
 			"C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlServerTests.h",
 			"MU",
 			"EWIEGA46WW/moc_SqlServerTests.cpp",
+			null
+		],
+		[
+			"C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/applicationdbcontext.h",
+			"MU",
+			"EWIEGA46WW/moc_applicationdbcontext.cpp",
 			null
 		]
 	],
@@ -279,11 +279,6 @@
 	"SOURCES" : 
 	[
 		[
-			"C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/applicationdbcontext.cpp",
-			"MU",
-			null
-		],
-		[
 			"C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/PostgreSqlTests.cpp",
 			"MU",
 			null
@@ -300,6 +295,11 @@
 		],
 		[
 			"C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlServerTests.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/applicationdbcontext.cpp",
 			"MU",
 			null
 		],

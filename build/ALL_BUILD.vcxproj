@@ -174,33 +174,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\DatabaseInstallExample\DatabaseInstallExample.vcxproj">
-      <Project>{5B09CBC9-351B-3532-9726-C90A0DA9262C}</Project>
-      <Name>DatabaseInstallExample</Name>
-    </ProjectReference>
     <ProjectReference Include="C:\Users\ARM\Desktop\Q1ORM\build\Tools\ExampleProjectModifier\ExampleProjectModifier.vcxproj">
       <Project>{B35F36FB-E92B-3AC6-8D85-FE01D427EDC2}</Project>
       <Name>ExampleProjectModifier</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\MySqlTestExample\MySqlTestExample.vcxproj">
-      <Project>{153FAD91-66C4-3EE8-8039-F34316B2091E}</Project>
-      <Name>MySqlTestExample</Name>
-    </ProjectReference>
-    <ProjectReference Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\SoloExample\SoloExample.vcxproj">
-      <Project>{A7BE102B-3B90-33D5-AE7D-59D01CD3C66E}</Project>
-      <Name>SoloExample</Name>
-    </ProjectReference>
-    <ProjectReference Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\SqliteTestExample\SqliteTestExample.vcxproj">
-      <Project>{A56426E9-CE7C-3947-ABCD-75033686C1ED}</Project>
-      <Name>SqliteTestExample</Name>
+    <ProjectReference Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\OrmExample\OrmExample.vcxproj">
+      <Project>{B339CA40-DBF3-3726-9F9B-BC5C2176C8D3}</Project>
+      <Name>OrmExample</Name>
     </ProjectReference>
     <ProjectReference Include="C:\Users\ARM\Desktop\Q1ORM\build\src\Src.vcxproj">
       <Project>{EB4BD481-7D13-3E6E-9FC3-7C3ABB6A76E2}</Project>
       <Name>Src</Name>
-    </ProjectReference>
-    <ProjectReference Include="C:\Users\ARM\Desktop\Q1ORM\build\Examples\UnitTestExample\UnitTestExample.vcxproj">
-      <Project>{E384CD41-2E56-33D4-835D-5D39584ABAEB}</Project>
-      <Name>UnitTestExample</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

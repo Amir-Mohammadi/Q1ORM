@@ -46,7 +46,9 @@ set(Q1ORM_SOURCES
     Q1Core/Q1Entity/Q1Column.cpp
 )
 
-add_library(Src SHARED ${Q1ORM_HEADERS} ${Q1ORM_SOURCES} ${Q1ORM_SCRIPTS})
+add_library(Src SHARED ${Q1ORM_HEADERS} ${Q1ORM_SOURCES} ${Q1ORM_SCRIPTS}
+
+)
 
 target_include_directories(Src
     PUBLIC

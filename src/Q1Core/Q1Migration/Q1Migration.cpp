@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QRegularExpression>
 #include <QDateTime>
+#include <algorithm>
 
 Q1Migration::Q1Migration(Q1Connection &connection)
     : connection(connection)
@@ -25,6 +26,23 @@ bool Q1Migration::EnsureHistoryTable()
         return false;
     }
 
+    // Avoid executing CREATE TABLE IF NOT EXISTS when the history table is
+    // already present. PostgreSQL emits a NOTICE for that statement even
+    // though it succeeds, which makes a healthy migration look like an error.
+    const QString historyTable = QStringLiteral("__q1_migrations");
+    const QStringList tables = connection.database.tables();
+    const bool historyExists = std::any_of(
+        tables.cbegin(), tables.cend(),
+        [&historyTable](const QString &table) {
+            return table.compare(historyTable, Qt::CaseInsensitive) == 0;
+        });
+
+    if (historyExists)
+    {
+        connection.Disconnect();
+        return true;
+    }
+
     const QString sql = connection.IsSqlServer()
         ? "IF OBJECT_ID(N'__q1_migrations', N'U') IS NULL "
           "CREATE TABLE __q1_migrations (id INT IDENTITY(1,1) PRIMARY KEY, "
@@ -37,7 +55,19 @@ bool Q1Migration::EnsureHistoryTable()
     QSqlQuery query(connection.database);
     if (!query.exec(sql))
     {
-        m_lastError = query.lastError().text();
+        const QString error = query.lastError().text();
+        // A concurrent initializer may have created the table after the
+        // metadata check. Treat that benign race as success.
+        if (error.contains(QStringLiteral("already exists"), Qt::CaseInsensitive) ||
+            error.contains(QStringLiteral("already exist"), Qt::CaseInsensitive) ||
+            error.contains(QStringLiteral("already an object named"), Qt::CaseInsensitive) ||
+            error.contains(QStringLiteral("duplicate"), Qt::CaseInsensitive))
+        {
+            connection.Disconnect();
+            return true;
+        }
+
+        m_lastError = error;
         connection.Disconnect();
         return false;
     }

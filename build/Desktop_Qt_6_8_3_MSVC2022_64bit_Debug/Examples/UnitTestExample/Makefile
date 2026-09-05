@@ -362,35 +362,35 @@ UnitTestExample_autogen\mocs_compilation.cpp.s:
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\Examples\UnitTestExample
 .PHONY : UnitTestExample_autogen\mocs_compilation.cpp.s
 
-__\SoloExample\applicationdbcontext.obj: __\SoloExample\applicationdbcontext.cpp.obj
-.PHONY : __\SoloExample\applicationdbcontext.obj
+applicationdbcontext.obj: applicationdbcontext.cpp.obj
+.PHONY : applicationdbcontext.obj
 
 # target to build an object file
-__\SoloExample\applicationdbcontext.cpp.obj:
+applicationdbcontext.cpp.obj:
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.obj
+	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.obj
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\Examples\UnitTestExample
-.PHONY : __\SoloExample\applicationdbcontext.cpp.obj
+.PHONY : applicationdbcontext.cpp.obj
 
-__\SoloExample\applicationdbcontext.i: __\SoloExample\applicationdbcontext.cpp.i
-.PHONY : __\SoloExample\applicationdbcontext.i
+applicationdbcontext.i: applicationdbcontext.cpp.i
+.PHONY : applicationdbcontext.i
 
 # target to preprocess a source file
-__\SoloExample\applicationdbcontext.cpp.i:
+applicationdbcontext.cpp.i:
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.i
+	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.i
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\Examples\UnitTestExample
-.PHONY : __\SoloExample\applicationdbcontext.cpp.i
+.PHONY : applicationdbcontext.cpp.i
 
-__\SoloExample\applicationdbcontext.s: __\SoloExample\applicationdbcontext.cpp.s
-.PHONY : __\SoloExample\applicationdbcontext.s
+applicationdbcontext.s: applicationdbcontext.cpp.s
+.PHONY : applicationdbcontext.s
 
 # target to generate assembly for a file
-__\SoloExample\applicationdbcontext.cpp.s:
+applicationdbcontext.cpp.s:
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug
-	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.s
+	$(MAKE) $(MAKESILENT) -f Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\build.make /nologo -$(MAKEFLAGS) Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.s
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\Examples\UnitTestExample
-.PHONY : __\SoloExample\applicationdbcontext.cpp.s
+.PHONY : applicationdbcontext.cpp.s
 
 main.obj: main.cpp.obj
 .PHONY : main.obj
@@ -452,9 +452,9 @@ help:
 	@echo ... UnitTestExample_autogen/mocs_compilation.obj
 	@echo ... UnitTestExample_autogen/mocs_compilation.i
 	@echo ... UnitTestExample_autogen/mocs_compilation.s
-	@echo ... __/SoloExample/applicationdbcontext.obj
-	@echo ... __/SoloExample/applicationdbcontext.i
-	@echo ... __/SoloExample/applicationdbcontext.s
+	@echo ... applicationdbcontext.obj
+	@echo ... applicationdbcontext.i
+	@echo ... applicationdbcontext.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

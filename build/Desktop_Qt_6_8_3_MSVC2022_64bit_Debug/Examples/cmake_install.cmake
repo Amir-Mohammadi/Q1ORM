@@ -34,16 +34,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/UnitTestExample/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/SoloExample/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/DatabaseInstallExample/cmake_install.cmake")
+  include("C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/OrmExample/cmake_install.cmake")
 endif()
 

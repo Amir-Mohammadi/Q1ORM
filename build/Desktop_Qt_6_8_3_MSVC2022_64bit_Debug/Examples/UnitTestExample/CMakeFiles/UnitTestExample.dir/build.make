@@ -92,29 +92,29 @@ Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\UnitTestExample_autogen\
 <<
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug
 
-Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.obj: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\flags.make
-Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.obj: C:\Users\ARM\Desktop\Q1ORM\Examples\SoloExample\applicationdbcontext.cpp
-Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.obj: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/__/SoloExample/applicationdbcontext.cpp.obj"
+Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.obj: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\flags.make
+Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.obj: C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\applicationdbcontext.cpp
+Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.obj: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/applicationdbcontext.cpp.obj"
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\Examples\UnitTestExample
-	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.obj.d --working-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\Examples\UnitTestExample --filter-prefix="Note: including file: " -- C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\HostX64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.obj /FdCMakeFiles\UnitTestExample.dir\ /FS -c C:\Users\ARM\Desktop\Q1ORM\Examples\SoloExample\applicationdbcontext.cpp
+	$(CMAKE_COMMAND) -E cmake_cl_compile_depends --dep-file=CMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.obj.d --working-dir=C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\Examples\UnitTestExample --filter-prefix="Note: including file: " -- C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\HostX64\x64\cl.exe @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /showIncludes /FoCMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.obj /FdCMakeFiles\UnitTestExample.dir\ /FS -c C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\applicationdbcontext.cpp
 <<
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug
 
-Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/UnitTestExample.dir/__/SoloExample/applicationdbcontext.cpp.i"
+Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/UnitTestExample.dir/applicationdbcontext.cpp.i"
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\Examples\UnitTestExample
-	C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\HostX64\x64\cl.exe > CMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.i @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\ARM\Desktop\Q1ORM\Examples\SoloExample\applicationdbcontext.cpp
+	C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\HostX64\x64\cl.exe > CMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.i @<<
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\applicationdbcontext.cpp
 <<
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug
 
-Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/UnitTestExample.dir/__/SoloExample/applicationdbcontext.cpp.s"
+Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/UnitTestExample.dir/applicationdbcontext.cpp.s"
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug\Examples\UnitTestExample
 	C:\PROGRA~1\MICROS~4\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\HostX64\x64\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.s /c C:\Users\ARM\Desktop\Q1ORM\Examples\SoloExample\applicationdbcontext.cpp
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.s /c C:\Users\ARM\Desktop\Q1ORM\Examples\UnitTestExample\applicationdbcontext.cpp
 <<
 	cd C:\Users\ARM\Desktop\Q1ORM\build\Desktop_Qt_6_8_3_MSVC2022_64bit_Debug
 
@@ -251,7 +251,7 @@ Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\main.cpp.s: cmake_force
 # Object files for target UnitTestExample
 UnitTestExample_OBJECTS = \
 "CMakeFiles\UnitTestExample.dir\UnitTestExample_autogen\mocs_compilation.cpp.obj" \
-"CMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.obj" \
+"CMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.obj" \
 "CMakeFiles\UnitTestExample.dir\Q1ORMTests.cpp.obj" \
 "CMakeFiles\UnitTestExample.dir\PostgreSqlTests.cpp.obj" \
 "CMakeFiles\UnitTestExample.dir\SqlGenerationTests.cpp.obj" \
@@ -262,7 +262,7 @@ UnitTestExample_OBJECTS = \
 UnitTestExample_EXTERNAL_OBJECTS =
 
 bin\UnitTestExample.exe: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\UnitTestExample_autogen\mocs_compilation.cpp.obj
-bin\UnitTestExample.exe: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\__\SoloExample\applicationdbcontext.cpp.obj
+bin\UnitTestExample.exe: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\applicationdbcontext.cpp.obj
 bin\UnitTestExample.exe: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\Q1ORMTests.cpp.obj
 bin\UnitTestExample.exe: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\PostgreSqlTests.cpp.obj
 bin\UnitTestExample.exe: Examples\UnitTestExample\CMakeFiles\UnitTestExample.dir\SqlGenerationTests.cpp.obj

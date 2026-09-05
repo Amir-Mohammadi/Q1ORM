@@ -21,12 +21,20 @@ public:
     {
         if (jsonArray.isEmpty())
         {
-            qDebug() << "Table is empty";
+            qInfo().noquote() << "[QUERY] 0 rows";
             return;
         }
 
-        QJsonObject firstObj = jsonArray[0].toObject();
-        QStringList headers = firstObj.keys();
+        QStringList headers;
+        for (const QJsonValue& value : jsonArray)
+        {
+            const QStringList rowKeys = value.toObject().keys();
+            for (const QString& key : rowKeys)
+            {
+                if (!headers.contains(key))
+                    headers.append(key);
+            }
+        }
 
         if (!columnOrder.isEmpty())
         {
@@ -64,18 +72,22 @@ public:
             QJsonObject obj = val.toObject();
             for (const QString& key : headers)
             {
-                QString data = obj[key].toVariant().toString();
+                QString data = FormatValue(obj.value(key));
                 int dataLen = data.length() + 2;
                 colWidths[key] = std::max(colWidths[key], dataLen);
             }
         }
 
+        qInfo().noquote() << QStringLiteral("[QUERY] %1 row(s) | %2 column(s)")
+                                 .arg(jsonArray.size())
+                                 .arg(headers.size());
+
         QString separator = PrintSeparator(headers, colWidths);
-        qDebug().noquote() << separator;
+        qInfo().noquote() << separator;
 
         QString headerRow = PrintRow(headers, headers, colWidths);
-        qDebug().noquote() << headerRow;
-        qDebug().noquote() << separator;
+        qInfo().noquote() << headerRow;
+        qInfo().noquote() << separator;
 
         for (const QJsonValue& val : jsonArray)
         {
@@ -83,16 +95,32 @@ public:
             QStringList row;
             for (const QString& key : headers)
             {
-                row << obj[key].toVariant().toString();
+                row << FormatValue(obj.value(key));
             }
-            qDebug().noquote() << PrintRow(row, headers, colWidths);
+            qInfo().noquote() << PrintRow(row, headers, colWidths);
         }
 
-        qDebug().noquote() << separator;
-        qDebug() << "Total rows:" << jsonArray.size();
+        qInfo().noquote() << separator;
     }
 
 private:
+    static QString FormatValue(const QJsonValue& value)
+    {
+        if (value.isUndefined() || value.isNull())
+            return QStringLiteral("<null>");
+        if (value.isString())
+            return value.toString();
+        if (value.isBool())
+            return value.toBool() ? QStringLiteral("true") : QStringLiteral("false");
+        if (value.isDouble())
+            return QString::number(value.toDouble(), 'g', 15);
+        if (value.isArray())
+            return QString::fromUtf8(QJsonDocument(value.toArray()).toJson(QJsonDocument::Compact));
+        if (value.isObject())
+            return QString::fromUtf8(QJsonDocument(value.toObject()).toJson(QJsonDocument::Compact));
+        return QString();
+    }
+
     static QString PrintRow(const QStringList& data, const QStringList& headers, const QMap<QString, int>& colWidths)
     {
         QString row = "| ";
@@ -317,7 +345,8 @@ public:
                                              group_by,
                                              having_clause,
                                              parameters,
-                                             offset_val);
+                                             offset_val,
+                                             distinct_flag);
             executed = true;
         }
 
@@ -341,7 +370,7 @@ public:
         }
         else
         {
-            qDebug() << "No results found";
+            qInfo().noquote() << "[QUERY] 0 rows";
         }
 
         return results;
@@ -364,7 +393,8 @@ public:
                                              group_by,
                                              having_clause,
                                              parameters,
-                                             offset_val);
+                                             offset_val,
+                                             distinct_flag);
             executed = true;
         }
 
@@ -380,7 +410,8 @@ public:
         {
             QJsonArray sortedArray = SortJsonKeys(array);
             QJsonDocument doc(sortedArray);
-            qDebug().noquote() << doc.toJson(QJsonDocument::Indented);
+            qInfo().noquote() << "[QUERY] JSON result:";
+            qInfo().noquote() << QString::fromUtf8(doc.toJson(QJsonDocument::Indented));
         }
 
         return results;
@@ -409,7 +440,8 @@ public:
                                              group_by,
                                              having_clause,
                                              parameters,
-                                             offset_val);
+                                             offset_val,
+                                             distinct_flag);
             executed = true;
 
             if (!included_relations.isEmpty())
@@ -441,7 +473,8 @@ public:
                                              group_by,
                                              having_clause,
                                              parameters,
-                                             offset_val);
+                                             offset_val,
+                                             distinct_flag);
             executed = true;
 
             if (!included_relations.isEmpty())
@@ -487,21 +520,33 @@ private:
     {
         QJsonArray sortedArray;
         for (const auto& val : array)
-        {
-            QJsonObject obj = val.toObject();
-            QJsonObject sortedObj;
+            sortedArray.append(SortJsonValue(val));
+        return sortedArray;
+    }
 
-            QStringList keys = obj.keys();
+    QJsonValue SortJsonValue(const QJsonValue& value)
+    {
+        if (value.isArray())
+        {
+            QJsonArray sorted;
+            for (const QJsonValue& item : value.toArray())
+                sorted.append(SortJsonValue(item));
+            return sorted;
+        }
+
+        if (value.isObject())
+        {
+            const QJsonObject object = value.toObject();
+            QStringList keys = object.keys();
             std::sort(keys.begin(), keys.end());
 
+            QJsonObject sorted;
             for (const QString& key : keys)
-            {
-                sortedObj.insert(key, obj[key]);
-            }
-
-            sortedArray.append(sortedObj);
+                sorted.insert(key, SortJsonValue(object.value(key)));
+            return sorted;
         }
-        return sortedArray;
+
+        return value;
     }
 
     QJsonArray FlattenAllIncludedData(const QJsonArray& jsonArray)
@@ -589,103 +634,9 @@ private:
 
     void PrintJsonWithIncludes(const QJsonArray& jsonArray)
     {
-        qDebug().noquote() << "[";
-
-        for (int i = 0; i < jsonArray.size(); ++i)
-        {
-            QJsonObject obj = jsonArray[i].toObject();
-            QJsonObject baseObj;
-            QMap<QString, QJsonArray> includeData;
-
-            for (const QString& key : obj.keys())
-            {
-                if (included_relations.contains(key))
-                {
-                    if (obj[key].isArray())
-                    {
-                        includeData[key] = obj[key].toArray();
-                    }
-                }
-                else
-                {
-                    baseObj.insert(key, obj[key]);
-                }
-            }
-
-            QJsonObject sortedBase;
-            QStringList keys = baseObj.keys();
-            std::sort(keys.begin(), keys.end());
-            for (const QString& key : keys)
-            {
-                sortedBase.insert(key, baseObj[key]);
-            }
-
-            qDebug().noquote() << "  {";
-
-            QStringList baseKeys = sortedBase.keys();
-            for (int j = 0; j < baseKeys.size(); ++j)
-            {
-                QString key = baseKeys[j];
-                QJsonValue val = sortedBase[key];
-                QString comma = (j < baseKeys.size() - 1 || !includeData.isEmpty()) ? "," : "";
-
-                if (val.isString())
-                {
-                    qDebug().noquote() << QString("    \"%1\": \"%2\"%3").arg(key, val.toString(), comma);
-                }
-                else if (val.isDouble())
-                {
-                    qDebug().noquote() << QString("    \"%1\": %2%3").arg(key, QString::number(val.toDouble()), comma);
-                }
-                else if (val.isBool())
-                {
-                    qDebug().noquote() << QString("    \"%1\": %2%3").arg(key, val.toBool() ? "true" : "false", comma);
-                }
-                else if (val.isNull())
-                {
-                    qDebug().noquote() << QString("    \"%1\": null%2").arg(key, comma);
-                }
-                else
-                {
-                    qDebug().noquote() << QString("    \"%1\": %2%3").arg(key, QString::number(val.toDouble()), comma);
-                }
-            }
-
-            QStringList includeKeys = includeData.keys();
-            for (int j = 0; j < includeKeys.size(); ++j)
-            {
-                QString relName = includeKeys[j];
-                QJsonArray relArray = includeData[relName];
-                QString comma = (j < includeKeys.size() - 1) ? "," : "";
-
-                qDebug().noquote() << QString("    \"%1\": [").arg(relName);
-
-                for (int k = 0; k < relArray.size(); ++k)
-                {
-                    QJsonObject relObj = relArray[k].toObject();
-                    QString relComma = (k < relArray.size() - 1) ? "," : "";
-
-                    QJsonObject sortedRel;
-                    QStringList relObjKeys = relObj.keys();
-                    std::sort(relObjKeys.begin(), relObjKeys.end());
-                    for (const QString& key : relObjKeys)
-                    {
-                        sortedRel.insert(key, relObj[key]);
-                    }
-
-                    QJsonDocument relDoc(sortedRel);
-                    QString relJson = relDoc.toJson(QJsonDocument::Compact);
-                    qDebug().noquote() << QString("      %1%2").arg(relJson, relComma);
-                }
-
-                qDebug().noquote() << QString("    ]%1").arg(comma);
-            }
-
-            QString rowComma = (i < jsonArray.size() - 1) ? "," : "";
-            qDebug().noquote() << QString("  }%1").arg(rowComma);
-        }
-
-        qDebug().noquote() << "]";
+        qInfo().noquote() << "[QUERY] JSON result with includes:";
+        qInfo().noquote() << QString::fromUtf8(
+            QJsonDocument(SortJsonKeys(jsonArray)).toJson(QJsonDocument::Indented));
     }
 
     template<typename T>
@@ -827,6 +778,9 @@ private:
                                  repository->QuoteIdentifier(targetColumn),
                                  placeholders.join(", "));
 
+        qInfo().noquote() << QStringLiteral("[QUERY] INCLUDE %1 -> %2 related key(s)")
+                                 .arg(relation.top_table)
+                                 .arg(keyValues.size());
         qDebug() << "Eager Loading Query:" << query;
 
         QList<QJsonObject> relatedData = repository->ExecuteRelationQuery(query, relationParameters);

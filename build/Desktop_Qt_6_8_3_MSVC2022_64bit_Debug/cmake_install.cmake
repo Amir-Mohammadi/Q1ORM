@@ -52,16 +52,6 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Tools/cmake_install.cmake")
 endif()
 
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/MySqlTestExample/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/SqliteTestExample/cmake_install.cmake")
-endif()
-
 if(CMAKE_INSTALL_COMPONENT)
   if(CMAKE_INSTALL_COMPONENT MATCHES "^[a-zA-Z0-9_.+-]+$")
     set(CMAKE_INSTALL_MANIFEST "install_manifest_${CMAKE_INSTALL_COMPONENT}.txt")

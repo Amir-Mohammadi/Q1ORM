@@ -14,7 +14,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlGenerationTests.cpp" "Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/SqlGenerationTests.cpp.obj" "msvc" "Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/SqlGenerationTests.cpp.obj.d"
   "C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/SqlServerTests.cpp" "Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/SqlServerTests.cpp.obj" "msvc" "Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/SqlServerTests.cpp.obj.d"
   "C:/Users/ARM/Desktop/Q1ORM/build/Desktop_Qt_6_8_3_MSVC2022_64bit_Debug/Examples/UnitTestExample/UnitTestExample_autogen/mocs_compilation.cpp" "Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/UnitTestExample_autogen/mocs_compilation.cpp.obj" "msvc" "Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/UnitTestExample_autogen/mocs_compilation.cpp.obj.d"
-  "C:/Users/ARM/Desktop/Q1ORM/Examples/SoloExample/applicationdbcontext.cpp" "Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/__/SoloExample/applicationdbcontext.cpp.obj" "msvc" "Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/__/SoloExample/applicationdbcontext.cpp.obj.d"
+  "C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/applicationdbcontext.cpp" "Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/applicationdbcontext.cpp.obj" "msvc" "Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/applicationdbcontext.cpp.obj.d"
   "C:/Users/ARM/Desktop/Q1ORM/Examples/UnitTestExample/main.cpp" "Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/main.cpp.obj" "msvc" "Examples/UnitTestExample/CMakeFiles/UnitTestExample.dir/main.cpp.obj.d"
   )
 

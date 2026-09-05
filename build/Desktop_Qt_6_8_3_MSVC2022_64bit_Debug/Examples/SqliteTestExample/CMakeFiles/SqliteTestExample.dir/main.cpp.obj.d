@@ -439,3 +439,23 @@ C:/Qt/6.8.3/msvc2022_64/include/QtCore/QMap
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/QJsonArray
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/QJsonDocument
 C:/Qt/6.8.3/msvc2022_64/include/QtCore/QJsonObject
+C:/Users/ARM/Desktop/Q1ORM/src/Q1ORM.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/QDebug
+C:/Users/ARM/Desktop/Q1ORM/src/Q1DatabaseInstall/Q1DatabaseInstall.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/QDebug
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/QString
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/QProcess
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qprocess.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qiodevice.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qstringlist.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/QObject
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/QByteArray
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/QDir
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qdir.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qdirlisting.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qfiledevice.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qfile.h
+C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.44.35207/include/filesystem
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qfileinfo.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qtimezone.h
+C:/Qt/6.8.3/msvc2022_64/include/QtCore/qstringlist.h
