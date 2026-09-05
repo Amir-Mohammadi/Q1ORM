@@ -1,9 +1,0 @@
-C:\Users\ARM\Desktop\Q1ORM\src\Q1ORM.cpp;C:\Users\ARM\Desktop\Q1ORM\build\src\Src.dir\Release\Q1ORM.obj
-C:\Users\ARM\Desktop\Q1ORM\src\Q1DatabaseInstall\Q1DatabaseInstall.cpp;C:\Users\ARM\Desktop\Q1ORM\build\src\Src.dir\Release\Q1DatabaseInstall.obj
-C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Context\Q1Context.cpp;C:\Users\ARM\Desktop\Q1ORM\build\src\Src.dir\Release\Q1Context.obj
-C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Entity\Q1Entity.cpp;C:\Users\ARM\Desktop\Q1ORM\build\src\Src.dir\Release\Q1Entity.obj
-C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Migration\Q1MigrationQuery.cpp;C:\Users\ARM\Desktop\Q1ORM\build\src\Src.dir\Release\Q1MigrationQuery.obj
-C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Migration\Q1Migration.cpp;C:\Users\ARM\Desktop\Q1ORM\build\src\Src.dir\Release\Q1Migration.obj
-C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Context\Q1ConnectionPool.cpp;C:\Users\ARM\Desktop\Q1ORM\build\src\Src.dir\Release\Q1ConnectionPool.obj
-C:\Users\ARM\Desktop\Q1ORM\src\Q1Core\Q1Entity\Q1Column.cpp;C:\Users\ARM\Desktop\Q1ORM\build\src\Src.dir\Release\Q1Column.obj
-C:\Users\ARM\Desktop\Q1ORM\build\src\Src_autogen\mocs_compilation_Release.cpp;C:\Users\ARM\Desktop\Q1ORM\build\src\Src.dir\Release\mocs_compilation_Release.obj
