@@ -12,6 +12,7 @@
 #include <QVariantMap>
 #include <QList>
 #include <QMap>
+#include <QHash>
 #include <QDate>
 #include <QDateTime>
 #include <QSqlRecord>
@@ -138,6 +139,12 @@ public:
 
 
     // Set table name
+    void Index(const QStringList& columns, bool unique = false, const QString& name = QString())
+    { table.AddIndex(columns, unique, name); }
+
+    void Unique(const QStringList& columns, const QString& name = QString())
+    { table.AddIndex(columns, true, name); }
+
     void ToTableName(const QString& table_name)
     {
         table.table_name = table_name;
@@ -1394,10 +1401,11 @@ public:
 
         QSqlRecord rec = sql_query.record();
         QStringList allColumnNames;
-
-        // Get all column names from result set
+        QHash<QString, int> resultColumnIndexes;
         for (int i = 0; i < rec.count(); ++i) {
-            allColumnNames << rec.fieldName(i);
+            const QString name = rec.fieldName(i);
+            allColumnNames << name;
+            resultColumnIndexes.insert(name.toLower(), i);
         }
 
         while (sql_query.next()) {
@@ -1412,7 +1420,7 @@ public:
                 char* memberPtr = reinterpret_cast<char*>(&entity) + info.offset;
 
                 // Get column index (works for simple select and joins)
-                int colIndex = rec.indexOf(col.name);
+                int colIndex = resultColumnIndexes.value(col.name.toLower(), -1);
                 if (colIndex < 0) continue;
 
                 QVariant val = sql_query.value(colIndex);
@@ -1491,7 +1499,7 @@ public:
             // Convert ALL result columns to JSON (including joined columns)
             QJsonObject obj;
             for (const QString& colName : allColumnNames) {
-                QVariant val = sql_query.value(rec.indexOf(colName));
+                QVariant val = sql_query.value(resultColumnIndexes.value(colName.toLower(), -1));
 
                 if (val.isNull()) {
                     obj.insert(colName, QJsonValue::Null);
@@ -1616,7 +1624,7 @@ public:
 
 
 
-    QVariant ExecuteScalar(const QString& sql)
+    QVariant ExecuteScalar(const QString& sql, const QVariantMap& parameters = QVariantMap())
     {
         if(!connection || !connection->Connect())
         {
@@ -1625,7 +1633,14 @@ public:
         }
 
         QSqlQuery query(connection->database);
-        if(!query.exec(sql))
+        bool success = false;
+        if (parameters.isEmpty()) success = query.exec(sql);
+        else if (query.prepare(sql)) {
+            for (auto it = parameters.cbegin(); it != parameters.cend(); ++it)
+                query.bindValue(it.key(), it.value());
+            success = query.exec();
+        }
+        if(!success)
         {
             last_error = query.lastError().text();
             qDebug() << "ExecuteScalar failed: " << last_error;
@@ -1679,10 +1694,11 @@ public:
 
         QSqlRecord rec = sql_query.record();
         QStringList columnNames;
-
-        // Get all column names from result set
+        QHash<QString, int> resultColumnIndexes;
         for (int i = 0; i < rec.count(); ++i) {
-            columnNames << rec.fieldName(i);
+            const QString name = rec.fieldName(i);
+            columnNames << name;
+            resultColumnIndexes.insert(name.toLower(), i);
         }
 
         // Fetch all rows as JSON objects
@@ -1691,7 +1707,7 @@ public:
 
             // Convert each column value to appropriate JSON type
             for (const QString& colName : columnNames) {
-                QVariant val = sql_query.value(rec.indexOf(colName));
+                QVariant val = sql_query.value(resultColumnIndexes.value(colName.toLower(), -1));
 
                 if (val.isNull()) {
                     obj.insert(colName, QJsonValue::Null);

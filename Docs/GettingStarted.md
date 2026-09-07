@@ -106,3 +106,28 @@ The examples in the repository demonstrate patterns such as:
 - `Q1Context::Initialize()` is the main entry point for preparing the context.
 - `Q1Context::GetLastError()` can be used to inspect connection or query failures.
 - The PostgreSQL installer helper writes and runs a batch script, so it is primarily intended for Windows environments.
+
+## Performance and safety APIs
+
+Q1ORM supports parameterized predicates and explicit indexes:
+
+```cpp
+entity.Index({"email"}, true);
+entity.Index({"tenant_id", "created_at"});
+
+Q1Query<User> query(&users);
+query.Where("age", Q1Operator::GreaterThan, 18)
+     .WhereEqual("status", "active")
+     .OrderBy("created_at", Q1Sort::Descending)
+     .Take(50);
+```
+
+`Q1Context::Initialize()` creates declared indexes and indexes foreign-key columns. Use the RAII transaction guard for exception-safe transactions:
+
+```cpp
+auto transaction = connection.Transaction();
+// writes...
+transaction.Commit();
+```
+
+`Any()` and `First()` avoid materializing more rows than needed.

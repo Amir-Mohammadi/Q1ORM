@@ -1,0 +1,13 @@
+{
+    "cmake.generator": "Ninja",
+    "cmake.buildDirectory": "${workspaceFolder}/build-vscode-qt68",
+    "cmake.configureSettings": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_PREFIX_PATH": "/home/arm/Qt/gcc_64",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+    },
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/build-vscode-qt68"
+    ],
+    "C_Cpp.intelliSenseEngine": "disabled"
+}

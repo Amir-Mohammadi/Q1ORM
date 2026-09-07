@@ -477,6 +477,24 @@ public:
     }
 
 public:
+    class TransactionGuard
+    {
+    public:
+        explicit TransactionGuard(Q1Connection& c) : connection(c), active(c.BeginTransaction()) {}
+        ~TransactionGuard() { if (active && !committed) connection.RollbackTransaction(); }
+        TransactionGuard(const TransactionGuard&) = delete;
+        TransactionGuard& operator=(const TransactionGuard&) = delete;
+        bool IsActive() const { return active; }
+        bool Commit() { if (!active || committed) return committed; committed = connection.CommitTransaction(); active = false; return committed; }
+        void Rollback() { if (active) { connection.RollbackTransaction(); active = false; } }
+    private:
+        Q1Connection& connection;
+        bool active = false;
+        bool committed = false;
+    };
+
+    TransactionGuard Transaction() { return TransactionGuard(*this); }
+
     QSqlDatabase database;
     QSqlDatabase root_database;
 

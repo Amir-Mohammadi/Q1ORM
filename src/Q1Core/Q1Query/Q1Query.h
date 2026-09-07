@@ -12,6 +12,9 @@
 #include <QJsonObject>
 #include <Q1Core/Q1Entity/Q1Column.h>
 
+enum class Q1Operator { Equal, NotEqual, GreaterThan, GreaterOrEqual, LessThan, LessOrEqual, Like };
+enum class Q1Sort { Ascending, Descending };
+
 template<typename Entity> class Q1Entity; // forward declaration
 
 class TableDebugger
@@ -185,10 +188,34 @@ public:
     Q1Query& Distinct()
     {
         distinct_flag = true;
+        Invalidate();
         return *this;
     }
 
     // Query builders
+    Q1Query& Where(const QString& column, Q1Operator op, const QVariant& value)
+    {
+        static const char* operators[] = {"=", "<>", ">", ">=", "<", "<=", "LIKE"};
+        const QString identifier = repository ? repository->QuoteIdentifier(column) : column;
+        if (value.isNull() && (op == Q1Operator::Equal || op == Q1Operator::NotEqual))
+            return Where(identifier + (op == Q1Operator::Equal ? " IS NULL" : " IS NOT NULL"));
+        QString name;
+        do { name = QString(":q1_value_%1").arg(parameter_sequence++); } while (parameters.contains(name));
+        Bind(name, value);
+        return Where(QString("%1 %2 %3").arg(identifier, QString::fromLatin1(operators[static_cast<int>(op)]), name));
+    }
+
+    Q1Query& WhereEqual(const QString& column, const QVariant& value)
+    { return Where(column, Q1Operator::Equal, value); }
+
+    Q1Query& WhereRaw(const QString& clause) { return Where(clause); }
+
+    Q1Query& OrderBy(const QString& column, Q1Sort direction)
+    {
+        const QString identifier = repository ? repository->QuoteIdentifier(column) : column;
+        return OrderBy(identifier + (direction == Q1Sort::Ascending ? " ASC" : " DESC"));
+    }
+
     Q1Query& Where(const QString& clause)
     {
         if (clause.trimmed().isEmpty())
@@ -221,6 +248,7 @@ public:
     Q1Query& OrderBy(const QString& clause)
     {
         order_by = clause;
+        Invalidate();
         return *this;
     }
 
@@ -252,6 +280,7 @@ public:
             order_by += ", ";
         }
         order_by += QString("%1 ASC").arg(column);
+        Invalidate();
         return *this;
     }
 
@@ -262,6 +291,7 @@ public:
             order_by += ", ";
         }
         order_by += QString("%1 DESC").arg(column);
+        Invalidate();
         return *this;
     }
 
@@ -269,24 +299,28 @@ public:
     Q1Query& InnerJoin(const QString& table, const QString& onCondition)
     {
         joins += QString(" INNER JOIN %1 ON %2").arg(table, onCondition);
+        Invalidate();
         return *this;
     }
 
     Q1Query& LeftJoin(const QString& table, const QString& onCondition)
     {
         joins += QString(" LEFT JOIN %1 ON %2").arg(table, onCondition);
+        Invalidate();
         return *this;
     }
 
     Q1Query& RightJoin(const QString& table, const QString& onCondition)
     {
         joins += QString(" RIGHT JOIN %1 ON %2").arg(table, onCondition);
+        Invalidate();
         return *this;
     }
 
     Q1Query& FullJoin(const QString& table, const QString& onCondition)
     {
         joins += QString(" FULL OUTER JOIN %1 ON %2").arg(table, onCondition);
+        Invalidate();
         return *this;
     }
 
@@ -294,40 +328,59 @@ public:
     Q1Query& Select(const QStringList& columns = QStringList())
     {
         selected_columns = columns;
+        Invalidate();
         return *this;
     }
 
     Q1Query& GroupBy(const QString& columns)
     {
         group_by = columns;
+        Invalidate();
         return *this;
     }
 
     Q1Query& Having(const QString& condition)
     {
         having_clause = condition;
+        Invalidate();
         return *this;
     }
 
     Q1Query& Include(const QString& relationship_name)
     {
         included_relations.append(relationship_name);
+        Invalidate();
         return *this;
     }
 
     Q1Query& Include(const QStringList& relationshipNames)
     {
         included_relations.append(relationshipNames);
+        Invalidate();
         return *this;
     }
 
     Q1Query& SetColumns(const QStringList& columns)
     {
         selected_columns = columns;
+        Invalidate();
         return *this;
     }
 
     // Display methods
+    bool Any()
+    {
+        Limit(1);
+        return !ToList().isEmpty();
+    }
+
+    Entity First()
+    {
+        Limit(1);
+        const QList<Entity> rows = ToList();
+        return rows.isEmpty() ? Entity{} : rows.first();
+    }
+
     QList<Entity> ShowList()
     {
         if (!repository)
@@ -681,7 +734,7 @@ private:
             sql += " HAVING " + having_clause;
         }
 
-        QVariant result = repository->ExecuteScalar(sql);
+        QVariant result = repository->ExecuteScalar(sql, parameters);
         if (!result.isValid() || result.isNull())
         {
             return T();
@@ -905,4 +958,5 @@ private:
     QMap<QString, QList<QJsonObject>> relation_cache;
     QVariantMap parameters;
     bool executed = false;
+    int parameter_sequence = 0;
 };

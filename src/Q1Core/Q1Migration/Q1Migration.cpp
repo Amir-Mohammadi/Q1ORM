@@ -671,3 +671,47 @@ bool Q1Migration::ConstraintExists(QSqlDatabase &db, const QString &constraint_n
 
     return false;
 }
+
+
+bool Q1Migration::EnsureIndexes(const Q1Table& table)
+{
+    m_lastError.clear();
+    if (!connection.Connect()) { m_lastError = connection.ErrorMessage(); return false; }
+    bool success = true;
+    for (const Q1Table::Index& index : table.GetIndexes()) {
+        QStringList columns;
+        for (const QString& name : index.columns) {
+            if (!table.HasColumn(name)) {
+                m_lastError = QString("Index %1 references unknown column %2").arg(index.name, name);
+                success = false;
+                break;
+            }
+            columns << connection.QuoteIdentifier(name);
+        }
+        if (!success) break;
+        QSqlQuery check(connection.database);
+        QString checkSql;
+        if (connection.IsPostgreSql())
+            checkSql = "SELECT 1 FROM pg_indexes WHERE schemaname = current_schema() AND tablename = ? AND indexname = ?";
+        else if (connection.IsSqlServer())
+            checkSql = "SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID(?) AND name = ?";
+        else if (connection.IsMySql())
+            checkSql = "SELECT 1 FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = ? AND index_name = ?";
+        else
+            checkSql = "SELECT 1 FROM sqlite_master WHERE type = 'index' AND tbl_name = ? AND name = ?";
+        if (!check.prepare(checkSql)) { m_lastError = check.lastError().text(); success = false; break; }
+        check.addBindValue(table.GetName());
+        check.addBindValue(index.name);
+        if (!check.exec()) { m_lastError = check.lastError().text(); success = false; break; }
+        const bool exists = check.next();
+        check.finish();
+        if (exists) continue;
+        const QString sql = QString("CREATE %1INDEX %2 ON %3 (%4)")
+            .arg(index.unique ? "UNIQUE " : "", connection.QuoteIdentifier(index.name),
+                 connection.QuoteIdentifier(table.GetName()), columns.join(", "));
+        QSqlQuery create(connection.database);
+        if (!create.exec(sql)) { m_lastError = create.lastError().text(); success = false; break; }
+    }
+    connection.Disconnect();
+    return success;
+}

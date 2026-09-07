@@ -2,6 +2,7 @@
 #define Q1TABLE_H
 
 #include <QStringList>
+#include <QList>
 
 #include "../../Q1Core/Q1Entity/Q1Column.h"
 #include "../../Q1Core/Q1Entity/Q1Relation.h"
@@ -11,6 +12,7 @@
 class Q1ORM_EXPORT Q1Table
 {
 public:
+    struct Index { QString name; QStringList columns; bool unique = false; };
     Q1Table() {}
 
     Q1Table(const QString& name) : table_name(name) {}
@@ -34,6 +36,17 @@ public:
     {
         relations.append(relation);
     }
+
+    void AddIndex(const QStringList& columns, bool unique = false, const QString& name = QString())
+    {
+        if (columns.isEmpty()) return;
+        Index index{ name.isEmpty() ? QStringLiteral("IX_%1_%2").arg(table_name, columns.join('_')) : name, columns, unique };
+        for (const Index& existing : indexes)
+            if (existing.name.compare(index.name, Qt::CaseInsensitive) == 0) return;
+        indexes.append(index);
+    }
+
+    const QList<Index>& GetIndexes() const { return indexes; }
 
     Q1Column* FindColumn(const QString& name)
     {
@@ -118,12 +131,14 @@ public:
     {
         columns.clear();
         relations.clear();
+        indexes.clear();
     }
 
 public:
     QString table_name;
     QList<Q1Column> columns;
     QList<Q1Relation> relations;
+    QList<Index> indexes;
 };
 
 #endif // Q1TABLE_H

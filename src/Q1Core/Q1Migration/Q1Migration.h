@@ -22,6 +22,7 @@ public:
     bool AddDatabase(QString database_name);
     bool AddTable(Q1Table q1table);
     bool AddColumn(QString table_name, Q1Column &column);
+    bool EnsureIndexes(const Q1Table& table);
     bool AddRelation(const Q1Relation &relation);
     bool CreateTableWithColumns(Q1Table& q1table);
 

@@ -75,6 +75,13 @@ bool Q1Context::Initialize()
     if (!connection->Connect())
         return false;
 
+    for (Q1Table* table : tables) {
+        if (!table) continue;
+        for (const Q1Relation& relation : table->GetRelations())
+            if (table->HasColumn(relation.foreign_key)) table->AddIndex({relation.foreign_key});
+        if (!query->EnsureIndexes(*table)) return false;
+    }
+
     QList<Q1Relation> allRelations = OnTableRelationCreating();
     InitialRelations(allRelations);
     if (query && !query->ErrorMessage().isEmpty())
