@@ -31,6 +31,7 @@ set(Q1ORM_HEADERS
     Q1Core/Q1Entity/Q1Relation.h
     Q1Core/Q1Query/Q1Query.h
     Q1Core/Q1Entity/Q1Column.h
+    Q1Core/Q1Entity/Q1MappingNames.h
     Q1Core/Q1Entity/Q1ModelBuilder.h
     Q1Core/Q1Entity/Q1EntityBase.h
 

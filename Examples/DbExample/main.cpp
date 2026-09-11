@@ -21,39 +21,24 @@ struct City {
 };
 
 class CountryMap {
-
 public:
   static void ConfigureEntity(Q1Entity<Country> &entity) {
     entity.ToTableName("countries");
-    entity.Property(entity.id, "id", false, true,
-                    "GENERATED ALWAYS AS IDENTITY");
-    entity.Property(entity.name, "name", false, false);
-  }
-
-  static QList<Q1Relation> CreateRelations(Q1Entity<Country> &entity) {
-    QList<Q1Relation> relations;
-
-    relations.append(entity.Relations("countries", "cities", ONE_TO_MANY,
-                                      "country_id", "id"));
-
-    return relations;
+    entity.HasKey<&Country::id>().ValueGeneratedOnAdd();
+    entity.Property<&Country::name>().IsRequired();
   }
 };
 
 class CityMap {
-
 public:
   static void ConfigureEntity(Q1Entity<City> &entity) {
     entity.ToTableName("cities");
-    entity.Property(entity.id, "id", false, true,
-                    "GENERATED ALWAYS AS IDENTITY");
-    entity.Property(entity.name, "name", false, false);
-    entity.Property(entity.country_id, "country_id", false, false);
-  }
-
-  static QList<Q1Relation> CreateRelations(Q1Entity<City> &entity) {
-    return {entity.Relations("cities", "countries", MANY_TO_ONE, "country_id",
-                             "id")};
+    entity.HasKey<&City::id>().ValueGeneratedOnAdd();
+    entity.Property<&City::name>().IsRequired();
+    entity.Property<&City::country_id>();
+    entity.HasOne<Country>().WithMany()
+        .HasForeignKey<&City::country_id>()
+        .HasPrincipalKey<&Country::id>();
   }
 };
 
@@ -78,7 +63,7 @@ protected:
 int main(int argc, char *argv[]) {
   QCoreApplication app(argc, argv);
 
-  Q1Connection conn(Q1Driver::SQLITE, "", "q1orm_test.sqlite", "", "", 0);
+  Q1Connection conn(Q1Driver::SQLITE, "", "q1orm_test2.sqlite", "", "", 0);
 
   ApplicationDbContext ctx(&conn);
 

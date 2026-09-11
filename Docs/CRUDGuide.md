@@ -39,45 +39,30 @@ Each model should be configured with table and column metadata.
 ### Country mapping
 
 ```cpp
-class CountryMap : public Q1Entity<Country>
-{
+class CountryMap {
 public:
-    static void ConfigureEntity(Q1Entity<Country>& entity)
-    {
-        entity.ToTableName("countries");
-        entity.Property(entity.id, "id", false, true, "GENERATED ALWAYS AS IDENTITY");
-        entity.Property(entity.name, "name", false, false);
-    }
-
-    static QList<Q1Relation> CreateRelations(Q1Entity<Country>& entity)
-    {
-        QList<Q1Relation> relations;
-        relations.append(entity.Relations("countries", "cities", ONE_TO_MANY, "country_id", "id"));
-        return relations;
-    }
+  static void ConfigureEntity(Q1Entity<Country> &entity) {
+    entity.ToTableName("countries");
+    entity.HasKey<&Country::id>().ValueGeneratedOnAdd();
+    entity.Property<&Country::name>().IsRequired();
+  }
 };
 ```
 
 ### City mapping
 
 ```cpp
-class CityMap : public Q1Entity<City>
-{
+class CityMap {
 public:
-    static void ConfigureEntity(Q1Entity<City>& entity)
-    {
-        entity.ToTableName("cities");
-        entity.Property(entity.id, "id", false, true, "GENERATED ALWAYS AS IDENTITY");
-        entity.Property(entity.name, "name", false, false);
-        entity.Property(entity.country_id, "country_id", false, false);
-    }
-
-    static QList<Q1Relation> CreateRelations(Q1Entity<City>& entity)
-    {
-        QList<Q1Relation> relations;
-        relations.append(entity.Relations("cities", "countries", MANY_TO_ONE, "country_id", "id"));
-        return relations;
-    }
+  static void ConfigureEntity(Q1Entity<City> &entity) {
+    entity.ToTableName("cities");
+    entity.HasKey<&City::id>().ValueGeneratedOnAdd();
+    entity.Property<&City::name>().IsRequired();
+    entity.Property<&City::country_id>();
+    entity.HasOne<Country>().WithMany()
+        .HasForeignKey<&City::country_id>()
+        .HasPrincipalKey<&Country::id>();
+  }
 };
 ```
 
@@ -90,59 +75,24 @@ class ApplicationDbContext : public Q1Context
 {
 public:
     explicit ApplicationDbContext(Q1Connection* conn)
-        : cities(conn),
-          countries(conn)
     {
         SetConnection(conn, false);
     }
 
-    void OnConfiguration() override;
-    QList<Q1Table*> OnTablesCreating() override;
-    QList<Q1Relation> OnTableRelationCreating() override;
-
     Q1Entity<City> cities;
     Q1Entity<Country> countries;
+
+protected:
+    void OnModelCreating(Q1ModelBuilder& builder) override
+    {
+        builder.ApplyMap<CityMap>(cities);
+        builder.ApplyMap<CountryMap>(countries);
+    }
 };
 ```
 
-Implementation:
-
-```cpp
-void ApplicationDbContext::OnConfiguration()
-{
-    if (!connection)
-    {
-        SetConnection(new Q1Connection(
-            Q1Driver::POSTGRE_SQL,
-            "localhost",
-            "q1orm_test",
-            "postgres",
-            "123",
-            5432
-        ), true);
-    }
-}
-
-QList<Q1Table*> ApplicationDbContext::OnTablesCreating()
-{
-    CityMap::ConfigureEntity(cities);
-    CountryMap::ConfigureEntity(countries);
-    CityMap::CreateRelations(cities);
-    CountryMap::CreateRelations(countries);
-
-    QList<Q1Table*> tables;
-    tables.append(cities.GetTablePtr());
-    tables.append(countries.GetTablePtr());
-    return tables;
-}
-
-QList<Q1Relation> ApplicationDbContext::OnTableRelationCreating()
-{
-    QList<Q1Relation> relations;
-    relations += CityMap::CreateRelations(cities);
-    return relations;
-}
-```
+The model builder configures both entity sets and resolves the typed foreign key
+after all maps have run. Include `<Q1ORM.h>` for these APIs.
 
 ## 4. Connect to the database
 

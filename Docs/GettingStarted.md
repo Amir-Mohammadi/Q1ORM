@@ -77,9 +77,8 @@ struct City {
 struct CityMap {
     static void ConfigureEntity(Q1Entity<City>& entity) {
         entity.ToTableName("cities");
-        entity.Property(entity.id, "id", false, true,
-                        "GENERATED ALWAYS AS IDENTITY");
-        entity.Property(entity.name, "name");
+        entity.HasKey<&City::id>().ValueGeneratedOnAdd();
+        entity.Property<&City::name>().IsRequired();
     }
 };
 
@@ -99,9 +98,10 @@ protected:
 ```
 
 `ApplyMap<Map>(member)` registers and configures the member automatically.
-Calls can be chained. `CreateRelations` is optional; when present it must return
-`QList<Q1Relation>` and runs after all maps have configured their tables.
-Inverse one-to-many and many-to-one declarations produce one foreign key.
+Calls can be chained. Configure relationships inside `ConfigureEntity` with
+`HasOne<Principal>().WithMany().HasForeignKey<&Entity::foreign_key>()`
+followed by `.HasPrincipalKey<&Principal::id>()`. Relationships resolve after all
+maps have configured their tables.
 
 The no-argument form `builder.ApplyMap<CityMap>()` is also supported: first call
 `RegisterEntity(&cities)` in the context constructor. The entity type is inferred
@@ -162,3 +162,44 @@ transaction.Commit();
 ```
 
 `Any()` and `First()` avoid materializing more rows than needed.
+
+## Typed mapping
+
+Use member pointers to map properties without repeating their column names:
+
+```cpp
+class CityMap {
+public:
+    static void ConfigureEntity(Q1Entity<City>& entity) {
+        entity.ToTableName("cities"); // Optional: otherwise the table is named City.
+        entity.HasKey<&City::id>().ValueGeneratedOnAdd();
+        entity.Property<&City::name>().IsRequired();
+        entity.Property<&City::country_id>();
+        entity.HasOne<Country>().WithMany()
+            .HasForeignKey<&City::country_id>()
+            .HasPrincipalKey<&Country::id>();
+    }
+};
+```
+
+Apply both `CityMap` and `CountryMap` to the model. `CountryMap` must map
+`Country::id`. Map order does not matter: relationships resolve after all maps
+have configured their tables. Properties and relationships are both declared
+inside `ConfigureEntity`; an inverse declaration is unnecessary.
+Both key members must have matching C++ types and be mapped. Missing principal
+entities or key mappings cause `Build()` / `Initialize()` to fail.
+
+`Property<&City::name>()` defaults to a required column named `name`.
+Use `.IsRequired(false)` for nullable database columns, or
+`.HasColumnName("display_name")` for a custom name. Typed relationships use
+these configured names, including overrides on either key. Empty or conflicting
+column overrides throw `std::invalid_argument`.
+`HasKey` marks a nonnullable primary key; `ValueGeneratedOnAdd()` selects identity
+generation for integer keys without embedding SQL in the map.
+
+Omit `ToTableName` for the unqualified C++ entity name (`City`, not `cities`).
+No automatic English pluralization is performed. Automatic member and type
+names use compiler signatures on GCC, Clang, and MSVC, rather than C# expression
+trees. This is compiler-specific C++20 name extraction; the existing explicit
+string-based API remains available. This API configures schema relationships;
+it does not add navigation-property loading or C# lambda expressions.

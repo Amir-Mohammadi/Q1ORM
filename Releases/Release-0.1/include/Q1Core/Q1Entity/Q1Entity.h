@@ -4,6 +4,8 @@
 #include <QString>
 #include <QStringList>
 #include <cstddef>
+#include <functional>
+#include <stdexcept>
 #include <type_traits>
 #include <typeindex>
 #include <typeinfo>
@@ -27,6 +29,7 @@
 #include "../../Q1Core/Q1Entity/Q1Column.h"
 #include "../../Q1Core/Q1Query/Q1Query.h"
 #include "Q1Core/Q1Entity/Q1EntityBase.h"
+#include "Q1MappingNames.h"
 
 template <typename> class Q1Entity;
 
@@ -38,15 +41,6 @@ template <typename T>
 struct has_configure_method<T, std::void_t<
                                    decltype(T::ConfigureEntity(std::declval<Q1Entity<T>&>()))
                                    >> : std::true_type {};
-
-template <typename T, typename = void>
-struct has_createrelations_method : std::false_type {};
-
-template <typename T>
-struct has_createrelations_method<T, std::void_t<
-                                         decltype(T::CreateRelations(std::declval<Q1Entity<T>&>()))
-                                         >> : std::true_type {};
-
 
 template <class Entity>
 class Q1Entity : public Q1EntityBase, public Entity
@@ -65,6 +59,7 @@ public:
     }
     Q1Entity()
     {
+        table.SetName(Q1Detail::EntityName<Entity>());
 
         // Auto-configure entity if static method exists
         if constexpr (has_configure_method<Entity>::value)
@@ -72,11 +67,6 @@ public:
             Entity::ConfigureEntity(*this);
         }
 
-        // Auto-create relations if static method exists
-        if constexpr (has_createrelations_method<Entity>::value)
-        {
-            Entity::CreateRelations(*this);
-        }
 
     }
 
@@ -86,6 +76,133 @@ public:
 /* ********************************* Property ************************************ */
 /* ############################################################################### */
 
+
+    // A member pointer keeps refactoring and type checking in the C++ compiler.
+    template <auto Member> QString ColumnName() const
+    {
+        static_assert(std::is_member_object_pointer_v<decltype(Member)>);
+        static_assert(Member != nullptr, "Mapped member must not be null.");
+        const auto offset = reinterpret_cast<const char*>(&(static_cast<const Entity&>(*this).*Member))
+                          - reinterpret_cast<const char*>(static_cast<const Entity*>(this));
+        for (auto it = property_map.cbegin(); it != property_map.cend(); ++it)
+            if (it.value().offset == offset)
+                return it.key();
+        return {}; // An unmapped member must fail model validation.
+    }
+
+    template <auto Member> class PropertyBuilder
+    {
+    public:
+        explicit PropertyBuilder(Q1Entity& entity) : entity(entity) {}
+        PropertyBuilder& IsRequired(bool required = true)
+        {
+            Column().nullable = !required;
+            return *this;
+        }
+        PropertyBuilder& ValueGeneratedOnAdd()
+        {
+            using Value = std::remove_cvref_t<decltype(std::declval<Entity&>().*Member)>;
+            static_assert(std::is_integral_v<Value> && !std::is_same_v<Value, bool>,
+                          "Identity generation requires an integer member.");
+            Column().is_identity = true;
+            Column().default_value = QStringLiteral("GENERATED ALWAYS AS IDENTITY");
+            return *this;
+        }
+        PropertyBuilder& HasColumnName(const QString& name)
+        {
+            const QString previous = entity.template ColumnName<Member>();
+            if (name == previous) return *this;
+            if (name.trimmed().isEmpty() || entity.table.HasColumn(name))
+                throw std::invalid_argument("Column name must be nonempty and unique.");
+            Column().name = name;
+            auto info = entity.property_map.take(previous);
+            info.name = name;
+            entity.property_map.insert(name, info);
+            return *this;
+        }
+    private:
+        Q1Column& Column()
+        {
+            return *entity.table.FindColumn(entity.template ColumnName<Member>());
+        }
+        Q1Entity& entity;
+    };
+
+    template <auto Member> PropertyBuilder<Member> Property(const QString& name)
+    {
+        static_assert(std::is_member_object_pointer_v<decltype(Member)>);
+        if (ColumnName<Member>().isEmpty()) {
+            if (name.trimmed().isEmpty() || table.HasColumn(name))
+                throw std::invalid_argument("Column name must be nonempty and unique.");
+            Property(static_cast<Entity&>(*this).*Member, name);
+        }
+        return PropertyBuilder<Member>(*this);
+    }
+
+    template <auto Member> PropertyBuilder<Member> Property()
+    {
+        return Property<Member>(Q1Detail::MemberName<Member>());
+    }
+
+    template <auto Member> PropertyBuilder<Member> HasKey()
+    {
+        auto property = Property<Member>();
+        auto* column = table.FindColumn(ColumnName<Member>());
+        column->primary_key = true;
+        column->nullable = false;
+        return property;
+    }
+
+    using EntityResolver = std::function<Q1EntityBase*(std::type_index)>;
+
+    template <typename Principal, auto ForeignKey> class ForeignKeyBuilder
+    {
+    public:
+        explicit ForeignKeyBuilder(Q1Entity& entity) : entity(entity) {}
+        template <auto PrincipalKey> void HasPrincipalKey()
+        {
+            using ForeignValue = std::remove_cvref_t<decltype(std::declval<Entity&>().*ForeignKey)>;
+            using PrincipalValue = std::remove_cvref_t<decltype(std::declval<Principal&>().*PrincipalKey)>;
+            static_assert(std::is_same_v<ForeignValue, PrincipalValue>,
+                          "Foreign and principal key member types must match.");
+            entity.typed_relations.append([](Q1Entity& owner, const EntityResolver& resolve) {
+                auto* base = resolve(std::type_index(typeid(Principal)));
+                auto* principal = static_cast<Q1Entity<Principal>*>(base);
+                return owner.Relations(owner.table.GetName(),
+                    principal ? principal->GetTablePtr()->GetName() : QString(), MANY_TO_ONE,
+                    owner.template ColumnName<ForeignKey>(),
+                    principal ? principal->template ColumnName<PrincipalKey>() : QString());
+            });
+        }
+    private:
+        Q1Entity& entity;
+    };
+
+    template <typename Principal> class ReferenceBuilder
+    {
+    public:
+        explicit ReferenceBuilder(Q1Entity& entity) : entity(entity) {}
+        ReferenceBuilder& WithMany() { return *this; }
+        template <auto ForeignKey> ForeignKeyBuilder<Principal, ForeignKey> HasForeignKey()
+        {
+            return ForeignKeyBuilder<Principal, ForeignKey>(entity);
+        }
+    private:
+        Q1Entity& entity;
+    };
+
+    template <typename Principal> ReferenceBuilder<Principal> HasOne()
+    {
+        return ReferenceBuilder<Principal>(*this);
+    }
+
+    QList<Q1Relation> ResolveTypedRelations(const EntityResolver& resolve)
+    {
+        QList<Q1Relation> result;
+        for (const auto& relation : typed_relations)
+            result.append(relation(*this, resolve));
+        return result;
+    }
 
     template<typename Member>
     void Property(Member& member, const QString& name, bool nullable = false,
@@ -1804,6 +1921,9 @@ public:
 
 
 
+
+private:
+    QList<std::function<Q1Relation(Q1Entity&, const EntityResolver&)>> typed_relations;
 
 public:
     struct PropertyInfo

@@ -24,9 +24,9 @@ struct MapEntity<TResult (*)(Q1Entity<TEntity> &) noexcept>
 template <typename, typename = void> struct HasMapEntity : std::false_type {};
 
 template <typename T>
-struct HasMapEntity<T, std::void_t<typename MapEntity<decltype(&T::ConfigureEntity)>::Type>>
-    : std::true_type {
-};
+struct HasMapEntity<
+    T, std::void_t<typename MapEntity<decltype(&T::ConfigureEntity)>::Type>>
+    : std::true_type {};
 } // namespace Q1Detail
 
 // Optional compatibility helper; maps do not need to inherit from this type.
@@ -51,12 +51,17 @@ public:
 
     TMap::ConfigureEntity(entity);
     AddTable(entity.GetTablePtr());
-    if constexpr (requires { TMap::CreateRelations(entity); }) {
-      m_deferred.append([this, &entity] {
-        for (const Q1Relation &relation : TMap::CreateRelations(entity))
-          AddRelation(relation);
-      });
-    }
+    m_entities.append(&entity);
+    m_deferred.append([this, &entity] {
+      const auto resolve = [this](std::type_index type) -> Q1EntityBase* {
+        for (auto* mapped : m_entities)
+          if (mapped->EntityType() == type) return mapped;
+        return nullptr;
+      };
+      entity.ResolveTypedRelations(resolve);
+      for (const auto& relation : entity.GetRelations())
+        AddRelation(relation);
+    });
     return *this;
   }
 
@@ -66,7 +71,8 @@ public:
         "Map must expose a public static ConfigureEntity(Q1Entity<Entity>&). "
         "Alternatively, use ApplyMap<Map>(entity).");
     if constexpr (Q1Detail::HasMapEntity<TMap>::value) {
-      using TEntity = typename Q1Detail::MapEntity<decltype(&TMap::ConfigureEntity)>::Type;
+      using TEntity =
+          typename Q1Detail::MapEntity<decltype(&TMap::ConfigureEntity)>::Type;
       auto *entity = m_context ? m_context->ResolveEntity<TEntity>() : nullptr;
       if (entity)
         return ApplyMap<TMap>(*entity);
@@ -94,6 +100,7 @@ private:
 
   Q1Context *m_context = nullptr;
   QList<Q1Table *> m_tables;
+  QList<Q1EntityBase *> m_entities;
   QList<Q1Relation> m_relations;
   QSet<QString> m_relationKeys;
   QList<std::function<void()>> m_deferred;
