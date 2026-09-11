@@ -1,5 +1,5 @@
 #include "Q1Context.h"
-#include <algorithm>
+#include "../Q1Entity/Q1ModelBuilder.h"
 
 Q1Context::~Q1Context()
 {
@@ -11,92 +11,94 @@ Q1Context::~Q1Context()
 
     if (connection)
     {
-        connection->Disconnect();
-        connection->RootDisconnect();
         if (owns_connection)
+        {
+            connection->Disconnect();
+            connection->RootDisconnect();
             delete connection;
+        }
         connection = nullptr;
     }
 }
 
 bool Q1Context::Initialize()
 {
-    OnConfiguration();
-
-    if (!connection)
-    {
+    model_error.clear();
+    if (!connection) {
         qWarning() << "Q1Context::Initialize - connection is null!";
         return false;
     }
 
-    database_name = connection->GetDatabaseName();
+    Q1ModelBuilder builder(this);
+    OnModelCreating(builder);
 
-    if (query)
-    {
-        delete query;
-        query = nullptr;
-    }
-
-    query = new Q1Migration(*connection);
-    InitialDatabase();
-
-    if (!connection->IsOpen())
-    {
-        qCritical() << "Q1Context::Initialize - connection is not open after InitialDatabase!";
+    if (!builder.Build()) {
+        model_error = builder.Errors().join(QLatin1Char('\n'));
+        for (const QString &e : builder.Errors())
+            qCritical() << "[Q1ORM] model configuration:" << e;
         return false;
     }
 
-    if (!query->EnsureHistoryTable())
-    {
+    const QList<Q1Table *> &tables   = builder.Tables();
+    const QList<Q1Relation> &relations = builder.Relations();
+
+
+    database_name = connection->GetDatabaseName();
+
+    delete query;
+    query = new Q1Migration(*connection);
+
+    if (!InitialDatabase()) {
+        qCritical() << "Q1Context::Initialize - database initialization failed:"
+                    << GetLastError();
+        return false;
+    }
+
+    if (!connection->IsOpen()) {
+        qCritical() << "Q1Context::Initialize - connection not open after InitialDatabase!";
+        return false;
+    }
+
+    if (!query->EnsureHistoryTable()) {
         qCritical() << "Q1Context::Initialize - failed to create migration history table:"
                     << query->ErrorMessage();
         return false;
     }
 
-    tables = OnTablesCreating();
-
-    InitialTables();
-    if (query && !query->ErrorMessage().isEmpty())
-    {
+    if (!InitialTables(tables)) {
         qCritical() << "Q1Context::Initialize - table initialization failed:"
-                    << query->ErrorMessage();
+                    << GetLastError();
         return false;
     }
-    if (!connection->Connect())
-        return false;
 
-    InitialColumns();
-    if (query && !query->ErrorMessage().isEmpty())
-    {
+    if (!InitialColumns(tables)) {
         qCritical() << "Q1Context::Initialize - column initialization failed:"
-                    << query->ErrorMessage();
+                    << GetLastError();
         return false;
     }
-    if (!connection->Connect())
-        return false;
 
-    for (Q1Table* table : tables) {
-        if (!table) continue;
-        for (const Q1Relation& relation : table->GetRelations())
-            if (table->HasColumn(relation.foreign_key)) table->AddIndex({relation.foreign_key});
-        if (!query->EnsureIndexes(*table)) return false;
+    for (Q1Table *table : tables) {
+        if (!table)
+            continue;
+        if (!query->EnsureIndexes(*table)) {
+            qCritical() << "Q1Context::Initialize - index creation failed for"
+                        << table->GetName() << ":" << query->ErrorMessage();
+            return false;
+        }
     }
 
-    QList<Q1Relation> allRelations = OnTableRelationCreating();
-    InitialRelations(allRelations);
-    if (query && !query->ErrorMessage().isEmpty())
-    {
+    if (!InitialRelations(relations)) {
         qCritical() << "Q1Context::Initialize - relation initialization failed:"
-                    << query->ErrorMessage();
+                    << GetLastError();
         return false;
     }
 
     return true;
 }
 
-void Q1Context::InitialDatabase()
+bool Q1Context::InitialDatabase()
 {
-    if (!connection || !query) return;
+    if (!connection || !query) return false;
 
     if (connection->IsSqlite())
     {
@@ -105,13 +107,13 @@ void Q1Context::InitialDatabase()
             qCritical() << "Failed to open SQLite database" << database_name
                         << "-" << connection->ErrorMessage();
         }
-        return;
+        return true;
     }
 
     if (!connection->RootConnect())
     {
         qCritical() << "Cannot connect to server:" << connection->ErrorMessage();
-        return;
+        return false;
     }
 
     QStringList databases = query->GetDatabases();
@@ -123,7 +125,7 @@ void Q1Context::InitialDatabase()
         {
             qCritical() << "Failed to create database:" << connection->ErrorMessage();
             connection->RootDisconnect();
-            return;
+            return false;
         }
 
         qDebug() << "Database created successfully:" << database_name;
@@ -139,13 +141,15 @@ void Q1Context::InitialDatabase()
     {
         qCritical() << "Failed to connect to database" << database_name
                     << "-" << connection->ErrorMessage();
-        return;
+        return false;
     }
+
+    return true;
 }
 
-void Q1Context::InitialTables()
+bool Q1Context::InitialTables(const QList<Q1Table*>& tables)
 {
-    if (!query || !connection) return;
+    if (!query || !connection) return false;
 
     QStringList database_tables = query->GetTables();
 
@@ -182,11 +186,13 @@ void Q1Context::InitialTables()
             qDebug() << "InitialTables - table already exists:" << table_name;
         }
     }
+
+    return true;
 }
 
-void Q1Context::InitialColumns()
+bool Q1Context::InitialColumns(const QList<Q1Table*>& tables)
 {
-    if (!query) return;
+    if (!query) return false;
 
     for (Q1Table* table : tables)
     {
@@ -228,6 +234,8 @@ void Q1Context::InitialColumns()
             }
         }
     }
+
+    return true;
 }
 
 void Q1Context::CompareColumn(const QString &table_name, Q1Column &dbColumn, Q1Column &declColumn)
@@ -270,13 +278,13 @@ void Q1Context::CompareColumn(const QString &table_name, Q1Column &dbColumn, Q1C
     }
 }
 
-void Q1Context::InitialRelations(const QList<Q1Relation> &relations)
+bool Q1Context::InitialRelations(const QList<Q1Relation> &relations)
 {
     if (!query || !connection)
-        return;
+        return false;
 
     if (!connection->Connect())
-        return;
+        return false;
 
     QStringList existingTables = connection->database.tables();
     for (QString &t : existingTables) t = t.toLower();
@@ -309,4 +317,5 @@ void Q1Context::InitialRelations(const QList<Q1Relation> &relations)
     }
 
     connection->Disconnect();
+    return true;
 }

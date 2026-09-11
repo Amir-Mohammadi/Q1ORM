@@ -25,9 +25,9 @@ Q1ORM exposes a small set of Qt-friendly building blocks for database work:
 Before building the project, make sure these tools are available:
 
 - CMake 3.14 or newer
-- Qt 5 or Qt 6 with the `Core` module
-- A C++17 compatible compiler
-- PostgreSQL or SQL Server access for database-backed examples
+- Qt 6 with the `Core` and `Sql` modules
+- A C++20 compatible compiler
+- The SQLite Qt SQL driver for `DbExample`
 
 ## Build the project
 
@@ -65,24 +65,55 @@ Use these variables to select and configure the backend:
 
 ## Creating a context
 
-Typical usage is to derive an application-specific context from `Q1Context`, then expose entity sets as members:
+Include `<Q1ORM.h>` to access the context, entity sets, and model builder.
+Configure each entity with a map, then apply the map to a context member:
 
 ```cpp
-class ApplicationDbContext : public Q1Context
-{
-public:
-    explicit ApplicationDbContext(Q1Connection* conn);
+struct City {
+    int id = 0;
+    QString name;
+};
 
-    void OnConfiguration() override;
-    QList<Q1Table*> OnTablesCreating() override;
-    QList<Q1Relation> OnTableRelationCreating() override;
+struct CityMap {
+    static void ConfigureEntity(Q1Entity<City>& entity) {
+        entity.ToTableName("cities");
+        entity.Property(entity.id, "id", false, true,
+                        "GENERATED ALWAYS AS IDENTITY");
+        entity.Property(entity.name, "name");
+    }
+};
+
+class ApplicationDbContext : public Q1Context {
+public:
+    explicit ApplicationDbContext(Q1Connection* connection) {
+        SetConnection(connection);
+    }
 
     Q1Entity<City> cities;
-    Q1Entity<Country> countries;
+
+protected:
+    void OnModelCreating(Q1ModelBuilder& builder) override {
+        builder.ApplyMap<CityMap>(cities);
+    }
 };
 ```
 
-In the derived context, configure the connection, declare the tables, and describe any relations needed by the model.
+`ApplyMap<Map>(member)` registers and configures the member automatically.
+Calls can be chained. `CreateRelations` is optional; when present it must return
+`QList<Q1Relation>` and runs after all maps have configured their tables.
+Inverse one-to-many and many-to-one declarations produce one foreign key.
+
+The no-argument form `builder.ApplyMap<CityMap>()` is also supported: first call
+`RegisterEntity(&cities)` in the context constructor. The entity type is inferred
+from the map's public static `ConfigureEntity(Q1Entity<City>&)` method. Neither
+form requires an `EntityType` alias or inheritance from `Q1EntityMap`.
+
+Call `Initialize()` before using the entity sets and check its boolean result.
+Mapping errors are available through `GetLastError()`. The connection and entity
+members must outlive their use by the context; `SetConnection(connection)` borrows
+the connection by default.
+
+See `Examples/DbExample/main.cpp` for a runnable SQLite example with two maps.
 
 ## Query examples
 

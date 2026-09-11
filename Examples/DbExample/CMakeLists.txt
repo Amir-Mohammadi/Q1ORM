@@ -67,5 +67,10 @@ if(WIN32)
 endif()
 
 enable_testing()
-add_test(NAME Q1ORM_Example
+add_test(NAME Q1ORM_DbExample
          COMMAND "$<TARGET_FILE:DbExample>")
+
+add_executable(ModelBuilderTest model_builder_test.cpp)
+target_link_libraries(ModelBuilderTest PRIVATE
+    ${Q1ORM_TARGET} Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql)
+add_test(NAME Q1ORM_ModelBuilder COMMAND ModelBuilderTest)

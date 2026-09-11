@@ -31,6 +31,8 @@ set(Q1ORM_HEADERS
     Q1Core/Q1Entity/Q1Relation.h
     Q1Core/Q1Query/Q1Query.h
     Q1Core/Q1Entity/Q1Column.h
+    Q1Core/Q1Entity/Q1ModelBuilder.h
+    Q1Core/Q1Entity/Q1EntityBase.h
 
 
 )
@@ -39,10 +41,10 @@ set(Q1ORM_SOURCES
     Q1ORM.cpp
     Q1DatabaseInstall/Q1DatabaseInstall.cpp
     Q1Core/Q1Context/Q1Context.cpp
+    Q1Core/Q1Entity/Q1ModelBuilder.cpp
     Q1Core/Q1Entity/Q1Entity.cpp
     Q1Core/Q1Migration/Q1MigrationQuery.cpp
     Q1Core/Q1Migration/Q1Migration.cpp
-
     Q1Core/Q1Entity/Q1Column.cpp
 )
 
