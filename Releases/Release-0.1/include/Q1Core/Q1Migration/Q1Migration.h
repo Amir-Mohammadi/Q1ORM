@@ -15,6 +15,14 @@ class Q1ORM_EXPORT Q1Migration
 {
 public:
     Q1Migration(Q1Connection &connection);
+    ~Q1Migration();
+    Q1Migration(const Q1Migration&) = delete;
+    Q1Migration& operator=(const Q1Migration&) = delete;
+
+    // Automatic schema setup using the live database catalog.
+    bool BeginSchemaUpdate();
+    bool CommitSchemaUpdate();
+    void RollbackSchemaUpdate();
 
     QStringList GetDatabases();
     QList<Q1Column> GetColumns(QString table_name);
@@ -41,10 +49,6 @@ public:
     bool ConstraintExists(QSqlDatabase &db, const QString &constraint_name);
 
     QStringList GetTables();
-    bool EnsureHistoryTable();
-    bool RecordMigration(const QString &migration_name,
-                         const QString &model_hash = QString());
-
 
     QString ErrorMessage() const { return m_lastError; }
 
@@ -52,6 +56,9 @@ private:
     Q1Connection &connection;
     Q1MigrationQuery translator;
     QString m_lastError;
+    bool m_schemaUpdateActive = false;
+    bool m_restoreForeignKeys = false;
+    void RestoreForeignKeys();
 };
 
 #endif // Q1MIGRATION_H

@@ -69,7 +69,7 @@ protected:
     bool InitialDatabase();
     bool InitialTables(const QList<Q1Table *> &model);
     bool InitialColumns(const QList<Q1Table *> &model);
-    void CompareColumn(const QString &table_name, Q1Column &dbColumn, Q1Column &declColumn);
+    bool CompareColumn(const QString &table_name, Q1Column &dbColumn, Q1Column &declColumn);
     bool InitialRelations(const QList<Q1Relation> &relations);
 
 protected:
@@ -79,8 +79,6 @@ protected:
     QString database_name;
     QString model_error;
 
-    bool check_columns = true;
-    bool allow_destructive_migrations = false;
     bool owns_connection = false;
 };
 
