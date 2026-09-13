@@ -74,3 +74,27 @@ add_executable(ModelBuilderTest model_builder_test.cpp)
 target_link_libraries(ModelBuilderTest PRIVATE
     ${Q1ORM_TARGET} Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql)
 add_test(NAME Q1ORM_ModelBuilder COMMAND ModelBuilderTest)
+
+add_executable(SchemaScaleTest
+    schema_scale_test.cpp
+    SchemaScale/ApplicationDbContext.cpp
+    SchemaScale/Maps00.cpp
+    SchemaScale/Maps01.cpp
+    SchemaScale/Maps02.cpp
+    SchemaScale/Maps03.cpp
+    SchemaScale/Maps04.cpp
+    SchemaScale/Maps05.cpp
+    SchemaScale/Maps06.cpp
+    SchemaScale/Maps07.cpp
+    SchemaScale/Maps08.cpp
+    SchemaScale/Maps09.cpp
+    SchemaScale/Maps10.cpp
+    SchemaScale/Maps11.cpp
+    SchemaScale/Maps12.cpp
+    SchemaScale/Maps13.cpp
+    SchemaScale/Maps14.cpp
+)
+target_link_libraries(SchemaScaleTest PRIVATE
+    ${Q1ORM_TARGET} Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql)
+add_test(NAME Q1ORM_SchemaScale300 COMMAND SchemaScaleTest)
+set_tests_properties(Q1ORM_SchemaScale300 PROPERTIES TIMEOUT 120)

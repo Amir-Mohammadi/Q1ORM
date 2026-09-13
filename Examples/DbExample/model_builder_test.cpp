@@ -2,7 +2,7 @@
 #include <QCoreApplication>
 #include <QTemporaryDir>
 
-struct Parent { int id = 0; QString name; };
+struct Parent { int id = 0; QString name; int revision = 0; };
 struct Child { int id = 0; int parent_id = 0; };
 
 struct ParentMap {
@@ -116,6 +116,26 @@ int main(int argc, char **argv)
     CHECK(context.ResolveEntity<Child>() == &context.children);
 
     CHECK(context.Initialize());
+    Q1Migration schema(connection);
+    CHECK(!schema.GetTables().contains("__q1_migrations"));
+    CHECK(connection.Connect());
+    CHECK(schema.ConstraintExists(connection.database, "FK_children_parents_parent_id"));
+    // Similar names must not match '_' as a SQL LIKE wildcard.
+    CHECK(!schema.ConstraintExists(connection.database, "FK_children_parents_parent_i_"));
+    connection.Disconnect();
+    const auto schemaVersion = [&connection] {
+        if (!connection.Connect()) return -1;
+        int version = -1;
+        {
+            QSqlQuery query(connection.database);
+            if (query.exec("PRAGMA schema_version") && query.next())
+                version = query.value(0).toInt();
+        }
+        connection.Disconnect();
+        return version;
+    };
+    const int initialSchemaVersion = schemaVersion();
+    CHECK(initialSchemaVersion >= 0);
     Parent parent;
     parent.name = "mapped parent";
     CHECK(context.parents.Insert(parent));
@@ -129,6 +149,44 @@ int main(int argc, char **argv)
     CHECK(context.children.SelectAll().size() == 1);
     CHECK(context.Initialize());
     CHECK(context.parents.SelectAll().size() == 1);
+    CHECK(schemaVersion() == initialSchemaVersion);
+    CHECK(!schema.GetTables().contains("__q1_migrations"));
+
+    // Schema reconciliation preserves fields and tables outside the model.
+    CHECK(connection.Connect());
+    {
+        QSqlQuery extra(connection.database);
+        CHECK(extra.exec("ALTER TABLE parents ADD COLUMN legacy_note TEXT"));
+        CHECK(extra.exec("UPDATE parents SET legacy_note = 'keep me'"));
+        CHECK(extra.exec("CREATE TABLE external_data (value TEXT)"));
+        CHECK(extra.exec("INSERT INTO external_data VALUES ('keep me too')"));
+    }
+    connection.Disconnect();
+    CHECK(context.Initialize());
+    CHECK(connection.Connect());
+    {
+        QSqlQuery extra(connection.database);
+        CHECK(extra.exec("SELECT legacy_note FROM parents"));
+        CHECK(extra.next());
+        CHECK(extra.value(0).toString() == "keep me");
+        CHECK(extra.exec("SELECT value FROM external_data"));
+        CHECK(extra.next());
+        CHECK(extra.value(0).toString() == "keep me too");
+    }
+    connection.Disconnect();
+
+    // Automatic setup still adds missing columns, and reports failed changes.
+    context.parents.Property<&Parent::revision>();
+    CHECK(!context.Initialize()); // Required column has no value for existing rows.
+    CHECK(!Q1Column::Contains(schema.GetColumns("parents"), "revision"));
+    context.parents.Property<&Parent::revision>().IsRequired(false);
+    CHECK(context.Initialize());
+    CHECK(Q1Column::Contains(schema.GetColumns("parents"), "revision"));
+    CHECK(context.parents.SelectAll().first().name == parent.name);
+    const int updatedSchemaVersion = schemaVersion();
+    CHECK(context.Initialize());
+    CHECK(schemaVersion() == updatedSchemaVersion);
+    CHECK(!schema.GetTables().contains("__q1_migrations"));
 
     Q1Entity<Parent> plain;
     Q1ModelBuilder plainBuilder;

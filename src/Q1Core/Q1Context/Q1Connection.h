@@ -355,6 +355,8 @@ public:
         is_open = false;
     }
 
+    bool InTransaction() const { return transaction_depth > 0; }
+
     bool BeginTransaction()
     {
         const bool was_open = database.isOpen();

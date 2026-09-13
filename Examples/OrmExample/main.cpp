@@ -188,25 +188,23 @@ struct Suite {
     if (!showcaseAll && config.driver != Q1Driver::SQLITE)
       return true;
 
-    showcaseSection("MIGRATION + MODEL METADATA");
-    Q1Migration migration(conn);
-    if (!migration.EnsureHistoryTable())
-      return fail("showcase migration", migration.ErrorMessage());
-    const QStringList databases = migration.GetDatabases();
-    const QStringList tables = migration.GetTables();
-    if (!migration.ErrorMessage().isEmpty())
-      return fail("showcase migration", migration.ErrorMessage());
-    const QList<Q1Column> countryColumns = migration.GetColumns("countries");
-    if (!migration.ErrorMessage().isEmpty())
-      return fail("showcase migration", migration.ErrorMessage());
-    qInfo().noquote() << QStringLiteral("[MIGRATION] history table ready | %1 "
+    showcaseSection("SCHEMA + MODEL METADATA");
+    Q1Migration schema(conn);
+    const QStringList databases = schema.GetDatabases();
+    const QStringList tables = schema.GetTables();
+    if (!schema.ErrorMessage().isEmpty())
+      return fail("showcase schema", schema.ErrorMessage());
+    const QList<Q1Column> countryColumns = schema.GetColumns("countries");
+    if (!schema.ErrorMessage().isEmpty())
+      return fail("showcase schema", schema.ErrorMessage());
+    qInfo().noquote() << QStringLiteral("[SCHEMA] %1 "
                                         "table(s) | %2 country column(s)")
                              .arg(tables.size())
                              .arg(countryColumns.size());
-    qInfo().noquote() << QStringLiteral("[MIGRATION] visible database(s): %1")
+    qInfo().noquote() << QStringLiteral("[SCHEMA] visible database(s): %1")
                              .arg(databases.join(", "));
     qInfo().noquote()
-        << "[MIGRATION] Context.Initialize() synchronized tables and relations";
+        << "[SCHEMA] Context.Initialize() synchronized tables and relations";
     qInfo().noquote() << "[MODEL] countries columns:";
     for (const Q1Column &column : ctx.countries.GetTableColumns())
       qInfo().noquote() << QStringLiteral("  - %1 (%2)%3")

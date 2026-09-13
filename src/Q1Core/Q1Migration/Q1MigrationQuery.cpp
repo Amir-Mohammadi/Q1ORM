@@ -108,12 +108,17 @@ QString Q1MigrationQuery::ConstraintExistsSQL(const QString &constraint_name)
                    "WHERE LOWER(constraint_name) = LOWER('%1')")
             .arg(EscapeSqlString(constraint_name));
     case DatabaseType::SQLite:
+        // SQLite stores generated names as CONSTRAINT "name". Match the
+        // complete quoted name (and legacy unquoted names), without treating
+        // underscores in identifiers as LIKE wildcards.
         return QString(
                    "SELECT COUNT(*) "
                    "FROM sqlite_master "
                    "WHERE type IN ('table', 'index') "
-                   "AND LOWER(sql) LIKE LOWER('%%CONSTRAINT %1%%')")
-            .arg(EscapeSqlString(constraint_name));
+                   "AND (INSTR(LOWER(sql), LOWER('CONSTRAINT \"%1\"')) > 0 "
+                   "OR INSTR(LOWER(sql), LOWER('CONSTRAINT %2 ')) > 0)")
+            .arg(EscapeSqlString(QString(constraint_name).replace('"', "\"\"")),
+                 EscapeSqlString(constraint_name));
     default:
         return QString(
                    "SELECT COUNT(*) FROM information_schema.table_constraints "

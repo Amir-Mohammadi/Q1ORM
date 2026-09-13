@@ -1,5 +1,7 @@
 #include "Q1Context.h"
 #include "../Q1Entity/Q1ModelBuilder.h"
+#include <QScopeGuard>
+#include <QHash>
 
 Q1Context::~Q1Context()
 {
@@ -29,6 +31,11 @@ bool Q1Context::Initialize()
         return false;
     }
 
+    if (connection->InTransaction()) {
+        model_error = "Initialize must run outside an application transaction.";
+        return false;
+    }
+
     Q1ModelBuilder builder(this);
     OnModelCreating(builder);
 
@@ -48,22 +55,24 @@ bool Q1Context::Initialize()
     delete query;
     query = new Q1Migration(*connection);
 
-    if (!InitialDatabase()) {
+    // An existing application database needs no server-level database discovery.
+    if (!connection->Connect() && !InitialDatabase()) {
         qCritical() << "Q1Context::Initialize - database initialization failed:"
                     << GetLastError();
         return false;
     }
+
+    const auto cleanup = qScopeGuard([this] {
+        query->RollbackSchemaUpdate();
+        connection->Disconnect();
+    });
 
     if (!connection->IsOpen()) {
         qCritical() << "Q1Context::Initialize - connection not open after InitialDatabase!";
         return false;
     }
 
-    if (!query->EnsureHistoryTable()) {
-        qCritical() << "Q1Context::Initialize - failed to create migration history table:"
-                    << query->ErrorMessage();
-        return false;
-    }
+    if (!query->BeginSchemaUpdate()) return false;
 
     if (!InitialTables(tables)) {
         qCritical() << "Q1Context::Initialize - table initialization failed:"
@@ -77,21 +86,16 @@ bool Q1Context::Initialize()
         return false;
     }
 
-    for (Q1Table *table : tables) {
-        if (!table)
-            continue;
-        if (!query->EnsureIndexes(*table)) {
-            qCritical() << "Q1Context::Initialize - index creation failed for"
-                        << table->GetName() << ":" << query->ErrorMessage();
-            return false;
-        }
-    }
-
     if (!InitialRelations(relations)) {
-        qCritical() << "Q1Context::Initialize - relation initialization failed:"
-                    << GetLastError();
+        qCritical() << "Q1Context::Initialize - relation initialization failed:" << GetLastError();
         return false;
     }
+
+    for (Q1Table *table : tables) {
+        if (table && !query->EnsureIndexes(*table)) return false;
+    }
+
+    if (!query->CommitSchemaUpdate()) return false;
 
     return true;
 }
@@ -106,6 +110,7 @@ bool Q1Context::InitialDatabase()
         {
             qCritical() << "Failed to open SQLite database" << database_name
                         << "-" << connection->ErrorMessage();
+            return false;
         }
         return true;
     }
@@ -152,6 +157,7 @@ bool Q1Context::InitialTables(const QList<Q1Table*>& tables)
     if (!query || !connection) return false;
 
     QStringList database_tables = query->GetTables();
+    if (!query->ErrorMessage().isEmpty()) return false;
 
     for (Q1Table* table : tables)
     {
@@ -175,6 +181,7 @@ bool Q1Context::InitialTables(const QList<Q1Table*>& tables)
             {
                 qWarning() << "InitialTables - failed to create table:"
                            << table_name << "-" << query->ErrorMessage();
+                return false;
             }
             else
             {
@@ -201,36 +208,25 @@ bool Q1Context::InitialColumns(const QList<Q1Table*>& tables)
         QString table_name = table->GetName();
         QList<Q1Column> declaredColumns = table->GetColumns();
         QList<Q1Column> existingColumns = query->GetColumns(table_name);
-
-        // Drop columns not declared
-        for (Q1Column &dbCol : existingColumns)
-        {
-            bool found = false;
-            for (Q1Column &declCol : declaredColumns)
-            {
-                if (declCol == dbCol)
-                {
-                    CompareColumn(table_name, dbCol, declCol);
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found && allow_destructive_migrations)
-            {
-                qDebug() << "InitialColumns - dropping column" << dbCol.name << "from" << table_name;
-                query->DropColumn(table_name, dbCol.name);
-            }
+        if (!query->ErrorMessage().isEmpty()) return false;
+        if (existingColumns.isEmpty()) {
+            model_error = QString("Cannot read columns for table '%1'.").arg(table_name);
+            return false;
         }
 
-        // Add missing columns
-        for (Q1Column &declCol : declaredColumns)
+        // Index the live schema once: matching is linear in the column count.
+        // Unmapped columns belong to the database and are preserved.
+        QHash<QString, Q1Column> columnsByName;
+        for (const Q1Column &column : existingColumns)
+            columnsByName.insert(column.name.toLower(), column);
+
+        for (Q1Column &declared : declaredColumns)
         {
-            int idx = Q1Column::IndexOf(existingColumns, declCol);
-            if (idx == -1)
-            {
-                qDebug() << "InitialColumns - adding column" << declCol.name << "to" << table_name;
-                query->AddColumn(table_name, declCol);
+            auto existing = columnsByName.find(declared.name.toLower());
+            if (existing == columnsByName.end()) {
+                if (!query->AddColumn(table_name, declared)) return false;
+            } else if (!CompareColumn(table_name, existing.value(), declared)) {
+                return false;
             }
         }
     }
@@ -238,44 +234,53 @@ bool Q1Context::InitialColumns(const QList<Q1Table*>& tables)
     return true;
 }
 
-void Q1Context::CompareColumn(const QString &table_name, Q1Column &dbColumn, Q1Column &declColumn)
+bool Q1Context::CompareColumn(const QString &table_name, Q1Column &dbColumn, Q1Column &declColumn)
 {
-    if (!query) return;
-
-    if (dbColumn.type != declColumn.type)
-    {
-        qWarning() << "Schema type change detected for" << table_name << dbColumn.name
-                   << "but automatic type conversion is not implemented";
-        return;
+    if (!query) return false;
+    if (dbColumn.type != declColumn.type || dbColumn.primary_key != declColumn.primary_key) {
+        model_error = QString("Changing type or primary key for '%1.%2' requires an explicit database schema change.")
+                          .arg(table_name, dbColumn.name);
+        return false;
     }
 
-    if (dbColumn.size != declColumn.size)
-        query->UpdateColumnSize(table_name, declColumn.name, declColumn.size);
+    // SQLite does not enforce VARCHAR lengths; integer storage sizes are not
+    // character limits and must never trigger ALTER ... TYPE VARCHAR.
+    if (!connection->IsSqlite() && (declColumn.type == VARCHAR || declColumn.type == CHAR)
+        && declColumn.size > 0 && dbColumn.size != declColumn.size
+        && !query->UpdateColumnSize(table_name, declColumn.name, declColumn.size))
+        return false;
 
-    if (dbColumn.nullable != declColumn.nullable)
-    {
-        if (declColumn.nullable)
-        {
-            query->SetColumnNullable(table_name, dbColumn.name);
-        }
-        else
-        {
-            if (!query->HasNullData(table_name, dbColumn.name))
-                query->DropColumnNullable(table_name, dbColumn.name);
+    if (dbColumn.nullable != declColumn.nullable) {
+        if (declColumn.nullable) {
+            if (!query->SetColumnNullable(table_name, dbColumn.name)) return false;
+        } else {
+            const bool hasNull = query->HasNullData(table_name, dbColumn.name);
+            if (!query->ErrorMessage().isEmpty()) return false;
+            if (hasNull) {
+                model_error = QString("Cannot make '%1.%2' required while NULL values exist. Backfill them first.")
+                                  .arg(table_name, dbColumn.name);
+                return false;
+            }
+            if (!query->DropColumnNullable(table_name, dbColumn.name)) return false;
         }
     }
 
     const bool dbIdentity = dbColumn.is_identity || Q1Column::IsIdentityDefault(dbColumn.default_value);
     const bool declIdentity = declColumn.is_identity || Q1Column::IsIdentityDefault(declColumn.default_value);
-
-    if (!dbIdentity && !declIdentity &&
-        !Q1Column::DefaultsMatch(dbColumn.default_value, declColumn.default_value))
-    {
-        if (!declColumn.default_value.isEmpty())
-            query->setColumnDefault(table_name, declColumn.name, declColumn.default_value);
-        else if (!dbColumn.default_value.isEmpty())
-            query->DropColumnDefault(table_name, declColumn.name);
+    if (!connection->IsSqlite() && dbIdentity != declIdentity) {
+        model_error = QString("Changing identity generation for '%1.%2' requires an explicit database schema change.")
+                          .arg(table_name, dbColumn.name);
+        return false;
     }
+    if (!dbIdentity && !declIdentity &&
+        !Q1Column::DefaultsMatch(dbColumn.default_value, declColumn.default_value)) {
+        if (!declColumn.default_value.isEmpty()) {
+            if (!query->setColumnDefault(table_name, declColumn.name, declColumn.default_value)) return false;
+        } else if (!dbColumn.default_value.isEmpty()) {
+            if (!query->DropColumnDefault(table_name, declColumn.name)) return false;
+        }
+    }
+    return true;
 }
 
 bool Q1Context::InitialRelations(const QList<Q1Relation> &relations)
@@ -286,6 +291,7 @@ bool Q1Context::InitialRelations(const QList<Q1Relation> &relations)
     if (!connection->Connect())
         return false;
 
+    const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
     QStringList existingTables = connection->database.tables();
     for (QString &t : existingTables) t = t.toLower();
 
@@ -297,25 +303,28 @@ bool Q1Context::InitialRelations(const QList<Q1Relation> &relations)
         if (!existingTables.contains(rel.base_table.toLower()) ||
             !existingTables.contains(rel.top_table.toLower()))
         {
-            qDebug() << "[Debug] Tables missing, skipping relation:"
-                     << rel.base_table << "->" << rel.top_table;
-            continue;
+            model_error = QString("Tables missing for relation %1 -> %2.")
+                              .arg(rel.base_table, rel.top_table);
+            return false;
         }
 
         const QString constraint_name = rel.GetConstraintName();
 
-        if (query->ConstraintExists(connection->database, constraint_name.toLower()))
+        const bool exists = query->ConstraintExists(connection->database, constraint_name.toLower());
+        if (!query->ErrorMessage().isEmpty()) return false;
+        if (exists)
         {
             qDebug() << "[Info] Relation already exists, skipping:" << constraint_name;
             continue;
         }
 
-        if (!query->AddRelation(rel))
+        if (!query->AddRelation(rel)) {
             qWarning() << "[Error] Failed to create relation:" << query->ErrorMessage();
+            return false;
+        }
         else
             qDebug() << "[Info] Relation created successfully:" << constraint_name;
     }
 
-    connection->Disconnect();
     return true;
 }

@@ -109,6 +109,10 @@ from the map's public static `ConfigureEntity(Q1Entity<City>&)` method. Neither
 form requires an `EntityType` alias or inheritance from `Q1EntityMap`.
 
 Call `Initialize()` before using the entity sets and check its boolean result.
+`Initialize()` creates missing tables, columns, indexes, and relationships
+using your maps. Existing tables and rows are reused; no migration-history table
+or terminal migration command is required. Call it normally at application startup.
+See [Automatic database setup](DatabaseSetup.md) for details.
 Mapping errors are available through `GetLastError()`. The connection and entity
 members must outlive their use by the context; `SetConnection(connection)` borrows
 the connection by default.

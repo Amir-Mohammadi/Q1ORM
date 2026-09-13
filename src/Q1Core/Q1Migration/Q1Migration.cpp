@@ -1,9 +1,8 @@
 #include "Q1Migration.h"
 #include <QSqlError>
+#include <QSqlIndex>
 #include <QDebug>
 #include <QRegularExpression>
-#include <QDateTime>
-#include <algorithm>
 
 Q1Migration::Q1Migration(Q1Connection &connection)
     : connection(connection)
@@ -16,94 +15,6 @@ Q1Migration::Q1Migration(Q1Connection &connection)
         translator = Q1MigrationQuery(DatabaseType::MySQL);
     else if (connection.GetDriver() == Q1Driver::SQLITE)
         translator = Q1MigrationQuery(DatabaseType::SQLite);
-}
-
-bool Q1Migration::EnsureHistoryTable()
-{
-    if (!connection.Connect())
-    {
-        m_lastError = connection.ErrorMessage();
-        return false;
-    }
-
-    // Avoid executing CREATE TABLE IF NOT EXISTS when the history table is
-    // already present. PostgreSQL emits a NOTICE for that statement even
-    // though it succeeds, which makes a healthy migration look like an error.
-    const QString historyTable = QStringLiteral("__q1_migrations");
-    const QStringList tables = connection.database.tables();
-    const bool historyExists = std::any_of(
-        tables.cbegin(), tables.cend(),
-        [&historyTable](const QString &table) {
-            return table.compare(historyTable, Qt::CaseInsensitive) == 0;
-        });
-
-    if (historyExists)
-    {
-        connection.Disconnect();
-        return true;
-    }
-
-    const QString sql = connection.IsSqlServer()
-        ? "IF OBJECT_ID(N'__q1_migrations', N'U') IS NULL "
-          "CREATE TABLE __q1_migrations (id INT IDENTITY(1,1) PRIMARY KEY, "
-          "migration_name NVARCHAR(255) NOT NULL UNIQUE, model_hash NVARCHAR(128), "
-          "applied_at DATETIME2 NOT NULL)"
-        : "CREATE TABLE IF NOT EXISTS __q1_migrations ("
-          "id INTEGER PRIMARY KEY, migration_name VARCHAR(255) NOT NULL UNIQUE, "
-          "model_hash VARCHAR(128), applied_at TIMESTAMP NOT NULL)";
-
-    QSqlQuery query(connection.database);
-    if (!query.exec(sql))
-    {
-        const QString error = query.lastError().text();
-        // A concurrent initializer may have created the table after the
-        // metadata check. Treat that benign race as success.
-        if (error.contains(QStringLiteral("already exists"), Qt::CaseInsensitive) ||
-            error.contains(QStringLiteral("already exist"), Qt::CaseInsensitive) ||
-            error.contains(QStringLiteral("already an object named"), Qt::CaseInsensitive) ||
-            error.contains(QStringLiteral("duplicate"), Qt::CaseInsensitive))
-        {
-            connection.Disconnect();
-            return true;
-        }
-
-        m_lastError = error;
-        connection.Disconnect();
-        return false;
-    }
-    connection.Disconnect();
-    return true;
-}
-
-bool Q1Migration::RecordMigration(const QString &migration_name,
-                                   const QString &model_hash)
-{
-    if (!connection.Connect())
-    {
-        m_lastError = connection.ErrorMessage();
-        return false;
-    }
-
-    QSqlQuery query(connection.database);
-    if (!query.prepare("INSERT INTO __q1_migrations "
-                      "(migration_name, model_hash, applied_at) VALUES (?, ?, ?)"))
-    {
-        m_lastError = query.lastError().text();
-        connection.Disconnect();
-        return false;
-    }
-    query.addBindValue(migration_name);
-    query.addBindValue(model_hash);
-    query.addBindValue(QDateTime::currentDateTimeUtc());
-
-    if (!query.exec())
-    {
-        m_lastError = query.lastError().text();
-        connection.Disconnect();
-        return false;
-    }
-    connection.Disconnect();
-    return true;
 }
 
 QStringList Q1Migration::GetDatabases()
@@ -142,6 +53,7 @@ QStringList Q1Migration::GetDatabases()
 
 QStringList Q1Migration::GetTables()
 {
+    m_lastError.clear();
     QStringList tables;
 
     if (!connection.Connect())
@@ -158,6 +70,7 @@ QStringList Q1Migration::GetTables()
 
 QList<Q1Column> Q1Migration::GetColumns(QString table_name)
 {
+    m_lastError.clear();
     QList<Q1Column> columns;
 
     if (!connection.Connect())
@@ -166,6 +79,7 @@ QList<Q1Column> Q1Migration::GetColumns(QString table_name)
         return columns;
     }
 
+    const QSqlIndex primary = connection.database.primaryIndex(table_name);
     QString query = translator.GetColumnsSQL(table_name);
     QSqlQuery sql(connection.database);
 
@@ -182,7 +96,8 @@ QList<Q1Column> Q1Migration::GetColumns(QString table_name)
             column.name = sql.value("column_name").toString();
             column.type = Q1Column::GetColumnType(sql.value("data_type").toString());
             column.size = sql.value("character_maximum_length").toInt();
-            column.nullable = (sql.value("is_nullable").toString() == "YES");
+            column.primary_key = primary.indexOf(column.name) >= 0;
+            column.nullable = !column.primary_key && (sql.value("is_nullable").toString() == "YES");
             const QVariant identityValue = sql.value("is_identity");
             const QString identityText = identityValue.toString();
             const bool isIdentity = identityValue.toBool() ||
@@ -240,7 +155,7 @@ bool Q1Migration::CreateTableWithColumns(Q1Table& q1table)
 
     QSqlDatabase &db = connection.database;
 
-    if (!db.transaction())
+    if (!connection.BeginTransaction())
     {
         m_lastError = "Failed to start transaction: " + db.lastError().text();
         qWarning() << m_lastError;
@@ -259,16 +174,16 @@ bool Q1Migration::CreateTableWithColumns(Q1Table& q1table)
     {
         m_lastError = sql.lastError().text();
         qWarning() << "CreateTableWithColumns failed:" << m_lastError;
-        db.rollback();
+        connection.RollbackTransaction();
         connection.Disconnect();
         return false;
     }
 
-    if (!db.commit())
+    if (!connection.CommitTransaction())
     {
         m_lastError = "Failed to commit: " + db.lastError().text();
         qWarning() << m_lastError;
-        db.rollback();
+        connection.RollbackTransaction();
         connection.Disconnect();
         return false;
     }
@@ -310,7 +225,7 @@ bool Q1Migration::AddColumn(QString table_name, Q1Column &column)
 
     QSqlDatabase &db = connection.database;
 
-    if (!db.transaction())
+    if (!connection.BeginTransaction())
     {
         m_lastError = "Failed to start transaction: " + db.lastError().text();
         connection.Disconnect();
@@ -328,15 +243,15 @@ bool Q1Migration::AddColumn(QString table_name, Q1Column &column)
     {
         m_lastError = sql.lastError().text();
         qWarning() << "AddColumn failed:" << m_lastError;
-        db.rollback();
+        connection.RollbackTransaction();
         connection.Disconnect();
         return false;
     }
 
-    if (!db.commit())
+    if (!connection.CommitTransaction())
     {
         m_lastError = "Failed to commit: " + db.lastError().text();
-        db.rollback();
+        connection.RollbackTransaction();
         connection.Disconnect();
         return false;
     }
@@ -383,7 +298,7 @@ bool Q1Migration::AddRelation(const Q1Relation &relation)
         return false;
     }
 
-    if (!connection.database.transaction())
+    if (!connection.BeginTransaction())
     {
         m_lastError = "Failed to start transaction: " + connection.database.lastError().text();
         return false;
@@ -425,17 +340,18 @@ bool Q1Migration::AddRelation(const Q1Relation &relation)
         if (!q.exec(stmt))
         {
             QString err = q.lastError().text();
-            connection.database.rollback();
+            connection.RollbackTransaction();
             m_lastError = err;
             qWarning() << "[Error] Failed to execute relation SQL:" << err << "\nQuery:" << stmt;
             return false;
         }
     }
 
-    if (!connection.database.commit())
+    if (!connection.CommitTransaction())
     {
-        qWarning() << "[Warning] Failed to commit transaction:" << connection.database.lastError().text();
-        connection.database.rollback();
+        m_lastError = connection.ErrorMessage();
+        qWarning() << "[Warning] Failed to commit transaction:" << m_lastError;
+        connection.RollbackTransaction();
         return false;
     }
 
@@ -497,8 +413,9 @@ bool Q1Migration::DropColumnNullable(QString table_name, QString column_name)
     QString query = translator.DropColumnNullableSQL(table_name, column_name);
     if (query.isEmpty())
     {
+        m_lastError = "This column alteration is unsupported by the selected database driver.";
         connection.Disconnect();
-        return true;
+        return false;
     }
 
     QSqlQuery sql(connection.database);
@@ -525,8 +442,9 @@ bool Q1Migration::DropColumnDefault(QString table_name, QString column_name)
     QString query = translator.DropColumnDefaultSQL(table_name, column_name);
     if (query.isEmpty())
     {
+        m_lastError = "This column alteration is unsupported by the selected database driver.";
         connection.Disconnect();
-        return true;
+        return false;
     }
 
     QSqlQuery sql(connection.database);
@@ -553,8 +471,9 @@ bool Q1Migration::SetColumnNullable(QString table_name, QString column_name)
     QString query = translator.SetColumnNullableSQL(table_name, column_name);
     if (query.isEmpty())
     {
+        m_lastError = "This column alteration is unsupported by the selected database driver.";
         connection.Disconnect();
-        return true;
+        return false;
     }
 
     QSqlQuery sql(connection.database);
@@ -581,8 +500,9 @@ bool Q1Migration::setColumnDefault(QString table_name, QString column_name, QStr
     QString query = translator.SetColumnDefaultSQL(table_name, column_name, default_value);
     if (query.isEmpty())
     {
+        m_lastError = "This column alteration is unsupported by the selected database driver.";
         connection.Disconnect();
-        return true;
+        return false;
     }
 
     QSqlQuery sql(connection.database);
@@ -628,6 +548,7 @@ bool Q1Migration::UpdateColumnSize(QString table_name, QString column_name, int 
 
 bool Q1Migration::HasNullData(QString table_name, QString column_name)
 {
+    m_lastError.clear();
     if (!connection.Connect())
     {
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
@@ -653,6 +574,7 @@ bool Q1Migration::HasNullData(QString table_name, QString column_name)
 
 bool Q1Migration::ConstraintExists(QSqlDatabase &db, const QString &constraint_name)
 {
+    m_lastError.clear();
     QString query = translator.ConstraintExistsSQL(constraint_name);
     QSqlQuery sql(db);
 
@@ -714,4 +636,93 @@ bool Q1Migration::EnsureIndexes(const Q1Table& table)
     }
     connection.Disconnect();
     return success;
+}
+
+Q1Migration::~Q1Migration()
+{
+    RollbackSchemaUpdate();
+}
+
+bool Q1Migration::BeginSchemaUpdate()
+{
+    m_lastError.clear();
+    if (m_schemaUpdateActive) {
+        m_lastError = "A schema update is already active.";
+        return false;
+    }
+    if (!connection.IsOpen()) {
+        m_lastError = "Schema setup requires an open database connection.";
+        return false;
+    }
+    if (connection.InTransaction()) {
+        m_lastError = "Initialize must run outside an application transaction.";
+        return false;
+    }
+    if (connection.IsSqlite()) {
+        QSqlQuery settings(connection.database);
+        if (!settings.exec("PRAGMA foreign_keys") || !settings.next()) {
+            m_lastError = settings.lastError().text();
+            return false;
+        }
+        m_restoreForeignKeys = settings.value(0).toInt() != 0;
+        settings.finish();
+        if (m_restoreForeignKeys && !settings.exec("PRAGMA foreign_keys = OFF")) {
+            m_lastError = settings.lastError().text();
+            m_restoreForeignKeys = false;
+            return false;
+        }
+    }
+    if (!connection.IsMySql() && !connection.BeginTransaction()) {
+        m_lastError = connection.ErrorMessage();
+        RestoreForeignKeys();
+        return false;
+    }
+    m_schemaUpdateActive = true;
+    return true;
+}
+
+bool Q1Migration::CommitSchemaUpdate()
+{
+    if (!m_schemaUpdateActive) {
+        m_lastError = "No schema update is active.";
+        return false;
+    }
+    if (connection.IsMySql()) {
+        // MySQL DDL commits implicitly, so no outer schema transaction is used.
+        m_schemaUpdateActive = false;
+        return true;
+    }
+    if (connection.IsSqlite()) {
+        QSqlQuery check(connection.database);
+        if (!check.exec("PRAGMA foreign_key_check")) {
+            m_lastError = check.lastError().text();
+            return false;
+        }
+        if (check.next()) {
+            m_lastError = QString("Foreign-key validation failed for table '%1', row %2.")
+                .arg(check.value(0).toString(), check.value(1).toString());
+            return false;
+        }
+    }
+    const bool committed = connection.CommitTransaction();
+    m_schemaUpdateActive = false;
+    if (!committed) m_lastError = connection.ErrorMessage();
+    RestoreForeignKeys();
+    return committed;
+}
+
+void Q1Migration::RollbackSchemaUpdate()
+{
+    if (!m_schemaUpdateActive) return;
+    if (!connection.IsMySql()) connection.RollbackTransaction();
+    m_schemaUpdateActive = false;
+    RestoreForeignKeys();
+}
+
+void Q1Migration::RestoreForeignKeys()
+{
+    if (!m_restoreForeignKeys) return;
+    QSqlQuery restore(connection.database);
+    restore.exec("PRAGMA foreign_keys = ON");
+    m_restoreForeignKeys = false;
 }
