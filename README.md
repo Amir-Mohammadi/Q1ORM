@@ -1,7 +1,13 @@
 # Q1ORM
 
+<<<<<<< HEAD
 Qt 6 ORM for C++20: typed mappings, automatic schema initialization, fluent
 queries, CRUD, relations, change tracking, and transactions.
+=======
+<p align="center">
+  <img src="Images/q1orm.png" alt="Q1ORM banner" width="900" />
+</p>
+>>>>>>> f5d573a6bc783d528d90074c923fadf4bdb384b7
 
 **One example/test project: `Examples/TestExample`.** It demonstrates ORM and
 service usage with automated assertions and clear PASS/FAIL results.
