@@ -280,7 +280,7 @@ The context owns the entity sets used by your application.
 
 ---
 
-# 4. Connect to SQLite
+# 4. Connect to Database
 
 SQLite is the simplest way to start.
 
@@ -293,6 +293,22 @@ Q1Connection connection(
     "",
     0
 );
+```
+
+or you can connect other databases such as (sqlserver, postgresql and mysql)
+
+```cpp
+
+Q1Connection connection(
+    Q1Driver::SqlServer,
+   "SQLServer",
+   "SQLSERVER",
+   "sa",
+   "123",
+   "q1orm_test",
+    1433
+);
+
 ```
 
 Then create your context:
@@ -308,11 +324,14 @@ ApplicationDbContext context(connection);
 Call `Initialize()` when your application starts:
 
 ```cpp
+
 if (!context.Initialize())
 {
     qCritical() << context.GetLastError();
     return 1;
 }
+
+context.Initialize();
 ```
 
 Q1ORM will inspect the database and reconcile supported schema differences.
