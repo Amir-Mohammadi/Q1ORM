@@ -3,14 +3,6 @@
 <p align="center">
   <img src="Images/q1orm.png" alt="Q1ORM banner" width="900" />
 </p>
-
-**Qt 6 ORM for C++20** with typed mappings, automatic schema initialization,
-fluent queries, CRUD operations, relations, change tracking, and transactions.
-
-Q1ORM separates plain C++ records, database mappings, and application services.
-Register entities in a context, configure their mappings, initialize the
-schema, and work with your database through a consistent API.
-
 <p align="center">
   <img src="https://img.shields.io/badge/C%2B%2B-17%2B-blue?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Qt-Compatible-green?style=for-the-badge" />
@@ -19,6 +11,13 @@ schema, and work with your database through a consistent API.
   <img src="https://img.shields.io/badge/SQLite-Supported-003B57?style=for-the-badge" />
   <img src="https://img.shields.io/badge/MySQL-Supported-4479A1?style=for-the-badge" />
 </p>
+
+**Qt 6 ORM for C++20** with typed mappings, automatic schema initialization,
+fluent queries, CRUD operations, relations, change tracking, and transactions.
+
+Q1ORM separates plain C++ records, database mappings, and application services.
+Register entities in a context, configure their mappings, initialize the
+schema, and work with your database through a consistent API.
 
 
 ## Features
@@ -85,26 +84,26 @@ commands are needed for the scripted release process.
 ### Linux
 
 On Ubuntu, install the prerequisites:
+
 ```bash
 sudo apt update
 sudo apt install build-essential cmake qt6-base-dev libqt6sql6-sqlite
-install Qt with [qt-online-installer](https://www.qt.io/development/download#eval-form)
-
-
+```
 From the repository directory:
 
-bash
+```bash
 chmod +x release.sh
 ./release.sh
-
+```
 The script builds in `build-ubuntu/`.
 
 If Qt is not detected automatically, set `QTDIR` to your Qt installation before
 running the script:
 
-bash
+```bash
 export QTDIR="/path/to/Qt/gcc_64"
 ./release.sh
+```
 
 ### Windows
 
@@ -118,30 +117,31 @@ Match the compiler and Qt architecture.
 
 Run the release script from the repository directory:
 
-bat
+```bat
 release.bat
-
+```
 You can also double-click `release.bat`.
 
 The script detects Qt and MSVC and builds in `build/`. If Qt is not detected
 automatically, set `QTDIR` first:
 
-bat
+```bat
 set "QTDIR=C:\Qt\<version>\msvc2022_64"
 release.bat
+```
 
 ### Generated release folder
 
 Both scripts create or update:
 
-text
+```text
 Releases/
 └── Release-0.1/
 ├── include/     Q1ORM headers
 ├── lib/         Linux shared library or Windows import library
 ├── bin/         Windows Q1ORM.dll and release tools
 └── scripts/     Database installation helper
-
+```
 Use this folder in your own executable project. Applications consuming the
 release package do not need to compile Q1ORM sources again.
 
@@ -175,13 +175,15 @@ CMake build directory.
 
 After running the Linux release script:
 
-bash
+```bash
 ./build-ubuntu/bin/TestExample
+```
 
 On Windows:
 
-powershell
+```powershell
 .\build\bin\Release\TestExample.exe
+```
 
 Qt Test prints PASS/FAIL results and totals.
 
@@ -189,41 +191,42 @@ Qt Test prints PASS/FAIL results and totals.
 
 Run all registered tests:
 
-bash
+```bash
 ctest --test-dir build-ubuntu --output-on-failure
-
+```
 Run the threaded CRUD test with verbose output:
 
-bash
+```bash
 ctest --test-dir build-ubuntu -R Q1ORM.threadedCrud -V
-
+```
 Run tests labeled `scale`:
 
-bash
+```bash
 ctest --test-dir build-ubuntu -L scale --output-on-failure
-
+```
 For Windows, replace `build-ubuntu` with `build` and add `-C Release`:
 
-powershell
+```powershell
 ctest --test-dir build -C Release --output-on-failure
+```
 
 ### Select tests and generate reports
 
 List available test functions:
 
-bash
+```bash
 ./build-ubuntu/bin/TestExample -functions
-
+```
 Run selected functions:
 
-bash
+```bash
 ./build-ubuntu/bin/TestExample crud aggregates
-
+```
 Generate a JUnit XML report:
 
-bash
+```bash
 ./build-ubuntu/bin/TestExample -o results.xml,junitxml
-
+```
 CTest returns zero only when every selected test passes. Failed assertions,
 missing plugins, initialization errors, and connection failures produce a
 failing result.
@@ -285,11 +288,11 @@ Other backends require:
 
 Ubuntu plugin packages include:
 
-bash
+```bash
 sudo apt install libqt6sql6-psql
 sudo apt install libqt6sql6-mysql
 sudo apt install libqt6sql6-odbc
-
+```
 Install only the packages required for your selected backends.
 
 On Windows and macOS, install or build plugins for the exact Qt/compiler kit.
@@ -302,7 +305,7 @@ plugin-loading problems.
 
 The application API is identical on Windows, Linux, and macOS:
 
-cpp
+```cpp
 Q1Connection sqlite(
 Q1Driver::SQLITE,
 "",
@@ -338,6 +341,7 @@ qEnvironmentVariable("DB_USER"),
 qEnvironmentVariable("DB_PASSWORD"),
 1433
 );
+```
 
 `Q1ORM_SQLSERVER_ODBC_DRIVER` selects an installed SQL Server ODBC driver.
 The SQL Server host argument also accepts a DSN or ODBC connection string.
@@ -355,7 +359,7 @@ Keep credentials outside source control.
 
 Linux:
 
-bash
+```bash
 export Q1ORM_TEST_DRIVER=POSTGRES
 export Q1ORM_DB_HOST=localhost
 export Q1ORM_DB_NAME=q1orm_test
@@ -364,12 +368,12 @@ export Q1ORM_DB_PASSWORD='<your-test-database-password>'
 export Q1ORM_DB_PORT=5432
 
 ctest --test-dir build-ubuntu --output-on-failure
-
+```
 On macOS, use the same environment variables and substitute your build directory.
 
 Windows PowerShell:
 
-powershell
+```powershell
 $env:Q1ORM_TEST_DRIVER = "POSTGRES"
 $env:Q1ORM_DB_HOST = "localhost"
 $env:Q1ORM_DB_NAME = "q1orm_test"
@@ -378,7 +382,7 @@ $env:Q1ORM_DB_PASSWORD = "<your-test-database-password>"
 $env:Q1ORM_DB_PORT = "5432"
 
 ctest --test-dir build -C Release --output-on-failure
-
+```
 Supported selections:
 
 - `SQLITE` — default.
@@ -397,29 +401,29 @@ To return to the default, unset `Q1ORM_TEST_DRIVER` or set it to `SQLITE`.
 
 Linux/macOS:
 
-bash
+```bash
 unset Q1ORM_TEST_DRIVER
-
+```
 Windows PowerShell:
 
-powershell
+```powershell
 Remove-Item Env:Q1ORM_TEST_DRIVER -ErrorAction SilentlyContinue
-
+```
 ## Use Q1ORM in your application
 
 Run the release script first, then copy:
 
-text
+```text
 Releases/Release-0.1/
-
+```
 into your application as:
 
-text
+```text
 external/Q1ORM/Release-0.1/
-
+```
 A minimal application layout is:
 
-text
+```text
 MyApplication/
 ├── CMakeLists.txt
 ├── main.cpp
@@ -430,12 +434,12 @@ MyApplication/
 ├── lib/
 ├── bin/
 └── scripts/
-
+```
 ### CMake integration
 
 Import the compiled library in your application's `CMakeLists.txt`:
 
-cmake
+```cmake
 cmake_minimum_required(VERSION 3.14)
 
 project(MyApplication LANGUAGES CXX)
@@ -486,7 +490,7 @@ COMMAND ${CMAKE_COMMAND} -E copy_if_different
 VERBATIM
 )
 endif()
-
+```
 The imported target propagates:
 
 - Q1ORM include paths.
@@ -530,14 +534,13 @@ The example:
 7. Deletes the inserted record.
 8. Commits the transaction.
 
-cpp
+```cpp
 #include <QCoreApplication>
 #include <QDebug>
 #include <QString>
 
 #include <Q1ORM.h>
 
-1ORM.h>
 
 struct Country
 {
@@ -655,7 +658,7 @@ return 1;
 qInfo completed.";
 return 0;
 }
-
+```
 The inserted record is deleted before commit. Existing rows are not cleared.
 
 Uncommitted writes are rolled back when the transaction guard leaves scope.
@@ -683,14 +686,14 @@ application object before using Qt SQL.
 
 Use bound values for user-provided data:
 
-cpp
+```cpp
 const QString requestedName = QStringLiteral("Canada");
 
 const auto rows = context.countries.Select()
 .Where("name", Q1Operator::Equal, requestedName)
 .OrderBy("id", Q1Sort::Ascending)
 .ToList();
-
+```
 Do not concatenate user input into raw SQL.
 
 Raw SQL clauses, identifiers, join expressions, and aggregate expressions must
@@ -716,7 +719,7 @@ The example project separates:
 
 With the example headers and an existing connection:
 
-cpp
+```cpp
 ApplicationContext context(connection);
 
 if (!context.Initialize())
@@ -741,7 +744,7 @@ return 1;
 }
 
 const auto cities = service.InCountry(country.id);
-
+```
 The service trims names, validates population and country, and persists through
 the ORM. Tests cover successful writes and rejected requests.
 
@@ -755,7 +758,7 @@ connection alive while the context uses it.
 Create a transaction guard, check that the transaction started, perform the
 operations, and commit explicitly:
 
-cpp
+```cpp
 auto transaction = connection.Transaction();
 
 if (!connection.InTransaction())
@@ -768,7 +771,7 @@ return 1;
 
 if (!transaction.Commit())
 return 1;
-
+```
 Uncommitted guards roll back at scope exit, including early returns.
 
 Nested transactions join the outer transaction.
@@ -801,13 +804,13 @@ particular, concurrent SQLite writers may encounter locking.
 
 Always check its result:
 
-cpp
+```cpp
 if (!context.Initialize())
 {
 qCritical() << context.GetLastError();
 return 1;
 }
-
+```
 Automatic reconciliation should not be assumed to provide a versioned migration
 history or to infer every intended schema transformation.
 
@@ -846,15 +849,15 @@ Enable verbose SQL logging before starting the application.
 
 Linux/macOS:
 
-bash
+```bash
 Q1ORM_VERBOSE=1 ./MyApplication
-
+```
 Windows PowerShell:
 
-powershell
+```powershell
 $env:Q1ORM_VERBOSE = "1"
 .\MyApplication.exe
-
+```
 Treat SQL logs as potentially sensitive. Remove credentials, connection strings,
 personal data, and confidential values before sharing them.
 
@@ -862,24 +865,24 @@ personal data, and confidential values before sharing them.
 
 Inspect available drivers:
 
-cpp
+```cpp
 #include <QSqlDatabase>
 
 qInfo() << "Available SQL drivers:" << QSqlDatabase::drivers();
-
+```
 Enable plugin diagnostics when a driver cannot be loaded.
 
 Linux/macOS:
 
-bash
+```bash
 QT_DEBUG_PLUGINS=1 ./MyApplication
-
+```
 Windows PowerShell:
 
-powershell
+```powershell
 $env:QT_DEBUG_PLUGINS = "1"
 .\MyApplication.exe
-
+```
 Check the plugin's architecture, Qt compatibility, runtime search paths, and
 native client dependencies.
 
@@ -970,12 +973,13 @@ Review changes before environment settings above.
 
 Review changes before diff
 
+```bash
 git add -A
 git diff --cached
 
 git commit -m "Consolidate ORM examples and automated tests"
 git push origin HEAD
-
+```
 
 These commands publish source to the existing remote. They do not deploy a
 hosted application or database.
