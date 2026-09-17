@@ -1,538 +1,1127 @@
 # Q1ORM
 
+
 <p align="center">
-  <img src="Images/q1orm.png" alt="Q1ORM banner" width="900" />
-</p>
-<p align="center">
-  <img src="https://img.shields.io/badge/C%2B%2B-17%2B-blue?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Qt-Compatible-green?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/PostgreSQL-Supported-316192?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/SQL%20Server-Supported-CC2927?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/SQLite-Supported-003B57?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/MySQL-Supported-4479A1?style=for-the-badge" />
+  <strong>A lightweight, type-safe ORM for C++ and Qt</strong>
 </p>
 
-**Qt 6 ORM for C++20** with typed mappings, automatic schema initialization,
-fluent queries, CRUD operations, relations, change tracking, and transactions.
+<p align="center">
+  Define your C++ models, map them to database tables, initialize the schema automatically, and work with your database through a clean C++ API.
+</p>
 
-Q1ORM separates plain C++ records, database mappings, and application services.
-Register entities in a context, configure their mappings, initialize the
-schema, and work with your database through a consistent API.
+<p align="center">
 
+![C++](https://img.shields.io/badge/C%2B%2B-20-blue)
+![Qt](https://img.shields.io/badge/Qt-5%20%7C%206-green)
+![License](https://img.shields.io/badge/license-MIT-yellow)
+![SQLite](https://img.shields.io/badge/SQLite-supported-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-supported-blue)
+![MySQL](https://img.shields.io/badge/MySQL-supported-blue)
+![SQL%20Server](https://img.shields.io/badge/SQL%20Server-supported-blue)
 
-## Features
+</p>
 
-- **Typed mappings** — configure tables, keys, properties, and relationships.
-- **Automatic schema initialization** — create missing schema objects and
-  reconcile mappings.
-- **Fluent queries** — filter, sort, paginate, join, group, and aggregate.
-- **CRUD and bulk operations** — insert, update, and delete records or ranges.
-- **Relations** — configure relationships and eagerly load related data.
-- **Change tracking** — track snapshots, identify dirty fields, and update
-  changed properties.
-- **Transactions** — explicit commits and scope-based rollback.
-- **Multiple backends** — SQLite, PostgreSQL, MySQL, and SQL Server.
-- **Cross-platform usage** — Windows, Linux, and macOS with compatible Qt kits.
-- **Automated tests** — functional, service, concurrency, and schema-scale checks.
+---
 
-Backend capabilities and SQL behavior differ. A supported driver does not mean
-every query or schema operation behaves identically across all databases.
+## ✨ Overview
 
-**One example/test project: `Examples/TestExample`.** It demonstrates ORM and
-service usage with automated assertions and clear PASS/FAIL results.
+**Q1ORM** is a Qt-based Object-Relational Mapper for C++20.
 
-## Contents
+It provides a simple way to define your database model directly in C++, connect to a database, automatically prepare and reconcile the schema, and perform CRUD and advanced queries without manually writing SQL for common operations.
 
-- [Requirements](#requirements)
-- [Create the release package](#create-the-release-package)
-- [Test results and coverage](#test-results-and-coverage)
-- [Database connections](#database-connections)
-- [Use Q1ORM in your application](#use-q1orm-in-your-application)
-- [Complete quick start](#complete-quick-start)
-- [Application services](#application-services)
-- [Transactions and threading](#transactions-and-threading)
-- [Schema changes and data safety](#schema-changes-and-data-safety)
-- [Error handling and diagnostics](#error-handling-and-diagnostics)
-- [Deployment checklist](#deployment-checklist)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [GitHub and continuous integration](#github-and-continuous-integration)
-- [License](#license)
-](#github-and-continuous-integration)
-- [License](#license)
- or newer, subject to the requirements of your selected Qt version.
-- Qt 6:
-  - **Core** and **Sql** for applications.
-  - **Test** for the example/test project.
-- A C++20 compiler and standard library with `std::barrier` support.
-  Suitable toolchains include GCC 11+, Visual Studio 2022, or a recent
-  Apple Clang/libc++ combination with the required support.
-- A Qt SQL plugin for the selected database backend.
-- For server databases, the corresponding client libraries and a reachable
-  database server.
+Q1ORM is designed around a few core concepts:
 
-Use matching operating systems, architectures, compiler toolchains, build
-configurations, and Qt kits when building the library and consuming applications.
+* `Q1Connection` — database connection
+* `Q1Context` — application database context
+* `Q1Entity<T>` — typed entity/table interface
+* `Q1ModelBuilder` — model configuration
+* `Q1Query<T>` — fluent query API
+* `Q1Relation` — table relationships
+* `Q1Migration` / `Q1MigrationQuery` — native schema and SQL helpers
 
-## Create the release package
+The normal application flow is:
 
-Download or clone the repository, then run the release script for your system.
+```text
+C++ Model
+   ↓
+Entity Mapping
+   ↓
+Q1Context
+   ↓
+Q1Connection
+   ↓
+Initialize()
+   ↓
+Database Schema
+   ↓
+CRUD / Queries / Transactions
+```
 
-The scripts configure, build, and install Q1ORM. No separate manual CMake build
-commands are needed for the scripted release process.
+---
 
-### Linux
+## 🚀 Features
 
-On Ubuntu, install the prerequisites:
+* C++20 API
+* Qt Core + Qt SQL
+* SQLite support
+* PostgreSQL support
+* MySQL support
+* SQL Server support
+* Automatic database initialization
+* Automatic creation of missing tables
+* Automatic addition of supported missing columns
+* Primary keys
+* Generated identity keys
+* Required properties
+* Custom table names
+* Custom column names
+* Relationships
+* One-to-one relationships
+* One-to-many relationships
+* Many-to-one relationships
+* Fluent queries
+* Filtering
+* `AND` / `OR` conditions
+* Ordering
+* Pagination
+* `Skip` / `Take`
+* Joins
+* Left joins
+* Inner joins
+* Grouping
+* `HAVING`
+* Aggregates
+* Eager loading / `Include`
+* JSON output
+* Raw SQL support
+* Insert / Update / Delete
+* Bulk insert / update / delete
+* Change tracking
+* Transactions
+* Nested transaction support
+* Automatic rollback through transaction guards
+* SQL logging
+* Cross-platform design
+* No external ORM framework dependency
+
+---
+
+# 🗄️ Supported Databases
+
+| Database   | Q1 Driver               | Qt SQL Plugin | Default Port |
+| ---------- | ----------------------- | ------------- | -----------: |
+| SQLite     | `Q1Driver::SQLITE`      | `QSQLITE`     |            — |
+| PostgreSQL | `Q1Driver::POSTGRE_SQL` | `QPSQL`       |       `5432` |
+| MySQL      | `Q1Driver::MYSQL`       | `QMYSQL`      |       `3306` |
+| SQL Server | `Q1Driver::SQLSERVER`   | `QODBC`       |       `1433` |
+
+SQLite does not require a database server.
+
+PostgreSQL, MySQL, and SQL Server require:
+
+* A running database server
+* An existing database
+* A database user
+* Appropriate permissions
+* The matching Qt SQL plugin
+* Required native client libraries
+
+The application API remains the same across the supported database engines.
+
+---
+
+# 📦 Requirements
+
+* C++20 compatible compiler
+* CMake 3.14+
+* Qt 5 or Qt 6
+* Qt `Core`
+* Qt `Sql`
+
+For server databases, install the corresponding Qt SQL plugin.
+
+For SQL Server, an appropriate ODBC driver is also required.
+
+---
+
+# 🔨 Building Q1ORM
+
+Clone the repository:
 
 ```bash
-sudo apt update
-sudo apt install build-essential cmake qt6-base-dev libqt6sql6-sqlite
+git clone https://github.com/Amir-Mohammadi/Q1ORM.git
+cd Q1ORM
 ```
-From the repository directory:
+
+Configure:
 
 ```bash
-chmod +x release.sh
-./release.sh
+cmake -S . -B build
 ```
-The script builds in `build-ubuntu/`.
 
-If Qt is not detected automatically, set `QTDIR` to your Qt installation before
-running the script:
+Build:
 
 ```bash
-export QTDIR="/path/to/Qt/gcc_64"
-./release.sh
+cmake --build build
 ```
 
-### Windows
+If CMake cannot find Qt, specify the Qt installation:
 
-Install:
-
-- Visual Studio 2022 with **Desktop development with C++**.
-- CMake.
-- Qt 6 for **MSVC 2022 64-bit**.
-
-Match the compiler and Qt architecture.
-
-Run the release script from the repository directory:
-
-```bat
-release.bat
-```
-You can also double-click `release.bat`.
-
-The script detects Qt and MSVC and builds in `build/`. If Qt is not detected
-automatically, set `QTDIR` first:
-
-```bat
-set "QTDIR=C:\Qt\<version>\msvc2022_64"
-release.bat
+```bash
+cmake -S . -B build \
+  -DCMAKE_PREFIX_PATH="C:/Qt/6.8.3/msvc2022_64"
 ```
 
-### Generated release folder
+Then:
 
-Both scripts create or update:
+```bash
+cmake --build build
+```
+
+Install the library:
+
+```bash
+cmake --install build
+```
+
+The release layout is:
 
 ```text
 Releases/
 └── Release-0.1/
-├── include/     Q1ORM headers
-├── lib/         Linux shared library or Windows import library
-├── bin/         Windows Q1ORM.dll and release tools
-└── scripts/     Database installation helper
-```
-Use this folder in your own executable project. Applications consuming the
-release package do not need to compile Q1ORM sources again.
-
-Re-run the release script after changing the library so the packaged headers
-and binaries stay synchronized.
-
-> **A successful release build is not an all-tests-passed result.**
-> The scripts build the tests but do not run the test suite.
-
-### macOS
-
-Install Xcode Command Line Tools, CMake, and a matching Qt 6 kit.
-
-The current `release.sh` targets Linux and uses `nproc`; it is not a macOS
-release script.
-
-On macOS:
-
-1. Open the root `CMakeLists.txt` in Qt Creator.
-2. Select your macOS Qt kit.
-3. Build the Release configuration.
-4. Build the CMake `install` target.
-
-The installation populates `Releases/Release-0.1/` with headers and
-`lib/libQ1ORM.dylib`.
-
-For the test commands below, replace `build-ubuntu` with your actual macOS
-CMake build directory.
-
-## Test results and coverage
-
-After running the Linux release script:
-
-```bash
-./build-ubuntu/bin/TestExample
+    ├── bin/
+    ├── include/
+    ├── lib/
+    └── scripts/
 ```
 
-On Windows:
+---
 
-```powershell
-.\build\bin\Release\TestExample.exe
-```
+# 🧩 Using Q1ORM
 
-Qt Test prints PASS/FAIL results and totals.
+The basic workflow is:
 
-### Run with CTest
+1. Define your C++ model.
+2. Create an entity map.
+3. Create a `Q1Context`.
+4. Create a `Q1Connection`.
+5. Register the entities.
+6. Configure the model.
+7. Call `Initialize()`.
+8. Perform CRUD and queries.
 
-Run all registered tests:
+---
 
-```bash
-ctest --test-dir build-ubuntu --output-on-failure
-```
-Run the threaded CRUD test with verbose output:
+# 1. Define a Model
 
-```bash
-ctest --test-dir build-ubuntu -R Q1ORM.threadedCrud -V
-```
-Run tests labeled `scale`:
-
-```bash
-ctest --test-dir build-ubuntu -L scale --output-on-failure
-```
-For Windows, replace `build-ubuntu` with `build` and add `-C Release`:
-
-```powershell
-ctest --test-dir build -C Release --output-on-failure
-```
-
-### Select tests and generate reports
-
-List available test functions:
-
-```bash
-./build-ubuntu/bin/TestExample -functions
-```
-Run selected functions:
-
-```bash
-./build-ubuntu/bin/TestExample crud aggregates
-```
-Generate a JUnit XML report:
-
-```bash
-./build-ubuntu/bin/TestExample -o results.xml,junitxml
-```
-CTest returns zero only when every selected test passes. Failed assertions,
-missing plugins, initialization errors, and connection failures produce a
-failing result.
-
-Filtered runs prove only their selected coverage. Set `Q1ORM_VERBOSE=1` for
-SQL logs.
-
-### Coverage
-
-| Test | Checks |
-| --- | --- |
-| `crud` | Generated IDs, persisted inserts/updates, deletion |
-| `bulkCrud` | `InsertRange`, distinct IDs, `UpdateRange`, `DeleteRange` |
-| `selects` | Filters, OR, ordered values, limit, skip/take, empty results |
-| `boundValues` | Quotes, Unicode, SQL-looking text treated as values |
-| `aggregates` | Exact count/min/max/sum/average, distinct and filtered aggregates |
-| `grouping` | `GroupBy`/`Having` and actual group counts |
-| `joinsAndIncludes` | Inner/left joins, unmatched parent, eager-loading values; right/full joins on applicable server backends |
-| `jsonAndRawSql` | JSON values, raw scalar SQL and query rows |
-| `changeTracking` | Snapshots, dirty fields, changed-field update, clear tracking |
-| `transactions` | Commit persistence, automatic/explicit/nested rollback |
- orphan `constraints` | Reject orphan insertion and verify default cascade deletion |
-| `errorHandling` | Reject unfiltered writes, report bad SQL, roll back failed bulk insert |
-| `sqlGeneration` | Identity SQL for all four dialects without servers |
-| ` dialects without servers |
-| `connectionLifecycle` | Reference-counted openthreadedCrud` | Four simultaneous workers, ten ORM CRUD cycles each, final count |
-| `services` | CityService validation, persistence, sorted lookup |
-| `modelBuilder` | Typed/legacy maps, invalid mappings, relations, schema reconciliation |
-| `schemaScale` | 300 tables, 30,000 rows, 599 indexes, 299 foreign keys, schema evolution |
-
-SQLite is the default backend and uses automatically removed temporary files.
-Ordinary tests reseed known data independently.
-
-The generated 300-model fixture remains in `SchemaScale/` and is built into the
-same executable.
-
-These tests cover the listed behaviors, not every possible input or backend.
-The coverage table is not a claim that tests have passed for a particular
-checkout; run the suite or inspect CI results for that commit.
-
-## Database connections
-
-| Database | Q1Driver | Qt plugin | Default port |
-| --- | --- | --- | --- |
-| SQLite | `Q1Driver::SQLITE` | `QSQLITE` | — |
-| PostgreSQL | `Q1Driver::POSTGRE_SQL` | `QPSQL` | 5432 |
-| MySQL | `Q1Driver::MYSQL` | `QMYSQL` | 3306 |
-| SQL Server | `Q1Driver::SQLSERVER` | `QODBC` | 1433 |
-
-SQLite needs no database server.
-
-Other backends require:
-
-- A reachable server.
-- An existing database and a database account.
-- Appropriate schema and data permissions.
-- The matching Qt SQL plugin.
-- Required native client libraries.
-
-Ubuntu plugin packages include:
-
-```bash
-sudo apt install libqt6sql6-psql
-sudo apt install libqt6sql6-mysql
-sudo apt install libqt6sql6-odbc
-```
-Install only the packages required for your selected backends.
-
-On Windows and macOS, install or build plugins for the exact Qt/compiler kit.
-SQL Server additionally requires its ODBC driver.
-
-Inspect `QSqlDatabase::drivers()` and use `QT_DEBUG_PLUGINS=1` to diagnose
-plugin-loading problems.
-
-### Connection examples
-
-The application API is identical on Windows, Linux, and macOS:
+A model can be a simple C++ structure.
 
 ```cpp
-Q1Connection sqlite(
-Q1Driver::SQLITE,
-"",
-"application.sqlite",
-"",
-"",
-0
+struct Country
+{
+    int id = 0;
+    QString name;
+};
+```
+
+No base class is required.
+
+---
+
+# 2. Map the Model
+
+Create a map for the model:
+
+```cpp
+struct CountryMap
+{
+    using EntityType = Country;
+
+    static void ConfigureEntity(Q1Entity<Country>& entity)
+    {
+        entity.ToTableName("countries");
+
+        entity.HasKey<&Country::id>()
+            .ValueGeneratedOnAdd();
+
+        entity.Property<&Country::name>()
+            .IsRequired();
+    }
+};
+```
+
+This mapping describes the desired database schema.
+
+---
+
+# 3. Create a Database Context
+
+```cpp
+class ApplicationDbContext : public Q1Context
+{
+public:
+    explicit ApplicationDbContext(Q1Connection& connection)
+    {
+        SetConnection(&connection, false);
+        RegisterEntity(&countries);
+    }
+
+    Q1Entity<Country> countries;
+
+protected:
+    void OnModelCreating(Q1ModelBuilder& builder) override
+    {
+        builder.ApplyMap<CountryMap>();
+    }
+};
+```
+
+The context owns the entity sets used by your application.
+
+---
+
+# 4. Connect to SQLite
+
+SQLite is the simplest way to start.
+
+```cpp
+Q1Connection connection(
+    Q1Driver::SQLITE,
+    "",
+    "application.sqlite",
+    "",
+    "",
+    0
 );
-
-Q1Connection postgres(
-Q1Driver::POSTGRE_SQL,
-"localhost",
-"application",
-qEnvironmentVariable("DB_USER"),
-qEnvironmentVariable("DB_PASSWORD"),
-5432
-);
-
-Q1Connection mysql(
-Q1Driver::MYSQL,
-"localhost",
-"application",
-qEnvironmentVariable("DB_USER"),
-qEnvironmentVariable("DB_PASSWORD"),
-3306
-);
-
-Q1Connection sqlServer(
-Q1Driver::SQLSERVER,
-"localhost",
-"application",
-qEnvironmentVariable("DB_USER"),
-qEnvironmentVariable("DB_PASSWORD"),
-1433
-);
 ```
 
-`Q1ORM_SQLSERVER_ODBC_DRIVER` selects an installed SQL Server ODBC driver.
-The SQL Server host argument also accepts a DSN or ODBC connection string.
+Then create your context:
 
-Keep credentials outside source control.
-
-### Run tests on a server
-
-> **Use a dedicated disposable database.**
-> Tests initialize schema and delete/reseed all rows in `test_cities` and
-> `test_countries`. They leave test data in server databases.
->
-> Do not use an application or production database, and do not run multiple
-> test processes against the same server test database.
-
-Linux:
-
-```bash
-export Q1ORM_TEST_DRIVER=POSTGRES
-export Q1ORM_DB_HOST=localhost
-export Q1ORM_DB_NAME=q1orm_test
-export Q1ORM_DB_USER=q1orm_test
-export Q1ORM_DB_PASSWORD='<your-test-database-password>'
-export Q1ORM_DB_PORT=5432
-
-ctest --test-dir build-ubuntu --output-on-failure
+```cpp
+ApplicationDbContext context(connection);
 ```
-On macOS, use the same environment variables and substitute your build directory.
 
-Windows PowerShell:
+---
 
-```powershell
-$env:Q1ORM_TEST_DRIVER = "POSTGRES"
-$env:Q1ORM_DB_HOST = "localhost"
-$env:Q1ORM_DB_NAME = "q1orm_test"
-$env:Q1ORM_DB_USER = "q1orm_test"
-$env:Q1ORM_DB_PASSWORD = "<your-test-database-password>"
-$env:Q1ORM_DB_PORT = "5432"
+# 5. Initialize the Database
 
-ctest --test-dir build -C Release --output-on-failure
+Call `Initialize()` when your application starts:
+
+```cpp
+if (!context.Initialize())
+{
+    qCritical() << context.GetLastError();
+    return 1;
+}
 ```
-Supported selections:
 
-- `SQLITE` — default.
-- `POSTGRES`
-- `MYSQL`
-- `SQLSERVER`
+Q1ORM will inspect the database and reconcile supported schema differences.
 
-Omit the port to use its default. Server database names are required; usernames
-and passwords have no defaults.
+---
 
-A selected unavailable backend fails instead of skipping or falling back.
+# 🏗️ Automatic Database Setup
 
-`modelBuilder` and `schemaScale` always use SQLite.
+One of Q1ORM's main features is automatic schema initialization.
 
-To return to the default, unset `Q1ORM_TEST_DRIVER` or set it to `SQLITE`.
+When your application calls:
 
-Linux/macOS:
-
-```bash
-unset Q1ORM_TEST_DRIVER
+```cpp
+context.Initialize();
 ```
-Windows PowerShell:
 
-```powershell
-Remove-Item Env:Q1ORM_TEST_DRIVER -ErrorAction SilentlyContinue
+Q1ORM:
+
+* Opens the configured database
+* Checks the current database catalog
+* Creates missing tables
+* Creates missing columns
+* Checks mapped columns
+* Checks indexes
+* Checks relationships
+* Reconciles supported schema changes
+
+Existing tables and existing data are preserved.
+
+There is no requirement to create migration files or maintain migration version numbers for the automatic initialization system.
+
+### Example
+
+Suppose the application initially contains:
+
+```cpp
+struct Country
+{
+    int id = 0;
+    QString name;
+};
 ```
-## Use Q1ORM in your application
 
-Run the release script first, then copy:
+and later you add:
+
+```cpp
+struct Country
+{
+    int id = 0;
+    QString name;
+    QString code;
+};
+```
+
+and map the new property:
+
+```cpp
+entity.Property<&Country::code>();
+```
+
+On the next:
+
+```cpp
+context.Initialize();
+```
+
+Q1ORM can add the missing supported column to the existing table.
+
+---
+
+# 🔄 Schema Reconciliation
+
+Q1ORM compares:
 
 ```text
-Releases/Release-0.1/
+C++ Model Mapping
+       │
+       ▼
+Desired Schema
+       │
+       │ compare
+       ▼
+Database Catalog
+       │
+       ▼
+Required Schema Changes
 ```
-into your application as:
+
+It does **not** rely on:
+
+* Migration version numbers
+* Saved schema snapshots
+* Migration history tables
+
+Column matching is performed using column names.
+
+An unchanged schema is checked but is not unnecessarily recreated.
+
+---
+
+# 🛡️ Existing Database Data
+
+Initialization does not insert application data.
+
+Existing rows are preserved.
+
+For example:
 
 ```text
-external/Q1ORM/Release-0.1/
+countries
+--------------------------------
+id | name
+--------------------------------
+1  | Canada
+2  | Germany
+3  | Japan
 ```
-A minimal application layout is:
+
+Calling:
+
+```cpp
+context.Initialize();
+```
+
+does not delete or recreate those rows.
+
+---
+
+# ⚠️ Schema Changes That Require Explicit Handling
+
+Automatic initialization should not be treated as a general-purpose migration engine.
+
+The following changes require explicit consideration:
+
+* Renaming a database column
+* Arbitrary type conversions
+* Primary-key changes
+* Destructive schema changes
+* Complex data transformations
+* Adding required columns to populated tables without a usable default
+
+For example, this:
+
+```cpp
+entity.Property<&Country::name>()
+    .HasColumnName("country_name");
+```
+
+can preserve an existing database column named `country_name`.
+
+Q1ORM does not guess that:
 
 ```text
-MyApplication/
-├── CMakeLists.txt
-├── main.cpp
-└── external/
-└── Q1ORM/
-└── Release-0.1/
-├── include/
-├── lib/
-├── bin/
-└── scripts/
+name → country_name
 ```
-### CMake integration
 
-Import the compiled library in your application's `CMakeLists.txt`:
+means the old database column should be renamed.
 
-```cmake
-cmake_minimum_required(VERSION 3.14)
+If the database itself must be renamed, perform that operation explicitly.
 
-project(MyApplication LANGUAGES CXX)
+---
 
-find_package(Qt6 REQUIRED COMPONENTS Core Sql)
+# 🧭 Custom Column Names
 
-set(
-Q1ORM_RELEASE
-"${CMAKE_CURRENT_SOURCE_DIR}/external/Q1ORM/Release-0.1"
-)
+A C++ member does not have to use the same name as its database column.
 
-add_library(Q1ORM::Q1ORM SHARED IMPORTED)
-
-set_target_properties(Q1ORM::Q1ORM PROPERTIES
-INTERFACE_INCLUDE_DIRECTORIES "${Q1ORM_RELEASEQ1ORM PROPERTIES
-INTERFACE_INCLUDE_DIRECTORIES "${Q1ORM_RELEASE    INTERFACE_COMPILE_FEATURES cxx_std_20    INTERFACE
-Qt6::Core
-Qt6::Sql
-)
-
-if(WIN32)
-set_target_properties(Q1ORM::Q1ORM PROPERTIES
-IMPORTED_LOCATION "${Q1ORM_RELEASE}/bin/Q1ORM.dll"
-IMPORTED_IMPLIB "${Q1ORM_RELEASE}/lib/Q1ORM.lib"
-)
-elseif(APPLE)
-set_target_properties(Q1ORM::Q1ORM PROPERTIES
-IMPORTED_LOCATION "${Q1ORM_RELEASE}/lib/libQ1ORM.dylib"
-)
-else()
-set_target_properties(Q1ORM::Q1ORM PROPERTIES
-_RELEASEED_LOCATION "${Q1ORM_RELEASE}/lib/libQ1ORM.so"
-)
-endif()
-
-add_executable(MyApplication main.cpp)
-
-target_link_libraries(MyApplication
-PRIVATE
-Q1ORM::Q1ORM
-)
-
-if(WIN32)
-add_custom_command(TARGET MyApplication POST_BUILD
-COMMAND ${CMAKE_COMMAND} -E copy_if_different
-"$<TARGET_FILE:Q1ORM::Q1ORM>"
-"$<TARGET_FILE_DIR:MyApplication>"
-VERBATIM
-)
-endif()
+```cpp
+struct Country
+{
+    int id = 0;
+    QString name;
+};
 ```
-The imported target propagates:
 
-- Q1ORM include paths.
-- The C++20 requirement.
-- Qt Core and Sql dependencies.
+Mapping:
 
-This configuration imports one packaged library configuration. Build the
-application with a compatible configuration; use. Build the
-application with a compatible configuration; use separate imported locations
-if you maintain
+```cpp
+entity.Property<&Country::name>()
+    .HasColumnName("country_name");
+```
 
-For another build system:
+The database will contain:
 
-1. Add the release `include/` directory to the header search paths.
-2. Link the Q1ORM library from `lib/`.
-3. Link Qt Core and Sql.
-4. Enable C++20.
-5. Deploy the required runtime libraries and plugins.
+```text
+country_name
+```
 
-Windows applications need `Q1ORM.dll` beside the executable, along with the
-required Qt runtime DLLs and plugins.
+while your C++ code continues to use:
 
-On Linux and macOS, the runtime loader must be able to locate Q1ORM and Qt.
-Server SQL plugins also need their native client dependencies.
+```cpp
+country.name
+```
 
-The repository's `TestExample` links the source library to test current changes.
-The imported target above is for applications consuming the release package.
+---
 
-## Complete quick start
+# 🧱 Tables and Columns
 
-Save the following as `main.cpp` and use the CMake configuration above.
+Change the table name:
 
-The example:
+```cpp
+entity.ToTableName("countries");
+```
 
-1. Creates a Qt application object.
-2. Opens a SQLite-backed context.
-3. Initializes the mapped schema.
-4. Inserts and updates a country.
-5. Filters, sorts, and paginates query results.
-6. Counts records.
-7. Deletes the inserted record.
-8. Commits the transaction.
+Configure a primary key:
+
+```cpp
+entity.HasKey<&Country::id>()
+    .ValueGeneratedOnAdd();
+```
+
+Configure a required property:
+
+```cpp
+entity.Property<&Country::name>()
+    .IsRequired();
+```
+
+Configure a custom database column name:
+
+```cpp
+entity.Property<&Country::name>()
+    .HasColumnName("country_name");
+```
+
+---
+
+# 🔗 Relationships
+
+Q1ORM supports relationships between entities.
+
+Example:
+
+```text
+Country
+   │
+   └── City
+```
+
+A country can have many cities.
+
+```cpp
+struct Country
+{
+    int id = 0;
+    QString name;
+};
+
+struct City
+{
+    int id = 0;
+    QString name;
+    int country_id = 0;
+};
+```
+
+Country relationship:
+
+```cpp
+static QList<Q1Relation> CreateRelations(Q1Entity<Country>& entity)
+{
+    QList<Q1Relation> relations;
+
+    relations.append(
+        entity.Relations(
+            "countries",
+            "cities",
+            ONE_TO_MANY,
+            "country_id",
+            "id"
+        )
+    );
+
+    return relations;
+}
+```
+
+City relationship:
+
+```cpp
+static QList<Q1Relation> CreateRelations(Q1Entity<City>& entity)
+{
+    QList<Q1Relation> relations;
+
+    relations.append(
+        entity.Relations(
+            "cities",
+            "countries",
+            MANY_TO_ONE,
+            "country_id",
+            "id"
+        )
+    );
+
+    return relations;
+}
+```
+
+---
+
+# ✏️ Insert
+
+Insert a new object:
+
+```cpp
+Country country;
+
+country.name = "Canada";
+
+if (!context.countries.Insert(country))
+{
+    qCritical() << "Insert failed";
+}
+```
+
+For generated primary keys, Q1ORM updates the object with the generated ID.
+
+```cpp
+qDebug() << "Generated ID:" << country.id;
+```
+
+---
+
+# 📚 Insert Multiple Records
+
+For bulk operations, use:
+
+```cpp
+context.countries.InsertRange(countries);
+```
+
+Always check the result before continuing with dependent operations.
+
+---
+
+# 🔎 Select
+
+Start a query with:
+
+```cpp
+auto query = context.countries.Select();
+```
+
+Retrieve rows:
+
+```cpp
+const auto countries = context.countries
+    .Select()
+    .ToList();
+```
+
+---
+
+# 🎯 Where
+
+Filter records using bound values:
+
+```cpp
+const auto countries = context.countries
+    .Select()
+    .Where(
+        "name",
+        Q1Operator::Equal,
+        QStringLiteral("Canada")
+    )
+    .ToList();
+```
+
+Bound values should be used for user-provided data.
+
+Do **not** concatenate user input into SQL.
+
+---
+
+# 🔀 Multiple Conditions
+
+Queries can be composed with multiple conditions.
+
+For example:
+
+```cpp
+auto countries = context.countries
+    .Select()
+    .Where("id", Q1Operator::GreaterThan, 10)
+    .AndWhere("name", Q1Operator::Equal, "Canada")
+    .ToList();
+```
+
+OR conditions can also be used:
+
+```cpp
+auto countries = context.countries
+    .Select()
+    .Where("name", Q1Operator::Equal, "Canada")
+    .OrWhere("name", Q1Operator::Equal, "Germany")
+    .ToList();
+```
+
+---
+
+# ↕️ Ordering
+
+Ascending:
+
+```cpp
+auto countries = context.countries
+    .Select()
+    .OrderBy("name", Q1Sort::Ascending)
+    .ToList();
+```
+
+Descending:
+
+```cpp
+auto countries = context.countries
+    .Select()
+    .OrderBy("id", Q1Sort::Descending)
+    .ToList();
+```
+
+---
+
+# 📄 Pagination
+
+Use `Skip()` and `Take()`:
+
+```cpp
+const auto countries = context.countries
+    .Select()
+    .OrderBy("id", Q1Sort::Ascending)
+    .Skip(20)
+    .Take(10)
+    .ToList();
+```
+
+This represents:
+
+```text
+Page 3
+-----------
+Skip 20
+Take 10
+```
+
+---
+
+# 🔢 Count
+
+```cpp
+const auto count =
+    context.countries
+        .Select()
+        .Count();
+```
+
+---
+
+# ✏️ Update
+
+Update an entity by its primary key:
+
+```cpp
+country.name = "Canada";
+
+if (!context.countries.UpdateById(country, country.id))
+{
+    qCritical() << "Update failed";
+}
+```
+
+---
+
+# 🗑️ Delete
+
+Delete by primary key:
+
+```cpp
+if (!context.countries.DeleteById(country.id))
+{
+    qCritical() << "Delete failed";
+}
+```
+
+---
+
+# 📦 Bulk Update and Delete
+
+Q1ORM provides bulk operations such as:
+
+```cpp
+InsertRange(...)
+UpdateRange(...)
+DeleteRange(...)
+```
+
+Use bulk operations when working with multiple entities rather than repeatedly issuing individual operations.
+
+---
+
+# 🔍 Joins
+
+Q1ORM supports joins through the query API.
+
+Conceptually:
+
+```text
+countries
+    │
+    └── cities
+          │
+          └── ...
+```
+
+Joins can be combined with:
+
+* Filtering
+* Ordering
+* Grouping
+* Aggregates
+* Pagination
+
+For complex queries, use trusted SQL expressions and identifiers.
+
+---
+
+# 📥 Eager Loading
+
+Relationships can be loaded together with the main query using `Include`.
+
+Example concept:
+
+```cpp
+context.countries
+    .Select()
+    .Include("cities")
+    .ToList();
+```
+
+This allows related records to be loaded as part of the query rather than manually querying every relationship.
+
+---
+
+# 📊 Grouping
+
+Group query results:
+
+```cpp
+context.countries
+    .Select()
+    .GroupBy("name");
+```
+
+Grouping can be combined with aggregates and `HAVING`.
+
+---
+
+# 🔢 Aggregates
+
+Q1ORM supports aggregate operations including:
+
+* `Count`
+* `Min`
+* `Max`
+* `Sum`
+* `Average`
+* Distinct aggregates
+* Filtered aggregates
+
+Example:
+
+```cpp
+const auto count =
+    context.countries
+        .Select()
+        .Count();
+```
+
+---
+
+# 🧾 JSON Output
+
+Query results can be converted to JSON for debugging or application-level processing.
+
+```cpp
+const auto json =
+    context.countries
+        .Select()
+        .ToJson();
+```
+
+---
+
+# 🧮 Raw SQL
+
+Q1ORM also supports raw SQL for operations that do not fit the query builder.
+
+Raw SQL should only contain trusted SQL syntax.
+
+User-provided values should remain bound parameters.
+
+> Binding protects values, not SQL identifiers, SQL clauses, join expressions, or aggregate expressions.
+
+If an identifier such as a sort column comes from a user request, map it through an explicit allowlist before using it.
+
+---
+
+# 🔄 Transactions
+
+Transactions are managed through a transaction guard.
+
+```cpp
+auto transaction = connection.Transaction();
+
+if (!connection.InTransaction())
+{
+    qCritical() << "Could not start transaction";
+    return 1;
+}
+
+Country country;
+country.name = "Transactional";
+
+if (!context.countries.Insert(country))
+{
+    return 1;
+}
+
+if (!transaction.Commit())
+{
+    qCritical() << "Commit failed";
+    return 1;
+}
+```
+
+If the transaction guard leaves scope without a successful commit, the uncommitted work is rolled back.
+
+This also makes early returns safer.
+
+---
+
+# 🔁 Nested Transactions
+
+Nested transactions join the outer transaction.
+
+They should therefore not be treated as completely independent database transactions.
+
+Keep transactions short and always check:
+
+```cpp
+connection.InTransaction()
+```
+
+and:
+
+```cpp
+transaction.Commit()
+```
+
+---
+
+# 🧵 Threading
+
+Qt SQL connections should remain associated with the thread that owns them.
+
+For worker threads:
+
+```text
+Worker Thread
+    │
+    ├── Q1Connection
+    │
+    ├── Q1Context
+    │
+    └── Q1Entity
+```
+
+Create and destroy the connection and context inside the same worker thread.
+
+Do not share:
+
+* `QSqlDatabase` handles
+* `Q1Connection`
+* `Q1Context`
+* Entity sets
+
+between worker threads.
+
+Initialize the schema before starting worker threads.
+
+Multiple independent connections do not eliminate database-level locking. SQLite, in particular, can experience contention when multiple writers operate concurrently.
+
+---
+
+# 🗄️ Database Connections
+
+## SQLite
+
+```cpp
+Q1Connection connection(
+    Q1Driver::SQLITE,
+    "",
+    "application.sqlite",
+    "",
+    "",
+    0
+);
+```
+
+SQLite does not use a host, username, password, or port.
+
+### SQLite Path
+
+A relative path such as:
+
+```text
+application.sqlite
+```
+
+is resolved relative to the process working directory.
+
+Therefore:
+
+```text
+C:\App\MyProgram.exe
+```
+
+and:
+
+```text
+C:\App\bin\MyProgram.exe
+```
+
+may open different database files if their working directories differ.
+
+For deployed applications, prefer an absolute path or a known writable application-data directory.
+
+---
+
+## PostgreSQL
+
+```cpp
+Q1Connection connection(
+    Q1Driver::POSTGRE_SQL,
+    "localhost",
+    "application",
+    qEnvironmentVariable("DB_USER"),
+    qEnvironmentVariable("DB_PASSWORD"),
+    5432
+);
+```
+
+Qt requires the PostgreSQL SQL plugin:
+
+```text
+QPSQL
+```
+
+---
+
+## MySQL
+
+```cpp
+Q1Connection connection(
+    Q1Driver::MYSQL,
+    "localhost",
+    "application",
+    qEnvironmentVariable("DB_USER"),
+    qEnvironmentVariable("DB_PASSWORD"),
+    3306
+);
+```
+
+Qt requires:
+
+```text
+QMYSQL
+```
+
+The Qt MySQL plugin and its native client libraries must match the Qt/compiler environment.
+
+---
+
+## SQL Server
+
+```cpp
+Q1Connection connection(
+    Q1Driver::SQLSERVER,
+    "localhost",
+    "application",
+    qEnvironmentVariable("DB_USER"),
+    qEnvironmentVariable("DB_PASSWORD"),
+    1433
+);
+```
+
+Qt uses:
+
+```text
+QODBC
+```
+
+The SQL Server ODBC driver must also be installed.
+
+`Q1ORM_SQLSERVER_ODBC_DRIVER` can be used to select the installed SQL Server ODBC driver.
+
+The host argument can also contain a DSN or ODBC-style connection string.
+
+---
+
+# 🧱 Complete Minimal Example
 
 ```cpp
 #include <QCoreApplication>
@@ -541,461 +1130,828 @@ The example:
 
 #include <Q1ORM.h>
 
-
 struct Country
 {
-int id = 0;
-QString name;
-
-{
-using EntityType = Country;
-
-static void ConfigureEntity(Q1Entity<Country>& entity)
-{
-entity.ToTableName("countries");
-
-entity.HasKey<&Country::id>()
-.ValueGeneratedOnAdd();
-
-entity.Property<&Country::name>()
-.IsRequired();
-}
+    int id = 0;
+    QString name;
 };
 
-class AppContext : public Q1Context
+struct CountryMap
+{
+    using EntityType = Country;
+
+    static void ConfigureEntity(Q1Entity<Country>& entity)
+    {
+        entity.ToTableName("countries");
+
+        entity.HasKey<&Country::id>()
+            .ValueGeneratedOnAdd();
+
+        entity.Property<&Country::name>()
+            .IsRequired();
+    }
+};
+
+class ApplicationDbContext : public Q1Context
 {
 public:
-explicit AppContext(Q1Connection& connection)
-{
-// The caller retains ownership of the connection.
-SetConnection(&connection, false);
-RegisterEntity(&countries);
-}
+    explicit ApplicationDbContext(Q1Connection& connection)
+    {
+        SetConnection(&connection, false);
+        RegisterEntity(&countries);
+    }
 
-Q1Entity<Country> countries;
+    Q1Entity<Country> countries;
 
 protected:
-void OnModelCreating(Q1ModelBuilder& builder) override
-{
-builder.ApplyMap<CountryMap>();
-}
+    void OnModelCreating(Q1ModelBuilder& builder) override
+    {
+        builder.ApplyMap<CountryMap>();
+    }
 };
 
 int main(int argc, char* argv[])
 {
-QCoreApplication application(argc, argv);
+    QCoreApplication application(argc, argv);
 
-// A relative SQLite path is resolved from the working directory.
-// The connection must outlive the context.
-Q1Connection connection(
-Q1Driver::SQLITE,
-"",
-"application.sqlite",
-"",
-"",
-0
-);
+    Q1Connection connection(
+        Q1Driver::SQLITE,
+        "",
+        "application.sqlite",
+        "",
+        "",
+        0
+    );
 
-AppContext context(connection);
+    ApplicationDbContext context(connection);
 
-if (!context.Initialize())
-{
-qCritical() << "Schema initialization failed:"
-<< context.GetLastError();
-return 1;
-}
+    if (!context.Initialize())
+    {
+        qCritical()
+            << "Database initialization failed:"
+            << context.GetLastError();
 
-auto transaction = connection.Transaction();
+        return 1;
+    }
 
-if (!connection.InTransaction())
-{
-qCritical() << "Could not start the transaction.";
-return 1;
-}
+    Country country;
+    country.name = "Canada";
 
-Country country{0, QStringLiteral("Canada")};
+    if (!context.countries.Insert(country))
+    {
+        qCritical() << "Insert failed";
+        return 1;
+    }
 
-if (!context.countries.Insert(country))
-{
-qCritical(country))
-{
-qCritical() << "Insert failed.";
-returnInfo() << "Generated ID:" << country.id;
+    qInfo() << "Generated ID:" << country.id;
 
-country.name = QStringLiteral("Canada - updated");
+    const auto countries = context.countries
+        .Select()
+        .Where(
+            "name",
+            Q1Operator::Equal,
+            QStringLiteral("Canada")
+        )
+        .OrderBy(
+            "id",
+            Q1Sort::Ascending
+        )
+        .Skip(0)
+        .Take(10)
+        .ToList();
 
-if (!context.countries.UpdateById(country, country.id))
-{
-qCritical() << "Update failed.";
-return 1;
-qCritical() << "Update failed.";
-return 1;
-Where("name", Q1Operator::Equal, country.name)
-.OrderBy("id", Q1Sort::Ascending)
-.Skip(0)
-.Take(10)
-.ToList();
+    for (const auto& item : countries)
+    {
+        qInfo() << item.id << item.name;
+    }
 
-for (const auto& row : rows)
-qInfo() << row.id << row.name;
+    country.name = "Canada - Updated";
 
-const auto count = context.countries.Select().Count();
-qInfo() << "Country count before deletion:" << count;
+    if (!context.countries.UpdateById(country, country.id))
+    {
+        qCritical() << "Update failed";
+        return 1;
+    }
 
-if (!context.countries.DeleteById(country.id))
-{
-qCritical() << "Delete failed.";
-return 1;
-}
+    if (!context.countries.DeleteById(country.id))
+    {
+        qCritical() << "Delete failed";
+        return 1;
+    }
 
-if (!transaction.Commit())
-{
-qCritical() << "Commit failed.";
-return  << "Commit failed.";
-return 1;
-}
-
-qInfo completed.";
-return 0;
+    return 0;
 }
 ```
-The inserted record is deleted before commit. Existing rows are not cleared.
 
-Uncommitted writes are rolled back when the transaction guard leaves scope.
-Schema initialization occurs before the transaction, so rolling back the CRUD
-operations does not undo that earlier initialization.
+---
 
-For deployed applications, use a writable application-data directory rather
-than relying on the working directory.
+# 🧩 CMake Integration
 
-### Mapping structure
+After building Q1ORM, copy:
 
-The example separates responsibilities:
-
-| Component | Responsibility |
-| --- | --- |
-| `Country` | Plain C++ record |
-| `CountryMap` | Table and property mapping |
-| `AppContext` | Connection association, entity registration, model configuration |
-| `Q1Entity<Country>` | Entity operations and query entry point |
-
-Include `<Q1ORM.h>` and create a `QCoreApplication` or an appropriate Qt GUI
-application object before using Qt SQL.
-
-### Query safety
-
-Use bound values for user-provided data:
-
-```cpp
-const QString requestedName = QStringLiteral("Canada");
-
-const auto rows = context.countries.Select()
-.Where("name", Q1Operator::Equal, requestedName)
-.OrderBy("id", Q1Sort::Ascending)
-.ToList();
+```text
+Releases/Release-0.1/
 ```
-Do not concatenate user input into raw SQL.
 
-Raw SQL clauses, identifiers, join expressions, and aggregate expressions must
-be trusted SQL. Binding protects values, not SQL syntax or identifiers.
+into your application:
 
-If users can select a sort column or another identifier, map their selection
-to an explicit allowlist.
-
-## Application services
-
-Q1ORM has no dependency-injection container. Create small services that receive
-a context and encapsulate application rules.
-
-The example project separates:
-
-| File | Purpose |
-| --- | --- |
-| `Models.h` | Plain records |
-| `ApplicationContext.h` | Typed maps and entity sets |
-| `CityService.h` | Business logic and validation |
-| `OrmTests.cpp` | Automated assertions |
-| `main.cpp` | Test runner |
-
-With the example headers and an existing connection:
-
-```cpp
-ApplicationContext context(connection);
-
-if (!context.Initialize())
-{
-qCritical() << context.GetLastError();
-return 1;
-}
-
-CityService service(context);
-
-Country country{0, "Canada"};
-
-if (!context.countries.Insert(country))
-return 1;
-
-City city{0, "Montreal", country.id, 100};
-
-if (!service.Create(city))
-{
-qCritical() << service.LastError();
-return 1;
-}
-
-const auto cities = service.InCountry(country.id);
+```text
+MyApplication/
+├── CMakeLists.txt
+├── main.cpp
+└── external/
+    └── Q1ORM/
+        └── Release-0.1/
+            ├── bin/
+            ├── include/
+            ├── lib/
+            └── scripts/
 ```
-The service trims names, validates population and country, and persists through
-the ORM. Tests cover successful writes and rejected requests.
 
-Keep the context alive while a service uses it, and keep the underlying
-connection alive while the context uses it.
+Example CMake configuration:
 
-## Transactions and threading
+```cmake
+cmake_minimum_required(VERSION 3.14)
 
-### Transactions
+project(MyApplication LANGUAGES CXX)
 
-Create a transaction guard, check that the transaction started, perform the
-operations, and commit explicitly:
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-```cpp
-auto transaction = connection.Transaction();
+find_package(Qt6 REQUIRED COMPONENTS Core Sql)
 
-if (!connection.InTransaction())
-return 1;
+set(Q1ORM_RELEASE
+    "${CMAKE_CURRENT_SOURCE_DIR}/external/Q1ORM/Release-0.1"
+)
 
-Country country{0, "Transactional"};
+add_library(Q1ORM::Q1ORM SHARED IMPORTED)
 
-if (!context.countries.Insert(country))
-return 1;
+set_target_properties(Q1ORM::Q1ORM PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES
+        "${Q1ORM_RELEASE}/include"
+    INTERFACE_COMPILE_FEATURES
+        cxx_std_20
+)
 
-if (!transaction.Commit())
-return 1;
+if(WIN32)
+
+    set_target_properties(Q1ORM::Q1ORM PROPERTIES
+        IMPORTED_LOCATION
+            "${Q1ORM_RELEASE}/bin/Q1ORM.dll"
+        IMPORTED_IMPLIB
+            "${Q1ORM_RELEASE}/lib/Q1ORM.lib"
+    )
+
+elseif(APPLE)
+
+    set_target_properties(Q1ORM::Q1ORM PROPERTIES
+        IMPORTED_LOCATION
+            "${Q1ORM_RELEASE}/lib/libQ1ORM.dylib"
+    )
+
+else()
+
+    set_target_properties(Q1ORM::Q1ORM PROPERTIES
+        IMPORTED_LOCATION
+            "${Q1ORM_RELEASE}/lib/libQ1ORM.so"
+    )
+
+endif()
+
+add_executable(MyApplication
+    main.cpp
+)
+
+target_link_libraries(MyApplication
+    PRIVATE
+        Q1ORM::Q1ORM
+        Qt6::Core
+        Qt6::Sql
+)
+
+if(WIN32)
+
+    add_custom_command(
+        TARGET MyApplication
+        POST_BUILD
+
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "$<TARGET_FILE:Q1ORM::Q1ORM>"
+            "$<TARGET_FILE_DIR:MyApplication>"
+    )
+
+endif()
 ```
-Uncommitted guards roll back at scope exit, including early returns.
 
-Nested transactions join the outer transaction.
+---
 
-Nested transactions join the outer transaction. An inner rollback prevents
-the guards as independent transactions.
+# 📁 Project Structure
 
-Keep transactions short and check commit results.
-
-### Threading
-
-Create and destroy a separate connection, context, and service inside each
-worker thread.
-
-- Initialize schema before launching workers.
-- Do not share Qt SQL handles or entity sets across threads.
-- Perform database operations in the thread that owns the connection.
-- Finish active operations before destroying the context and connection.
-- Expect backend-specific locking and concurrent-write behavior.
-
-`threadedCrud` demonstrates simultaneous ORM reads and writes against the same
-database using independent connections.
-
-Thread-local connections do not remove database-level contention. In
-particular, concurrent SQLite writers may encounter locking.
-
-## Schema changes and data safety
-
-`Initialize()` creates missing schema objects and reconciles mappings.
-
-Always check its result:
-
-```cpp
-if (!context.Initialize())
-{
-qCritical() << context.GetLastError();
-return 1;
-}
+```text
+Q1ORM/
+├── src/
+│   ├── Q1Core/
+│   ├── Q1Entity/
+│   ├── Q1Migration/
+│   ├── Q1Query/
+│   └── ...
+│
+├── Examples/
+│   ├── SoloExample/
+│   ├── DatabaseInstallExample/
+│   ├── UnitTestExample/
+│   └── ...
+│
+├── Docs/
+│
+├── Releases/
+│   └── Release-0.1/
+│       ├── bin/
+│       ├── include/
+│       ├── lib/
+│       └── scripts/
+│
+├── Tools/
+│
+├── CMakeLists.txt
+├── LICENSE
+└── README.md
 ```
-Automatic reconciliation should not be assumed to provide a versioned migration
-history or to infer every intended schema transformation.
 
-Before changing mappings for an existing database:
+---
 
-1. Back up the database and verify that it can be restored.
-2. Test the changes against a copy of representative data.
-3. Review required columns, defaults, keys, indexes, and relationships.
-4. Check initialization errors and stop startup on failure.
-5. Validate important queries and existing records after the change.
+# 🧠 Q1Migration and Q1MigrationQuery
 
-A required new column without a default can fail on populated tables.
-Some changes may require an explicit data backfill.
+Q1ORM still contains:
 
-Handle renames, type conversions, and destructive changes deliberately rather
-than assuming they are inferred automatically.
+```text
+Q1Core/Q1Migration/
+```
 
-Schema-alteration capabilities and transactional-DDL behavior vary by backend.
-Test changes using the same database engine used in deployment.
+with:
 
-Coordinate schema initialization before worker startup or concurrent
-application instances attempt schema changes.
+```text
+Q1Migration
+Q1MigrationQuery
+```
 
-## Error handling and diagnostics
+These classes remain part of the native Q1ORM implementation and provide schema/catalog and database-specific SQL functionality.
 
-Check return values before continuing with dependent work, especially for:
+Q1ORM does not depend on an external migration framework.
 
-- Context initialization.
-- Inserts, updates, and deletes.
-- Bulk operations.
-- Transaction startup and commit.
+Older:
 
-### SQL logging
+```text
+__q1_migrations
+```
 
-Enable verbose SQL logging before starting the application.
+tables, if they already exist in a database, are left untouched.
 
-Linux/macOS:
+Q1ORM does not use them for the automatic schema initialization process.
+
+---
+
+# 🔐 Schema Safety
+
+Automatic initialization is intentionally conservative.
+
+### Preserved
+
+Q1ORM preserves:
+
+* Existing tables
+* Existing rows
+* Unmapped columns
+* Unmapped tables
+* Existing database objects that are outside the mapped model
+
+### Automatically handled
+
+Supported schema changes can include:
+
+* Missing tables
+* Missing mapped columns
+* Required indexes
+* Supported relationships
+
+### Explicit operations
+
+You should explicitly handle:
+
+* Column renames
+* Arbitrary type conversions
+* Primary-key changes
+* Destructive changes
+* Data transformations
+* Complex backfills
+
+Before changing a production schema:
+
+1. Back up the database.
+2. Test the change against representative data.
+3. Verify required columns and defaults.
+4. Check relationships and indexes.
+5. Run `Initialize()`.
+6. Check `GetLastError()`.
+7. Validate the resulting schema and data.
+
+A new required column on a populated table may require a SQL default or an explicit data backfill.
+
+---
+
+# 🔄 Transaction Behavior During Schema Updates
+
+Schema updates use transactions on:
+
+* SQLite
+* PostgreSQL
+* SQL Server
+
+MySQL DDL operations may commit implicitly.
+
+Therefore, if a later MySQL schema operation fails, earlier schema changes may already have been committed.
+
+After correcting the reported problem, run initialization again.
+
+Always test schema changes against the same database engine used in production.
+
+---
+
+# 🧪 Testing
+
+Build the project:
+
+```bash
+cmake -S . -B build
+cmake --build build
+```
+
+Run CTest:
+
+```bash
+ctest --test-dir build --output-on-failure
+```
+
+On Windows Release builds:
+
+```powershell
+ctest --test-dir build -C Release --output-on-failure
+```
+
+You can also run the test executable directly.
+
+```text
+TestExample
+```
+
+List available tests:
+
+```bash
+TestExample -functions
+```
+
+Run selected tests:
+
+```bash
+TestExample crud aggregates
+```
+
+Generate JUnit output:
+
+```bash
+TestExample -o results.xml,junitxml
+```
+
+The test suite covers areas including:
+
+* CRUD
+* Bulk CRUD
+* Filtering
+* Ordering
+* Pagination
+* Aggregates
+* Grouping
+* Joins
+* Includes
+* JSON
+* Raw SQL
+* Change tracking
+* Transactions
+* Constraints
+* Error handling
+* SQL generation
+* Connection lifecycle
+* Model building
+* Schema reconciliation
+
+SQLite is used as the default test backend.
+
+---
+
+# 🧪 Testing With PostgreSQL / MySQL / SQL Server
+
+Use a dedicated test database.
+
+**Do not run the test suite against a production database.**
+
+Example PostgreSQL configuration:
+
+```bash
+export Q1ORM_TEST_DRIVER=POSTGRES
+export Q1ORM_DB_HOST=localhost
+export Q1ORM_DB_NAME=q1orm_test
+export Q1ORM_DB_USER=q1orm_test
+export Q1ORM_DB_PASSWORD='<password>'
+export Q1ORM_DB_PORT=5432
+
+ctest --test-dir build --output-on-failure
+```
+
+Windows PowerShell:
+
+```powershell
+$env:Q1ORM_TEST_DRIVER = "POSTGRES"
+$env:Q1ORM_DB_HOST = "localhost"
+$env:Q1ORM_DB_NAME = "q1orm_test"
+$env:Q1ORM_DB_USER = "q1orm_test"
+$env:Q1ORM_DB_PASSWORD = "<password>"
+$env:Q1ORM_DB_PORT = "5432"
+
+ctest --test-dir build -C Release --output-on-failure
+```
+
+Supported test selections:
+
+```text
+SQLITE
+POSTGRES
+MYSQL
+SQLSERVER
+```
+
+---
+
+# 🐞 Debugging
+
+## SQL Logging
+
+Enable SQL logging:
+
+### Linux / macOS
 
 ```bash
 Q1ORM_VERBOSE=1 ./MyApplication
 ```
-Windows PowerShell:
+
+### Windows PowerShell
 
 ```powershell
 $env:Q1ORM_VERBOSE = "1"
 .\MyApplication.exe
 ```
-Treat SQL logs as potentially sensitive. Remove credentials, connection strings,
-personal data, and confidential values before sharing them.
 
-### SQL plugin diagnostics
+Do not share logs containing:
 
-Inspect available drivers:
+* Passwords
+* Connection strings
+* Personal information
+* Confidential application data
+
+---
+
+# 🔌 Check Qt SQL Drivers
+
+If a database driver is not loading:
 
 ```cpp
 #include <QSqlDatabase>
+#include <QDebug>
 
-qInfo() << "Available SQL drivers:" << QSqlDatabase::drivers();
+qInfo() << QSqlDatabase::drivers();
 ```
-Enable plugin diagnostics when a driver cannot be loaded.
 
-Linux/macOS:
+Expected drivers may include:
+
+```text
+QSQLITE
+QPSQL
+QMYSQL
+QODBC
+```
+
+depending on your Qt installation.
+
+For plugin diagnostics:
+
+### Linux / macOS
 
 ```bash
 QT_DEBUG_PLUGINS=1 ./MyApplication
 ```
-Windows PowerShell:
+
+### Windows PowerShell
 
 ```powershell
 $env:QT_DEBUG_PLUGINS = "1"
 .\MyApplication.exe
 ```
-Check the plugin's architecture, Qt compatibility, runtime search paths, and
-native client dependencies.
 
-## Deployment checklist
+Check:
 
-Before distributing an application:
+* Qt version
+* Compiler
+* Architecture
+* Debug/Release configuration
+* SQL plugin location
+* Native client libraries
+* Runtime search paths
 
-- [ ] Build Q1ORM and the application with compatible toolchains and Qt kits.
-- [ ] Match operating system, architecture, and build configuration.
-- [ ] Rebuild the release package after library changes.
-- [ ] Deploy the Q1ORM shared library.
-- [ ] Deploy required Qt runtime libraries.
-- [ ] Deploy the selected Qt SQL plugin.
-- [ ] Install or deploy native database client dependencies where required.
-- [ ] Verify runtime library search paths.
-- [ ] Use a writable database location for SQLite.
-- [ ] Keep credentials outside source control.
-- [ ] Assign appropriate database permissions.
-- [ ] Test schema changes against representative data.
-- [ ] Run tests for the backend used in deployment.
-- [ ] Test on a machine without the development environment.
+---
 
-Copying `Q1ORM.dll` alone is not a complete Windows deployment.
-Similarly, shipping `libQ1ORM.so` or `libQ1ORM.dylib` does not automatically
-deploy Qt, SQL plugins, or database client libraries.
+# ⚠️ Common Problems
 
-## Troubleshooting
+| Problem                     | Check                                                      |
+| --------------------------- | ---------------------------------------------------------- |
+| `Q1ORM.h` not found         | Verify the `include/` directory                            |
+| Q1ORM linker error          | Check architecture, compiler, Qt and library configuration |
+| `Q1ORM.dll` not found       | Place the DLL beside the application executable            |
+| Qt SQL driver not loaded    | Check `QSqlDatabase::drivers()`                            |
+| SQLite cannot open database | Check path and directory permissions                       |
+| PostgreSQL connection fails | Check host, port, credentials and `QPSQL`                  |
+| MySQL driver not loaded     | Check `QMYSQL` and native MySQL client libraries           |
+| SQL Server connection fails | Check `QODBC` and SQL Server ODBC driver                   |
+| Schema initialization fails | Check `GetLastError()`                                     |
+| SQLite database locked      | Check concurrent writers and long transactions             |
+| Qt thread mismatch          | Create/use/destroy the connection in its owning thread     |
 
-| Problem | What to check |
-| --- | --- |
-| CMake cannot find Qt | Confirm the Qt kit. Set `QTDIR` for the release scripts; for direct CMake configuration, set `CMAKE_PREFIX_PATH` or `Qt6_DIR` as appropriate. |
-| `std::barrier` is unavailable | Confirm C++20 is enabled and both the compiler and standard library support it. |
-| `Q1ORM.h` cannot be found | Verify the packaged `include/` directory and the imported target's include path. |
-| Linker errors or incompatible library format | Check architecture, compiler ABI, Qt kit, build configuration, and library paths. |
-| Q1ORM is not found at startup | Check DLL placement on Windows or runtime library search paths on Linux/macOS. |
-| Qt SQL driver is not loaded | Inspect `QSqlDatabase::drivers()`, enable `QT_DEBUG_PLUGINS=1`, and check plugin dependencies. |
-| Server connection fails | Check host, port, database name, authentication, network access, and client/ODBC configuration. |
-| SQLite cannot open the database | Check the resolved path, parent-directory existence, and filesystem permissions. |
-| Schema initialization fails | Inspect `GetLastError()`, permissions, existing records, and incompatible mappings. |
-| SQLite reports a locked database | Check concurrent writers and long-running transactions. Avoid overlapping test processes. |
-| Qt reports a connection/thread mismatch | Create, use, and destroy the connection and context in the same worker thread. |
-| SQLite tests pass but server tests fail | Check backend capabilities, plugin availability, permissions, and backend-specific SQL behavior. |
-| Release build succeeds but tests are unverified | Run `TestExample` or CTest explicitly. Release scripts do not run the suite. |
+---
 
-## Contributing
+# 🚚 Deployment
 
-Keep changes focused and include tests for new behavior and bug fixes.
+A Q1ORM application needs more than the Q1ORM shared library.
 
-Before submitting a change:
+For Windows, deploy:
 
-1. Build Q1ORM and `Examples/TestExample`.
-2. Run the full SQLite test suite.
-3. Run relevant server-backend tests for changes affecting connections,
-   dialects, schema generation, or backend-specific behavior.
-4. Add regression assertions for bug fixes.
-5. Update documentation for public API or configuration changes.
-6. Review staged files for credentials, local databases, logs, and unintended
-   generated artifacts.
-
-When reporting a problem, include:
-
-- Q1ORM commit or release.
-- Operating system and architecture.
-- Compiler and Qt versions.
-- Database backend and server version, if applicable.
-- A minimal reproducer.
-- Expected and actual behavior.
-- Relevant sanitized diagnostics.
-
-State which backends and test selections you ran. A passing filtered test run
-verifies only that selection.
-
-## GitHub and continuous integration
-
-`.github/workflows/ci.yml` builds and tests SQLite on Linux, Windows, and macOS
-for pushes and pull requests, uploading test logs even on failure.
-
-Check GitHub Actions for the exact commit being evaluated.
-
-A green SQLite run does not certify server backends. Run PostgreSQL, MySQL,
-and SQL Server tests explicitly using the environment settings above.
-
-### Publish changes
-
-Review changes before environment settings above.
-
-### Publish changes
-
-Review changes before diff
-
-```bash
-git add -A
-git diff --cached
-
-git commit -m "Consolidate ORM examples and automated tests"
-git push origin HEAD
+```text
+MyApplication.exe
+Q1ORM.dll
+Qt6Core.dll
+Qt6Sql.dll
+platforms/
+sqldrivers/
 ```
 
-These commands publish source to the existing remote. They do not deploy a
-hosted application or database.
+and the native database client dependencies required by the selected backend.
 
-## License
+For Linux and macOS, ensure the runtime loader can locate:
 
-Q1ORM is distributed under the MIT License. See `LICENSE` for the full terms.
+```text
+libQ1ORM.so
+```
 
-Qt and database client libraries are separate dependencies with their own
-licenses. Review the applicable terms when distributing your application.
+or:
 
-## References
+```text
+libQ1ORM.dylib
+```
 
-- [Qt CMake setup](https://doc.qt.io/qt-6/cmake-get-started.html)
-- [Qt SQL plugins](https://doc.qt.io/qt-6/sql-driver.html)
-- [Qt Windows deployment](https://doc.qt.io/qt-6/windows-deployment.html)
-- [MIT license](LICENSE)
-`
+along with the required Qt libraries and SQL plugins.
 
+For SQLite, make sure the application has permission to create/open the database file.
+
+Keep database credentials outside source control.
+
+---
+
+# 🔒 Security Guidelines
+
+Q1ORM supports parameter binding for values.
+
+Use:
+
+```cpp
+.Where(
+    "name",
+    Q1Operator::Equal,
+    userProvidedName
+)
+```
+
+instead of constructing SQL manually:
+
+```cpp
+// Do not do this.
+QString sql =
+    "SELECT * FROM users WHERE name = '" +
+    userProvidedName +
+    "'";
+```
+
+Raw SQL remains useful, but raw SQL syntax must be trusted.
+
+Do not directly expose user-controlled values as:
+
+* SQL identifiers
+* Column names
+* Table names
+* SQL expressions
+* `ORDER BY` expressions
+* Join expressions
+
+If an application allows users to select a column, translate the user selection through an explicit allowlist.
+
+---
+
+# 🏛️ Recommended Application Architecture
+
+Q1ORM does not provide or require a dependency-injection container.
+
+A simple application structure is:
+
+```text
+Application
+│
+├── Models/
+│   ├── Country.h
+│   └── City.h
+│
+├── Data/
+│   └── ApplicationDbContext.h
+│
+├── Services/
+│   ├── CountryService.h
+│   └── CityService.h
+│
+└── main.cpp
+```
+
+Responsibilities:
+
+```text
+Model
+  ↓
+Mapping
+  ↓
+Q1Entity
+  ↓
+Q1Context
+  ↓
+Service
+  ↓
+Application
+```
+
+Keep business validation and application rules in services rather than putting unrelated business logic into the ORM mapping layer.
+
+---
+
+# 🔄 Application Startup Pattern
+
+A typical application can follow:
+
+```cpp
+Q1Connection connection(...);
+
+ApplicationDbContext context(connection);
+
+if (!context.Initialize())
+{
+    qCritical() << context.GetLastError();
+    return 1;
+}
+
+// Start application services
+// Start workers
+// Handle requests
+```
+
+Initialize the schema before launching worker threads or starting concurrent database activity.
+
+---
+
+# 📋 Complete CRUD Overview
+
+| Operation          | Q1ORM API                         |
+| ------------------ | --------------------------------- |
+| Initialize schema  | `Initialize()`                    |
+| Insert             | `Insert()`                        |
+| Bulk insert        | `InsertRange()`                   |
+| Select             | `Select()`                        |
+| Filter             | `Where()`                         |
+| AND                | `AndWhere()`                      |
+| OR                 | `OrWhere()`                       |
+| Sort               | `OrderBy()`                       |
+| Pagination         | `Skip()` / `Take()`               |
+| Count              | `Count()`                         |
+| Update by ID       | `UpdateById()`                    |
+| Bulk update        | `UpdateRange()`                   |
+| Delete by ID       | `DeleteById()`                    |
+| Bulk delete        | `DeleteRange()`                   |
+| Join               | Query join API                    |
+| Eager loading      | `Include()`                       |
+| Group              | `GroupBy()`                       |
+| Filter groups      | `Having()`                        |
+| Aggregates         | Count / Min / Max / Sum / Average |
+| JSON               | `ToJson()`                        |
+| Transactions       | `Transaction()`                   |
+| Commit             | `Commit()`                        |
+| Transaction status | `InTransaction()`                 |
+| Error              | `GetLastError()`                  |
+
+---
+
+# 🧭 Design Philosophy
+
+Q1ORM follows a simple principle:
+
+> **The C++ model describes what the application expects; the database catalog describes what currently exists.**
+
+At startup, Q1ORM compares the two and applies supported schema changes.
+
+This avoids the need for:
+
+```text
+Migration001
+Migration002
+Migration003
+Migration004
+...
+```
+
+for the supported automatic schema reconciliation workflow.
+
+At the same time, Q1ORM deliberately does not guess destructive or ambiguous operations such as arbitrary renames and type conversions.
+
+---
+
+# 📚 Examples
+
+The repository contains examples covering:
+
+```text
+Examples/
+├── SoloExample/
+├── DatabaseInstallExample/
+├── UnitTestExample/
+└── ...
+```
+
+The examples demonstrate database configuration, model mapping, CRUD, queries, schema initialization, relationships, testing and deployment patterns.
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+Before submitting a pull request:
+
+1. Build Q1ORM.
+2. Build the examples.
+3. Run the SQLite test suite.
+4. Run relevant server-backend tests.
+5. Add regression tests for bug fixes.
+6. Update documentation for public API changes.
+7. Review staged files for credentials and generated files.
+
+For bug reports, include:
+
+* Q1ORM version or commit
+* Operating system
+* Architecture
+* Compiler
+* Qt version
+* Database backend
+* Database server version
+* Minimal reproducer
+* Expected behavior
+* Actual behavior
+* Relevant sanitized logs
+
+---
+
+# 📄 License
+
+Q1ORM is distributed under the **MIT License**.
+
+See [`LICENSE`](LICENSE) for the complete license text.
+
+Qt and database client libraries are separate dependencies and have their own licenses.
+
+---
+
+# ⭐ Support the Project
+
+If Q1ORM is useful to you:
+
+* ⭐ Star the repository
+* 🐛 Report bugs
+* 💡 Open feature requests
+* 🔧 Submit pull requests
+* 📖 Improve the documentation
+
+---
+
+<p align="center">
+  <strong>Q1ORM — C++ database access without the boilerplate.</strong>
+</p>
