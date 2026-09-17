@@ -135,6 +135,10 @@ public:
             if (name.trimmed().isEmpty() || table.HasColumn(name))
                 throw std::invalid_argument("Column name must be nonempty and unique.");
             Property(static_cast<Entity&>(*this).*Member, name);
+            property_map[name].assign = [](Entity& target, const QVariant& value) {
+                using Value = std::remove_cvref_t<decltype(target.*Member)>;
+                target.*Member = value.isNull() ? Value{} : value.template value<Value>();
+            };
         }
         return PropertyBuilder<Member>(*this);
     }
@@ -228,6 +232,10 @@ public:
 
         info.offset = reinterpret_cast<char*>(&member) - reinterpret_cast<char*>(static_cast<Entity*>(this));
         info.type = column_type;
+        info.assign = [offset = info.offset](Entity& target, const QVariant& value) {
+            auto& field = *reinterpret_cast<Member*>(reinterpret_cast<char*>(&target) + offset);
+            field = value.isNull() ? Member{} : value.template value<Member>();
+        };
         property_map[name] = info;
 
 
@@ -857,6 +865,7 @@ public:
         qDebug() << "✓ Insert successful!";
         qDebug() << "========================\n";
         connection->Disconnect();
+        TrackEntity(entity);
         return true;
     }
 
@@ -1538,91 +1547,18 @@ public:
         }
 
         while (sql_query.next()) {
-            Entity entity;
+            Entity entity{};
 
             // Populate entity members from table.columns
             for (const Q1Column& col : table.columns) {
                 auto it = property_map.find(col.name);
                 if (it == property_map.end()) continue;
 
-                const PropertyInfo& info = it.value();
-                char* memberPtr = reinterpret_cast<char*>(&entity) + info.offset;
-
                 // Get column index (works for simple select and joins)
                 int colIndex = resultColumnIndexes.value(col.name.toLower(), -1);
                 if (colIndex < 0) continue;
 
-                QVariant val = sql_query.value(colIndex);
-
-                if (val.isNull()) {
-                    switch (col.type) {
-                    case INTEGER:
-                        *reinterpret_cast<int*>(memberPtr) = 0;
-                        break;
-                    case SMALLINT:
-                        *reinterpret_cast<short*>(memberPtr) = 0;
-                        break;
-                    case BIGINT:
-                        *reinterpret_cast<qint64*>(memberPtr) = 0;
-                        break;
-                    case REAL:
-                        *reinterpret_cast<float*>(memberPtr) = 0.0f;
-                        break;
-                    case DOUBLE_PRECISION:
-                        *reinterpret_cast<double*>(memberPtr) = 0.0;
-                        break;
-                    case BOOLEAN:
-                        *reinterpret_cast<bool*>(memberPtr) = false;
-                        break;
-                    case CHAR:
-                    case TEXT:
-                    case VARCHAR:
-                        *reinterpret_cast<QString*>(memberPtr) = QString();
-                        break;
-                    case DATE:
-                        *reinterpret_cast<QDate*>(memberPtr) = QDate();
-                        break;
-                    case TIMESTAMP:
-                        *reinterpret_cast<QDateTime*>(memberPtr) = QDateTime();
-                        break;
-                    default:
-                        break;
-                    }
-                } else {
-                    switch (col.type) {
-                    case INTEGER:
-                        *reinterpret_cast<int*>(memberPtr) = val.toInt();
-                        break;
-                    case SMALLINT:
-                        *reinterpret_cast<short*>(memberPtr) = static_cast<short>(val.toInt());
-                        break;
-                    case BIGINT:
-                        *reinterpret_cast<long long*>(memberPtr) = val.toLongLong();
-                        break;
-                    case REAL:
-                        *reinterpret_cast<float*>(memberPtr) = static_cast<float>(val.toDouble());
-                        break;
-                    case DOUBLE_PRECISION:
-                        *reinterpret_cast<double*>(memberPtr) = val.toDouble();
-                        break;
-                    case BOOLEAN:
-                        *reinterpret_cast<bool*>(memberPtr) = val.toBool();
-                        break;
-                    case CHAR:
-                    case TEXT:
-                    case VARCHAR:
-                        *reinterpret_cast<QString*>(memberPtr) = val.toString();
-                        break;
-                    case DATE:
-                        *reinterpret_cast<QDate*>(memberPtr) = val.toDate();
-                        break;
-                    case TIMESTAMP:
-                        *reinterpret_cast<QDateTime*>(memberPtr) = val.toDateTime();
-                        break;
-                    default:
-                        break;
-                    }
-                }
+                it.value().assign(entity, sql_query.value(colIndex));
             }
 
             // Convert ALL result columns to JSON (including joined columns)
@@ -1648,6 +1584,8 @@ public:
             }
 
             lastJson.append(obj);
+            if (columns.isEmpty() && joins.isEmpty() && group_by.isEmpty())
+                TrackEntity(entity);
             results.append(entity);
         }
 
@@ -1931,6 +1869,7 @@ public:
         QString name;
         ptrdiff_t offset;
         Q1ColumnDataType type;
+        std::function<void(Entity&, const QVariant&)> assign;
     };
 
     const QMap<QString, PropertyInfo>& GetPropertyMap() const

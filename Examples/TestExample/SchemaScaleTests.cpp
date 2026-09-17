@@ -91,7 +91,7 @@ bool verify(Q1Connection& connection, bool populated, bool evolved) {
 bool run() {
     QTemporaryDir directory;
     CHECK(directory.isValid());
-    Q1Connection connection(Q1Driver::SQLITE, "","scale.sqlite", "", "", 0);
+    Q1Connection connection(Q1Driver::SQLITE, "", directory.filePath("scale.sqlite"), "", "", 0);
     CHECK(connection.Connect());
     int originalVersion;
     {
@@ -103,11 +103,8 @@ bool run() {
         QElapsedTimer timer;
         timer.start();
         CHECK(connection.BeginTransaction());
-        // Avoid 30000 informational CRUD messages in the test report.
-        QLoggingCategory::setFilterRules("*.debug=false\n*.info=false");
         CHECK(context.InsertRows());
         CHECK(connection.CommitTransaction());
-        QLoggingCategory::setFilterRules("*.debug=false\n*.info=true");
         qInfo() << "Insert 30000 rows:" << timer.nsecsElapsed() / 1000000.0 << "ms";
     }
     // Close/reopen and rebuild context mappings to simulate a later startup.
@@ -140,8 +137,6 @@ bool run() {
 }
 } // namespace
 
-int main(int argc, char** argv) {
-    QCoreApplication app(argc, argv);
-    QLoggingCategory::setFilterRules("*.debug=false");
+int runSchemaScaleTests() {
     return run() ? 0 : 1;
 }

@@ -58,7 +58,10 @@ target_include_directories(Src
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(Src PRIVATE
+add_library(Q1ORM::Q1ORM ALIAS Src)
+target_compile_features(Src PUBLIC cxx_std_20)
+
+target_link_libraries(Src PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Sql)
 

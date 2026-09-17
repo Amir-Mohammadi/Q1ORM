@@ -28,6 +28,7 @@ cmake_args=(
     -S "$PROJECT"
     -B "$BUILD"
     -DCMAKE_BUILD_TYPE=Release
+    -DQ1ORM_BUILD_TOOLS=ON
 )
 
 # If QTDIR is provided, use that Qt installation.

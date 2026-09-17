@@ -5,6 +5,18 @@
 struct Parent { int id = 0; QString name; int revision = 0; };
 struct Child { int id = 0; int parent_id = 0; };
 
+struct ReadValues {
+    int number = -7;
+    short small = -7;
+    qint64 large = -7;
+    float fraction = -7.0f;
+    double decimal = -7.0;
+    bool enabled = true;
+    QString text = "default";
+    QDate date{2000, 1, 1};
+    QDateTime timestamp{QDate(2000, 1, 1), QTime(0, 0), Qt::UTC};
+};
+
 struct ParentMap {
     static void ConfigureEntity(Q1Entity<Parent> &entity) {
         entity.ToTableName("parents");
@@ -94,9 +106,8 @@ protected:
     qCritical() << "Check failed at line" << __LINE__ << #condition; return 1; \
 } } while (false)
 
-int main(int argc, char **argv)
+int runModelBuilderTests()
 {
-    QCoreApplication app(argc, argv);
     QTemporaryDir directory;
     CHECK(directory.isValid());
     Q1Connection connection(Q1Driver::SQLITE, "", directory.filePath("model.sqlite"), "", "", 0);
@@ -147,6 +158,71 @@ int main(int argc, char **argv)
     CHECK(parents.size() == 1);
     CHECK(parents.first().name == parent.name);
     CHECK(context.children.SelectAll().size() == 1);
+    const auto nullChildren = context.children.Select({"NULL AS id", "NULL AS parent_id"}).ToList();
+    CHECK(nullChildren.size() == 1);
+    CHECK(nullChildren.first().id == 0);
+    CHECK(nullChildren.first().parent_id == 0);
+
+    for (const bool legacy : {false, true}) {
+        Q1Entity<ReadValues> values;
+        values.SetConnection(&connection);
+        values.ToTableName("parents");
+        if (legacy) {
+            values.Property(values.number, "number");
+            values.Property(values.small, "small");
+            values.Property(values.large, "large");
+            values.Property(values.fraction, "fraction");
+            values.Property(values.decimal, "decimal");
+            values.Property(values.enabled, "enabled");
+            values.Property(values.text, "text");
+            values.Property(values.date, "date");
+            values.Property(values.timestamp, "timestamp");
+        } else {
+            values.Property<&ReadValues::number>();
+            values.Property<&ReadValues::small>();
+            values.Property<&ReadValues::large>();
+            values.Property<&ReadValues::fraction>();
+            values.Property<&ReadValues::decimal>();
+            values.Property<&ReadValues::enabled>();
+            values.Property<&ReadValues::text>().HasColumnName("label");
+            values.Property<&ReadValues::date>();
+            values.Property<&ReadValues::timestamp>();
+        }
+        const QString textColumn = legacy ? "text" : "label";
+        const auto rows = values.Select({
+            "42 AS number", "-123 AS small", "5000000000 AS large",
+            "1.25 AS fraction", "2.5 AS decimal", "1 AS enabled",
+            QString("'read value' AS %1").arg(textColumn),
+            "'2026-09-17' AS date", "'2026-09-17T12:34:56Z' AS timestamp"
+        }).ToList();
+        CHECK(rows.size() == 1);
+        const auto& row = rows.first();
+        CHECK(row.number == 42);
+        CHECK(row.small == -123);
+        CHECK(row.large == 5000000000LL);
+        CHECK(row.fraction == 1.25f);
+        CHECK(row.decimal == 2.5);
+        CHECK(row.enabled);
+        CHECK(row.text == "read value");
+        CHECK(row.date == QDate(2026, 9, 17));
+        CHECK(row.timestamp == QDateTime::fromString("2026-09-17T12:34:56Z", Qt::ISODate));
+        const auto nullRows = values.Select({
+            "NULL AS number", "NULL AS small", "NULL AS large",
+            "NULL AS fraction", "NULL AS decimal", "NULL AS enabled",
+            QString("NULL AS %1").arg(textColumn), "NULL AS date", "NULL AS timestamp"
+        }).ToList();
+        CHECK(nullRows.size() == 1);
+        const auto& nullRow = nullRows.first();
+        CHECK(nullRow.number == 0);
+        CHECK(nullRow.small == 0);
+        CHECK(nullRow.large == 0);
+        CHECK(nullRow.fraction == 0.0f);
+        CHECK(nullRow.decimal == 0.0);
+        CHECK(!nullRow.enabled);
+        CHECK(nullRow.text.isNull());
+        CHECK(!nullRow.date.isValid());
+        CHECK(!nullRow.timestamp.isValid());
+    }
     CHECK(context.Initialize());
     CHECK(context.parents.SelectAll().size() == 1);
     CHECK(schemaVersion() == initialSchemaVersion);
@@ -244,6 +320,10 @@ int main(int argc, char **argv)
     CHECK(typedChild.id > 0);
     CHECK(typed.parents.SelectAll().first().name == typedParent.name);
     CHECK(typed.children.SelectAll().first().parent_id == typedParent.id);
+    const auto typedNullChildren = typed.children.Select({"NULL AS id", "NULL AS parent_ref"}).ToList();
+    CHECK(typedNullChildren.size() == 1);
+    CHECK(typedNullChildren.first().id == 0);
+    CHECK(typedNullChildren.first().parent_id == 0);
 
     Q1Entity<Child> orphan;
     Q1ModelBuilder missingPrincipal;

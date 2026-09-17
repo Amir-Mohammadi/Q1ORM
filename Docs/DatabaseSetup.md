@@ -16,8 +16,8 @@ If you add a supported column to your map, startup adds that missing column.
 There are no migration files, history records, or terminal commands to manage.
 
 An unchanged schema is checked but not recreated. Initialization does not insert
-application data. The DbExample inserts its sample country and city only when
-both tables are empty, so running it again does not duplicate the sample rows.
+application data. TestExample deliberately clears and reseeds its test tables
+before each ordinary test; use only a dedicated test database with that runner.
 
 Use the same database path on each run. A relative SQLite filename such as
 `q1orm_test2.sqlite` is relative to the process working directory. Starting from

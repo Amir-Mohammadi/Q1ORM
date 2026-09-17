@@ -25,9 +25,9 @@ Q1ORM exposes a small set of Qt-friendly building blocks for database work:
 Before building the project, make sure these tools are available:
 
 - CMake 3.14 or newer
-- Qt 6 with the `Core` and `Sql` modules
+- Qt 6 with the `Core`, `Sql`, and `Test` modules
 - A C++20 compatible compiler
-- The SQLite Qt SQL driver for `DbExample`
+- The SQLite Qt SQL driver for `TestExample`
 
 ## Build the project
 
@@ -46,21 +46,17 @@ cmake --install build
 
 ## Database configuration
 
-The examples support both PostgreSQL and SQL Server through `Q1Connection`.
+TestExample defaults to a temporary SQLite database. Server tests require a
+dedicated disposable database because test tables are cleared and reseeded.
 
 Use these variables to select and configure the backend:
 
-- `Q1ORM_DB_DRIVER=postgres` or `Q1ORM_DB_DRIVER=sqlserver`
-- `Q1ORM_PG_HOST`
-- `Q1ORM_PG_DB_NAME`
-- `Q1ORM_PG_USER`
-- `Q1ORM_PG_PASSWORD`
-- `Q1ORM_PG_PORT`
-- `Q1ORM_SQLSERVER_HOST`
-- `Q1ORM_SQLSERVER_DB_NAME`
-- `Q1ORM_SQLSERVER_USER`
-- `Q1ORM_SQLSERVER_PASSWORD`
-- `Q1ORM_SQLSERVER_PORT`
+- `Q1ORM_TEST_DRIVER=SQLITE|POSTGRES|MYSQL|SQLSERVER`
+- `Q1ORM_DB_HOST`
+- `Q1ORM_DB_NAME`
+- `Q1ORM_DB_USER`
+- `Q1ORM_DB_PASSWORD`
+- `Q1ORM_DB_PORT`
 - `Q1ORM_SQLSERVER_ODBC_DRIVER`
 
 ## Creating a context
@@ -117,7 +113,8 @@ Mapping errors are available through `GetLastError()`. The connection and entity
 members must outlive their use by the context; `SetConnection(connection)` borrows
 the connection by default.
 
-See `Examples/DbExample/main.cpp` for a runnable SQLite example with two maps.
+See `Examples/TestExample/ApplicationContext.h` for two maps and
+`Examples/TestExample/OrmTests.cpp` for executable usage checks.
 
 ## Query examples
 
@@ -133,8 +130,8 @@ The examples in the repository demonstrate patterns such as:
 
 ## Example folders
 
-- `Examples/UnitTestExample/` contains the complete integration and SQL generation tests.
-- `Examples/DockerTestExample/` runs the same tests against PostgreSQL in Docker.
+- `Examples/TestExample/` is the single example and test executable.
+- See the root README for platform build instructions, service usage, and coverage.
 
 ## Notes
 

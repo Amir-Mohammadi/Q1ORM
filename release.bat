@@ -67,9 +67,9 @@ echo.
 echo.
 echo [1/6] Configuring project...
 if defined QT (
-    cmake -S "%PROJECT%" -B "%BUILD%" -DCMAKE_PREFIX_PATH="%QT%"
+    cmake -S "%PROJECT%" -B "%BUILD%" -DQ1ORM_BUILD_TOOLS=ON -DCMAKE_PREFIX_PATH="%QT%"
 ) else (
-    cmake -S "%PROJECT%" -B "%BUILD%"
+    cmake -S "%PROJECT%" -B "%BUILD%" -DQ1ORM_BUILD_TOOLS=ON
 )
 
 if errorlevel 1 (
@@ -180,15 +180,15 @@ if not exist "%RELEASE%" (
 echo.
 echo Deploying Qt runtime...
 if defined WINDEPLOYQT (
-    if exist "%RELEASE%\bin\UnitTestExample.exe" (
-        "%WINDEPLOYQT%" --no-translations --no-opengl-sw --force "%RELEASE%\bin\UnitTestExample.exe"
+    if exist "%BUILD%\bin\Release\TestExample.exe" (
+        "%WINDEPLOYQT%" --no-translations --no-opengl-sw --force "%BUILD%\bin\Release\TestExample.exe"
         if errorlevel 1 (
             echo QT RUNTIME DEPLOY FAILED!
             pause
             exit /b 1
         )
     ) else (
-        echo WARNING: UnitTestExample.exe not found in release bin. Skipping Qt runtime deploy.
+        echo WARNING: TestExample.exe not found in build bin. Skipping Qt runtime deploy.
     )
 ) else (
     echo WARNING: windeployqt.exe not found. Skipping Qt runtime deploy.
