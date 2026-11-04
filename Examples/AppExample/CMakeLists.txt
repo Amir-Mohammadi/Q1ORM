@@ -6,18 +6,33 @@ if(NOT TARGET Q1ORM::Q1ORM)
     add_subdirectory(../../src ${CMAKE_CURRENT_BINARY_DIR}/q1orm)
 endif()
 
-find_package(Qt6 REQUIRED COMPONENTS Test)
+find_package(Qt6 REQUIRED COMPONENTS Test Sql)
 find_package(Threads REQUIRED)
 
 add_executable(AppExample
     main.cpp
-    )
+)
 
 set_target_properties(AppExample PROPERTIES
     AUTOMOC ON
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
-target_link_libraries(AppExample PRIVATE Q1ORM::Q1ORM Qt6::Test Threads::Threads)
+
+target_link_libraries(AppExample PRIVATE 
+    Q1ORM::Q1ORM 
+    Qt6::Test 
+    Qt6::Sql 
+    Threads::Threads
+)
+
+
+if(UNIX AND NOT APPLE)
+    set_target_properties(AppExample PROPERTIES
+        BUILD_WITH_INSTALL_RPATH TRUE
+        INSTALL_RPATH_USE_LINK_PATH TRUE
+        INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/../src:/home/arm/Qt/gcc_64/lib"
+    )
+endif()
 
 if(WIN32)
     add_custom_command(TARGET AppExample POST_BUILD

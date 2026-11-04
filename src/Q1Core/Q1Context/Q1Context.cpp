@@ -55,8 +55,7 @@ bool Q1Context::Initialize()
     delete query;
     query = new Q1Migration(*connection);
 
-    // An existing application database needs no server-level database discovery.
-    if (!connection->Connect() && !InitialDatabase()) {
+    if (!InitialDatabase()) {
         qCritical() << "Q1Context::Initialize - database initialization failed:"
                     << GetLastError();
         return false;
@@ -115,6 +114,9 @@ bool Q1Context::InitialDatabase()
         return true;
     }
 
+    if (connection->Connect())
+        return true;
+
     if (!connection->RootConnect())
     {
         qCritical() << "Cannot connect to server:" << connection->ErrorMessage();
@@ -122,14 +124,27 @@ bool Q1Context::InitialDatabase()
     }
 
     QStringList databases = query->GetDatabases();
+    const QString discoveryError = query->ErrorMessage();
+    if (!discoveryError.isEmpty())
+    {
+        connection->RootDisconnect();
+        model_error = QString("Cannot check whether database '%1' exists: %2")
+                          .arg(database_name, discoveryError);
+        return false;
+    }
+
     if (!databases.contains(database_name))
     {
         qDebug() << "InitialDatabase - database not found. Creating:" << database_name;
 
         if (!query->AddDatabase(database_name))
         {
-            qCritical() << "Failed to create database:" << connection->ErrorMessage();
             connection->RootDisconnect();
+            const QString error = query->ErrorMessage().isEmpty()
+                                      ? connection->ErrorMessage()
+                                      : query->ErrorMessage();
+            model_error = QString("Failed to create database '%1': %2")
+                              .arg(database_name, error);
             return false;
         }
 

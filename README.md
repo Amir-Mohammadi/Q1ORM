@@ -1138,6 +1138,12 @@ The SQL Server ODBC driver must also be installed.
 
 The host argument can also contain a DSN or ODBC-style connection string.
 
+For ODBC Driver 18, configure encryption and certificate trust with
+`Q1ORM_SQLSERVER_ENCRYPT` and `Q1ORM_SQLSERVER_TRUST_SERVER_CERTIFICATE`.
+For a local development server with a self-signed certificate, use
+`Q1ORM_SQLSERVER_TRUST_SERVER_CERTIFICATE=yes`; use a trusted server
+certificate in production.
+
 ---
 
 # 🧱 Complete Minimal Example

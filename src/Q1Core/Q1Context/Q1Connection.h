@@ -636,15 +636,43 @@ private: // Connection Parameters
                 connection_string.append(QString("Database=%1;").arg(target_database_name));
             }
 
-            return connection_string;
+            return AddSqlServerSecurityOptions(connection_string);
         }
 
         QString server = host_name;
         if (port > 0 && !server.contains(',') && !server.contains('\\'))
             server.append(QString(",%1").arg(port));
 
-        return QString("Driver={%1};Server=%2;Database=%3;")
-            .arg(odbc_driver_name, server, target_database_name);
+        connection_string = QString("Driver={%1};Server=%2;Database=%3;")
+                                .arg(odbc_driver_name, server, target_database_name);
+        return AddSqlServerSecurityOptions(connection_string);
+    }
+
+    QString AddSqlServerSecurityOptions(QString connection_string) const
+    {
+        const QString encrypt = qEnvironmentVariable("Q1ORM_SQLSERVER_ENCRYPT").trimmed();
+        if (!encrypt.isEmpty() &&
+            !connection_string.contains(QStringLiteral("Encrypt="), Qt::CaseInsensitive))
+        {
+            if (!connection_string.endsWith(';'))
+                connection_string.append(';');
+            connection_string.append(QStringLiteral("Encrypt=%1;").arg(encrypt));
+        }
+
+        const QString trustServerCertificate =
+            qEnvironmentVariable("Q1ORM_SQLSERVER_TRUST_SERVER_CERTIFICATE").trimmed();
+        if (!trustServerCertificate.isEmpty() &&
+            !connection_string.contains(
+                QStringLiteral("TrustServerCertificate="), Qt::CaseInsensitive))
+        {
+            if (!connection_string.endsWith(';'))
+                connection_string.append(';');
+            connection_string.append(
+                QStringLiteral("TrustServerCertificate=%1;")
+                    .arg(trustServerCertificate));
+        }
+
+        return connection_string;
     }
 
     QStringList SqlServerOdbcDrivers() const
