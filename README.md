@@ -1267,7 +1267,11 @@ QODBC
 
 The SQL Server ODBC driver must also be installed.
 
-`Q1ORM_SQLSERVER_ODBC_DRIVER` can be used to select the installed SQL Server ODBC driver.
+`Q1ORM_SQLSERVER_ODBC_DRIVER` selects a specific installed SQL Server ODBC driver,
+for example `ODBC Driver 18 for SQL Server`. Without an override, Q1ORM tries
+Drivers 18, 17, and 13 (then Native Client 11.0 on Windows) until a driver loads.
+Certificate, login, and database errors are reported immediately rather than
+being hidden by errors from missing fallback drivers.
 
 The host argument can also contain a DSN or ODBC-style connection string.
 
@@ -1276,6 +1280,14 @@ For ODBC Driver 18, configure encryption and certificate trust with
 For a local development server with a self-signed certificate, use
 `Q1ORM_SQLSERVER_TRUST_SERVER_CERTIFICATE=yes`; use a trusted server
 certificate in production.
+
+`AppExample` defaults to the SQL Server login `sa`. Override it with
+`Q1ORM_SQLSERVER_USER` and set its password with `Q1ORM_SQLSERVER_PASSWORD`.
+For the example's loopback hosts (`localhost`, `127.0.0.1`, and `::1`),
+`TrustServerCertificate=yes` is used unless
+`Q1ORM_SQLSERVER_TRUST_SERVER_CERTIFICATE` is explicitly set. Set it to `no`
+to require certificate validation. Other applications using `Q1Connection`
+configure certificate trust explicitly.
 
 ---
 

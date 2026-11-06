@@ -6,6 +6,7 @@
 #include <QFileInfo>
 #include <QScopeGuard>
 #include <QRegularExpression>
+#include <QSqlDriver>
 #include <QtTest>
 #include <barrier>
 #include <thread>
@@ -13,6 +14,31 @@
 
 int runModelBuilderTests();
 int runSchemaScaleTests();
+
+namespace {
+class ScriptedOdbcDriver : public QSqlDriver
+{
+public:
+    QList<QSqlError> failures;
+    QStringList attempts;
+
+    bool hasFeature(DriverFeature) const override { return false; }
+    QSqlResult* createResult() const override { return nullptr; }
+    void close() override { setOpen(false); }
+
+    bool open(const QString& connectionString, const QString&, const QString&,
+              const QString&, int, const QString&) override
+    {
+        const int index = attempts.size();
+        attempts.append(connectionString);
+        const QSqlError failure = failures.value(index);
+        setLastError(failure);
+        setOpenError(failure.isValid());
+        setOpen(!failure.isValid());
+        return isOpen();
+    }
+};
+}
 
 std::unique_ptr<Q1Connection> OrmTests::makeConnection() const
 {
@@ -46,7 +72,7 @@ void OrmTests::init()
     QTest::failOnWarning(QRegularExpression("Unable to free statement"));
     const QString test = QString::fromLatin1(QTest::currentTestFunction());
     if (test == "modelBuilder" || test == "schemaScale" || test == "sqlGeneration"
-        || test == "databaseCreation")
+        || test == "databaseCreation" || test == "sqlServerConnections")
         return;
     connection = makeConnection();
     context = std::make_unique<ApplicationContext>(*connection);
@@ -346,6 +372,99 @@ void OrmTests::connectionLifecycle()
         QCOMPARE(query.value(0).toInt(), 3);
     }
     local->Disconnect();
+}
+
+void OrmTests::sqlServerConnections_data()
+{
+    QTest::addColumn<bool>("root");
+    QTest::addColumn<QString>("host");
+    QTest::addColumn<QString>("odbcDriver");
+    QTest::addColumn<bool>("missingFirstDriver");
+    QTest::addColumn<QString>("errorCode");
+    QTest::addColumn<QString>("errorText");
+    QTest::addColumn<int>("attempts");
+
+    for (bool root : {false, true})
+    {
+        const QByteArray prefix = root ? "root-" : "database-";
+        const auto row = [&](const char* label, const QString& code, const QString& text,
+                             bool missingFirst = false, int attempts = 1,
+                             const QString& driver = QString(),
+                             const QString& host = QStringLiteral("localhost")) {
+            QTest::newRow((prefix + label).constData())
+                << root << host << driver << missingFirst << code << text << attempts;
+        };
+        row("certificate", "08001", "certificate verify failed:self-signed certificate");
+        row("login", "28000", "Login failed for user 'root'.");
+        row("database", "42000", "Cannot open database requested by the login.");
+        row("fallback-success", "", "", true, 2);
+        row("fallback-login", "28000", "Login failed for user 'root'.", true, 2);
+        row("explicit-driver", "01000", "Can't open lib 'Custom SQL Server Driver'",
+            false, 1, " Custom SQL Server Driver ");
+        row("explicit-dsn", "IM002", "Data source name not found", false, 1,
+            "", "DSN=q1orm_missing");
+        row("explicit-string", "IM003", "Specified driver could not be loaded", false, 1,
+            "", "Driver={Custom Driver};Server=localhost;");
+    }
+}
+
+void OrmTests::sqlServerConnections()
+{
+    QFETCH(bool, root);
+    QFETCH(QString, host);
+    QFETCH(QString, odbcDriver);
+    QFETCH(bool, missingFirstDriver);
+    QFETCH(QString, errorCode);
+    QFETCH(QString, errorText);
+    QFETCH(int, attempts);
+
+    const bool driverWasSet = qEnvironmentVariableIsSet("Q1ORM_SQLSERVER_ODBC_DRIVER");
+    const QByteArray previousDriver = qgetenv("Q1ORM_SQLSERVER_ODBC_DRIVER");
+    const auto restoreDriver = qScopeGuard([&] {
+        if (driverWasSet) qputenv("Q1ORM_SQLSERVER_ODBC_DRIVER", previousDriver);
+        else qunsetenv("Q1ORM_SQLSERVER_ODBC_DRIVER");
+    });
+    qputenv("Q1ORM_SQLSERVER_ODBC_DRIVER", odbcDriver.toUtf8());
+
+    Q1Connection local(Q1Driver::SQLSERVER, host, "example", "user", "password");
+    QSqlDatabase& handle = root ? local.root_database : local.database;
+    const QString name = handle.connectionName();
+    handle = QSqlDatabase();
+    QSqlDatabase::removeDatabase(name);
+    auto* scripted = new ScriptedOdbcDriver;
+    if (missingFirstDriver)
+        scripted->failures.append(QSqlError("QODBC", "Can't open lib 'ODBC Driver 18 for SQL Server'",
+                                           QSqlError::ConnectionError, "01000"));
+    if (!errorCode.isEmpty())
+        scripted->failures.append(QSqlError("QODBC", errorText,
+                                           QSqlError::ConnectionError, errorCode));
+    handle = QSqlDatabase::addDatabase(scripted, name);
+    local.SetHostName(host);
+
+    const bool expectedOpen = errorCode.isEmpty();
+    if (root && !expectedOpen)
+        QTest::ignoreMessage(QtCriticalMsg, QRegularExpression("^Q1Connection::RootConnect failed:"));
+    QCOMPARE(root ? local.RootConnect() : local.Connect(false), expectedOpen);
+    QCOMPARE(scripted->attempts.size(), attempts);
+    if (missingFirstDriver)
+        QVERIFY(scripted->attempts.last().contains("Driver={ODBC Driver 17 for SQL Server}"));
+    if (!odbcDriver.isEmpty())
+        QVERIFY(scripted->attempts.first().contains("Driver={Custom SQL Server Driver}"));
+    if (!expectedOpen)
+    {
+        QCOMPARE(local.ErrorMessage(), errorText);
+        QCOMPARE(local.error.nativeErrorCode(), errorCode);
+        QVERIFY(!handle.isOpen());
+        return;
+    }
+
+    QVERIFY(local.ErrorMessage().isEmpty());
+    QVERIFY(root ? local.RootConnect() : local.Connect(false));
+    QCOMPARE(scripted->attempts.size(), attempts);
+    if (root) local.RootDisconnect(); else local.Disconnect();
+    QVERIFY(handle.isOpen());
+    if (root) local.RootDisconnect(); else local.Disconnect();
+    QVERIFY(!handle.isOpen());
 }
 
 void OrmTests::errorHandling()

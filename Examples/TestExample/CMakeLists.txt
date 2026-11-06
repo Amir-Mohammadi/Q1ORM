@@ -51,7 +51,7 @@ q1orm_deploy_mysql_runtime(TestExample)
 foreach(test_case IN ITEMS
     crud bulkCrud selects boundValues aggregates grouping joinsAndIncludes
     jsonAndRawSql changeTracking transactions constraints errorHandling sqlGeneration databaseCreation connectionLifecycle
-    threadedCrud services modelBuilder schemaScale
+    threadedCrud services modelBuilder schemaScale sqlServerConnections
 )
     add_test(NAME Q1ORM.${test_case} COMMAND TestExample ${test_case})
     set_tests_properties(Q1ORM.${test_case} PROPERTIES

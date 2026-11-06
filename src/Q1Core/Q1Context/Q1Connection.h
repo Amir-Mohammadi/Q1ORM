@@ -247,15 +247,9 @@ public:
         if(!EnsureDriverAvailable(root_database))
             return false;
 
-        if(!root_database.open())
+        if(!root_database.open() &&
+           (!IsSqlServer() || !TryOpenSqlServerWithFallbacks(root_database, default_databases[driver])))
         {
-            if (IsSqlServer() && TryOpenSqlServerWithFallbacks(root_database, default_databases[driver], true))
-            {
-                ClearError();
-                root_open_count = 1;
-                root_is_open = true;
-                return true;
-            }
             RecordError(root_database.lastError());
             qCritical() << "Q1Connection::RootConnect failed:" << error.text();
             return false;
@@ -313,15 +307,9 @@ public:
         if (!EnsureDriverAvailable(database))
             return false;
 
-        if (!database.open())
+        if (!database.open() &&
+            (!IsSqlServer() || !TryOpenSqlServerWithFallbacks(database, database_name)))
         {
-            if (IsSqlServer() && TryOpenSqlServerWithFallbacks(database, database_name, false, reportError))
-            {
-                ClearError();
-                open_count = 1;
-                is_open = true;
-                return true;
-            }
             RecordError(database.lastError());
             if (reportError)
                 qCritical() << "Q1Connection::Connect failed:" << error.text();
@@ -685,37 +673,56 @@ private: // Connection Parameters
     {
         QStringList driversToTry;
 
-        if (qEnvironmentVariableIsSet("Q1ORM_SQLSERVER_ODBC_DRIVER"))
-            driversToTry << qEnvironmentVariable("Q1ORM_SQLSERVER_ODBC_DRIVER");
+        const QString configuredDriver =
+            qEnvironmentVariable("Q1ORM_SQLSERVER_ODBC_DRIVER").trimmed();
+        if (!configuredDriver.isEmpty())
+            return {configuredDriver};
 
         driversToTry << "ODBC Driver 18 for SQL Server"
                      << "ODBC Driver 17 for SQL Server"
-                     << "ODBC Driver 13 for SQL Server"
-                     << "SQL Server Native Client 11.0";
+                     << "ODBC Driver 13 for SQL Server";
+#ifdef Q_OS_WIN
+        driversToTry << "SQL Server Native Client 11.0";
+#endif
 
         driversToTry.removeAll(QString());
         driversToTry.removeDuplicates();
         return driversToTry;
     }
 
-    bool TryOpenSqlServerWithFallbacks(QSqlDatabase &db,
-                                       const QString &target_database_name,
-                                       bool is_root,
-                                       bool reportError = true)
+    static bool IsMissingOdbcDriver(const QSqlError &sqlError)
     {
+        const QString code = sqlError.nativeErrorCode();
+        return code.contains(QStringLiteral("IM002")) ||
+               code.contains(QStringLiteral("IM003")) ||
+               sqlError.databaseText().contains(QStringLiteral("Can't open lib"),
+                                                Qt::CaseInsensitive);
+    }
+
+    bool TryOpenSqlServerWithFallbacks(QSqlDatabase &db,
+                                       const QString &target_database_name)
+    {
+        // A loaded driver's TLS, login, or database error must remain visible.
+        if (!IsMissingOdbcDriver(db.lastError()))
+            return false;
+
         const QStringList driversToTry = SqlServerOdbcDrivers();
 
         for (const QString &odbc_driver_name : driversToTry)
         {
-            db.setDatabaseName(BuildSqlServerConnectionString(target_database_name, odbc_driver_name));
+            const QString connectionString =
+                BuildSqlServerConnectionString(target_database_name, odbc_driver_name);
+            // Also avoids retrying an explicit Driver/DSN connection string.
+            if (connectionString == db.databaseName())
+                continue;
+
+            db.setDatabaseName(connectionString);
             if (db.open())
                 return true;
+            if (!IsMissingOdbcDriver(db.lastError()))
+                return false;
         }
 
-        RecordError(db.lastError());
-        if (reportError)
-            qCritical() << (is_root ? "Q1Connection::RootConnect failed:" : "Q1Connection::Connect failed:")
-                        << error.text();
         return false;
     }
 

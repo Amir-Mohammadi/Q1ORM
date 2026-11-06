@@ -28,6 +28,8 @@ private slots:
     void sqlGeneration();
     void databaseCreation();
     void connectionLifecycle();
+    void sqlServerConnections_data();
+    void sqlServerConnections();
     void threadedCrud();
     void services();
     void modelBuilder();

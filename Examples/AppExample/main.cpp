@@ -78,7 +78,7 @@ const DbConfig dbs[] = {
         Q1Driver::POSTGRE_SQL,
         "POSTGRES",
         "127.0.0.1",
-        "postgres",
+        "sa",
         "123",
         "q1prm",
         5432
@@ -91,7 +91,7 @@ const DbConfig dbs[] = {
         "root",
         "123",
         "testdb",
-        3307
+        3306
     },
 
     {
@@ -99,7 +99,7 @@ const DbConfig dbs[] = {
         "SQLSERVER",
         "127.0.0.1",
         "sa",
-        "123",
+        "P@nd1378",
         "q1orm_test",
         1433
     },
@@ -1279,6 +1279,21 @@ int main(int argc, char* argv[])
 
         try
         {
+            if (config.driver == Q1Driver::SQLSERVER)
+            {
+                const DbSettings settings = ResolveSettings(config);
+                const bool loopback =
+                    settings.host.compare(QStringLiteral("localhost"), Qt::CaseInsensitive) == 0 ||
+                    settings.host == QStringLiteral("127.0.0.1") ||
+                    settings.host == QStringLiteral("::1");
+                // Local demo servers commonly use self-signed certificates.
+                if (loopback &&
+                    !qEnvironmentVariableIsSet("Q1ORM_SQLSERVER_TRUST_SERVER_CERTIFICATE"))
+                {
+                    qputenv("Q1ORM_SQLSERVER_TRUST_SERVER_CERTIFICATE", "yes");
+                }
+            }
+
             Suite suite(config);
             ok = suite.run();
             error = suite.lastError;
