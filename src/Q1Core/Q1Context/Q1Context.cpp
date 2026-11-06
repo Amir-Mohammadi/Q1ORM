@@ -103,31 +103,31 @@ bool Q1Context::InitialDatabase()
 {
     if (!connection || !query) return false;
 
+    // SQLite creates its file on open. Server databases may need to be
+    // created through a separate connection before the target can be opened.
+    if (connection->Connect(false))
+        return true;
+
+    const QString connectionError = connection->ErrorMessage();
     if (connection->IsSqlite())
     {
-        if (!connection->Connect())
-        {
-            qCritical() << "Failed to open SQLite database" << database_name
-                        << "-" << connection->ErrorMessage();
-            return false;
-        }
-        return true;
-    }
-
-    if (connection->Connect())
-        return true;
-
-    if (!connection->RootConnect())
-    {
-        qCritical() << "Cannot connect to server:" << connection->ErrorMessage();
+        model_error = QString("Failed to open SQLite database '%1': %2")
+                          .arg(database_name, connectionError);
         return false;
     }
 
-    QStringList databases = query->GetDatabases();
+    if (!connection->RootConnect())
+    {
+        model_error = QString("Cannot open database '%1': %2. Cannot connect to the server to create it: %3")
+                          .arg(database_name, connectionError, connection->ErrorMessage());
+        return false;
+    }
+
+    const auto disconnectRoot = qScopeGuard([this] { connection->RootDisconnect(); });
+    const QStringList databases = query->GetDatabases();
     const QString discoveryError = query->ErrorMessage();
     if (!discoveryError.isEmpty())
     {
-        connection->RootDisconnect();
         model_error = QString("Cannot check whether database '%1' exists: %2")
                           .arg(database_name, discoveryError);
         return false;
@@ -139,10 +139,14 @@ bool Q1Context::InitialDatabase()
 
         if (!query->AddDatabase(database_name))
         {
-            connection->RootDisconnect();
             const QString error = query->ErrorMessage().isEmpty()
                                       ? connection->ErrorMessage()
                                       : query->ErrorMessage();
+
+            // Another initializer may have created it after the catalog check.
+            if (connection->Connect(false))
+                return true;
+
             model_error = QString("Failed to create database '%1': %2")
                               .arg(database_name, error);
             return false;
@@ -152,15 +156,15 @@ bool Q1Context::InitialDatabase()
     }
     else
     {
-        qDebug() << "InitialDatabase - database already exists:" << database_name;
+        model_error = QString("Database '%1' already exists but could not be opened: %2")
+                          .arg(database_name, connectionError);
+        return false;
     }
-
-    connection->RootDisconnect();
 
     if (!connection->Connect())
     {
-        qCritical() << "Failed to connect to database" << database_name
-                    << "-" << connection->ErrorMessage();
+        model_error = QString("Database '%1' was created but could not be opened: %2")
+                          .arg(database_name, connection->ErrorMessage());
         return false;
     }
 

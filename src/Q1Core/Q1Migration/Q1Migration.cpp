@@ -3,6 +3,7 @@
 #include <QSqlIndex>
 #include <QDebug>
 #include <QRegularExpression>
+#include <QScopeGuard>
 
 Q1Migration::Q1Migration(Q1Connection &connection)
     : connection(connection)
@@ -19,6 +20,7 @@ Q1Migration::Q1Migration(Q1Connection &connection)
 
 QStringList Q1Migration::GetDatabases()
 {
+    m_lastError.clear();
     QStringList databases;
 
     if (connection.IsSqlite())
@@ -33,6 +35,7 @@ QStringList Q1Migration::GetDatabases()
         return databases;
     }
 
+    const auto disconnectRoot = qScopeGuard([this] { connection.RootDisconnect(); });
     QString query = translator.GetDatabasesSQL();
     QSqlQuery sql(connection.root_database);
 
@@ -47,7 +50,6 @@ QStringList Q1Migration::GetDatabases()
             databases.append(sql.value(0).toString());
     }
 
-    connection.RootDisconnect();
     return databases;
 }
 
@@ -61,9 +63,9 @@ QStringList Q1Migration::GetTables()
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return tables;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     tables = connection.database.tables();
-    connection.Disconnect();
 
     return tables;
 }
@@ -78,6 +80,7 @@ QList<Q1Column> Q1Migration::GetColumns(QString table_name)
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return columns;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     const QSqlIndex primary = connection.database.primaryIndex(table_name);
     QString query = translator.GetColumnsSQL(table_name);
@@ -100,8 +103,8 @@ QList<Q1Column> Q1Migration::GetColumns(QString table_name)
             column.nullable = !column.primary_key && (sql.value("is_nullable").toString() == "YES");
             const QVariant identityValue = sql.value("is_identity");
             const QString identityText = identityValue.toString();
-            const bool isIdentity = identityValue.toBool() ||
-                                    identityValue.toInt() != 0 ||
+            // PostgreSQL reports YES/NO; QVariant::toBool() treats "NO" as true.
+            const bool isIdentity = identityValue.toInt() != 0 ||
                                     identityText.compare("YES", Qt::CaseInsensitive) == 0 ||
                                     identityText.compare("true", Qt::CaseInsensitive) == 0;
             column.is_identity = isIdentity;
@@ -113,12 +116,12 @@ QList<Q1Column> Q1Migration::GetColumns(QString table_name)
         }
     }
 
-    connection.Disconnect();
     return columns;
 }
 
 bool Q1Migration::AddDatabase(QString database_name)
 {
+    m_lastError.clear();
     if (connection.IsSqlite())
     {
         Q_UNUSED(database_name);
@@ -131,6 +134,7 @@ bool Q1Migration::AddDatabase(QString database_name)
         return false;
     }
 
+    const auto disconnectRoot = qScopeGuard([this] { connection.RootDisconnect(); });
     QString query = translator.AddDatabaseSQL(database_name);
     QSqlQuery sql(connection.root_database);
 
@@ -141,7 +145,6 @@ bool Q1Migration::AddDatabase(QString database_name)
         qWarning() << "AddDatabase failed:" << m_lastError;
     }
 
-    connection.RootDisconnect();
     return success;
 }
 
@@ -152,6 +155,7 @@ bool Q1Migration::CreateTableWithColumns(Q1Table& q1table)
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return false;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     QSqlDatabase &db = connection.database;
 
@@ -159,7 +163,6 @@ bool Q1Migration::CreateTableWithColumns(Q1Table& q1table)
     {
         m_lastError = "Failed to start transaction: " + db.lastError().text();
         qWarning() << m_lastError;
-        connection.Disconnect();
         return false;
     }
 
@@ -175,7 +178,6 @@ bool Q1Migration::CreateTableWithColumns(Q1Table& q1table)
         m_lastError = sql.lastError().text();
         qWarning() << "CreateTableWithColumns failed:" << m_lastError;
         connection.RollbackTransaction();
-        connection.Disconnect();
         return false;
     }
 
@@ -184,12 +186,10 @@ bool Q1Migration::CreateTableWithColumns(Q1Table& q1table)
         m_lastError = "Failed to commit: " + db.lastError().text();
         qWarning() << m_lastError;
         connection.RollbackTransaction();
-        connection.Disconnect();
         return false;
     }
 
     qDebug() << "CreateTableWithColumns - table created successfully:" << q1table.GetName();
-    connection.Disconnect();
     return true;
 }
 
@@ -200,6 +200,7 @@ bool Q1Migration::AddTable(Q1Table q1table)
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return false;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     QString query = translator.AddTableSQL(q1table);
     QSqlQuery sql(connection.database);
@@ -211,7 +212,6 @@ bool Q1Migration::AddTable(Q1Table q1table)
         qWarning() << "AddTable failed:" << m_lastError;
     }
 
-    connection.Disconnect();
     return success;
 }
 
@@ -222,13 +222,13 @@ bool Q1Migration::AddColumn(QString table_name, Q1Column &column)
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return false;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     QSqlDatabase &db = connection.database;
 
     if (!connection.BeginTransaction())
     {
         m_lastError = "Failed to start transaction: " + db.lastError().text();
-        connection.Disconnect();
         return false;
     }
 
@@ -244,7 +244,6 @@ bool Q1Migration::AddColumn(QString table_name, Q1Column &column)
         m_lastError = sql.lastError().text();
         qWarning() << "AddColumn failed:" << m_lastError;
         connection.RollbackTransaction();
-        connection.Disconnect();
         return false;
     }
 
@@ -252,11 +251,9 @@ bool Q1Migration::AddColumn(QString table_name, Q1Column &column)
     {
         m_lastError = "Failed to commit: " + db.lastError().text();
         connection.RollbackTransaction();
-        connection.Disconnect();
         return false;
     }
 
-    connection.Disconnect();
     return true;
 }
 
@@ -268,14 +265,12 @@ bool Q1Migration::AddRelation(const Q1Relation &relation)
         return false;
     }
 
-    if (!connection.database.isOpen())
+    if (!connection.Connect())
     {
-        if (!connection.Connect())
-        {
-            m_lastError = connection.ErrorMessage();
-            return false;
-        }
+        m_lastError = connection.ErrorMessage();
+        return false;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     QStringList existingTables = connection.database.tables();
     QList<QString> lowerTables;
@@ -365,6 +360,7 @@ bool Q1Migration::DropTable(QString table_name)
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return false;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     QString query = translator.DropTableSQL(table_name);
     QSqlQuery sql(connection.database);
@@ -376,7 +372,6 @@ bool Q1Migration::DropTable(QString table_name)
         qWarning() << "DropTable failed:" << m_lastError;
     }
 
-    connection.Disconnect();
     return success;
 }
 
@@ -387,6 +382,7 @@ bool Q1Migration::DropColumn(QString table_name, QString column_name)
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return false;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     QString query = translator.DropColumnSQL(table_name, column_name);
     QSqlQuery sql(connection.database);
@@ -398,7 +394,6 @@ bool Q1Migration::DropColumn(QString table_name, QString column_name)
         qWarning() << "DropColumn failed:" << m_lastError;
     }
 
-    connection.Disconnect();
     return success;
 }
 
@@ -409,12 +404,12 @@ bool Q1Migration::DropColumnNullable(QString table_name, QString column_name)
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return false;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     QString query = translator.DropColumnNullableSQL(table_name, column_name);
     if (query.isEmpty())
     {
         m_lastError = "This column alteration is unsupported by the selected database driver.";
-        connection.Disconnect();
         return false;
     }
 
@@ -427,7 +422,6 @@ bool Q1Migration::DropColumnNullable(QString table_name, QString column_name)
         qWarning() << "DropColumnNullable failed:" << m_lastError;
     }
 
-    connection.Disconnect();
     return success;
 }
 
@@ -438,12 +432,12 @@ bool Q1Migration::DropColumnDefault(QString table_name, QString column_name)
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return false;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     QString query = translator.DropColumnDefaultSQL(table_name, column_name);
     if (query.isEmpty())
     {
         m_lastError = "This column alteration is unsupported by the selected database driver.";
-        connection.Disconnect();
         return false;
     }
 
@@ -456,7 +450,6 @@ bool Q1Migration::DropColumnDefault(QString table_name, QString column_name)
         qWarning() << "DropColumnDefault failed:" << m_lastError;
     }
 
-    connection.Disconnect();
     return success;
 }
 
@@ -467,12 +460,12 @@ bool Q1Migration::SetColumnNullable(QString table_name, QString column_name)
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return false;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     QString query = translator.SetColumnNullableSQL(table_name, column_name);
     if (query.isEmpty())
     {
         m_lastError = "This column alteration is unsupported by the selected database driver.";
-        connection.Disconnect();
         return false;
     }
 
@@ -485,7 +478,6 @@ bool Q1Migration::SetColumnNullable(QString table_name, QString column_name)
         qWarning() << "SetColumnNullable failed:" << m_lastError;
     }
 
-    connection.Disconnect();
     return success;
 }
 
@@ -496,12 +488,12 @@ bool Q1Migration::setColumnDefault(QString table_name, QString column_name, QStr
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return false;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     QString query = translator.SetColumnDefaultSQL(table_name, column_name, default_value);
     if (query.isEmpty())
     {
         m_lastError = "This column alteration is unsupported by the selected database driver.";
-        connection.Disconnect();
         return false;
     }
 
@@ -514,7 +506,6 @@ bool Q1Migration::setColumnDefault(QString table_name, QString column_name, QStr
         qWarning() << "setColumnDefault failed:" << m_lastError;
     }
 
-    connection.Disconnect();
     return success;
 }
 
@@ -525,11 +516,11 @@ bool Q1Migration::UpdateColumnSize(QString table_name, QString column_name, int 
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return false;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     QString query = translator.UpdateColumnSizeSQL(table_name, column_name, size);
     if (query.isEmpty())
     {
-        connection.Disconnect();
         return true;
     }
 
@@ -542,7 +533,6 @@ bool Q1Migration::UpdateColumnSize(QString table_name, QString column_name, int 
         qWarning() << "UpdateColumnSize failed:" << m_lastError;
     }
 
-    connection.Disconnect();
     return success;
 }
 
@@ -554,6 +544,7 @@ bool Q1Migration::HasNullData(QString table_name, QString column_name)
         m_lastError = "Cannot connect: " + connection.ErrorMessage();
         return false;
     }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
 
     QString query = translator.HasNullDataSQL(table_name, column_name);
     QSqlQuery sql(connection.database);
@@ -568,7 +559,6 @@ bool Q1Migration::HasNullData(QString table_name, QString column_name)
         m_lastError = sql.lastError().text();
     }
 
-    connection.Disconnect();
     return hasNull;
 }
 
@@ -599,6 +589,7 @@ bool Q1Migration::EnsureIndexes(const Q1Table& table)
 {
     m_lastError.clear();
     if (!connection.Connect()) { m_lastError = connection.ErrorMessage(); return false; }
+    const auto disconnect = qScopeGuard([this] { connection.Disconnect(); });
     bool success = true;
     for (const Q1Table::Index& index : table.GetIndexes()) {
         QStringList columns;
@@ -634,7 +625,6 @@ bool Q1Migration::EnsureIndexes(const Q1Table& table)
         QSqlQuery create(connection.database);
         if (!create.exec(sql)) { m_lastError = create.lastError().text(); success = false; break; }
     }
-    connection.Disconnect();
     return success;
 }
 

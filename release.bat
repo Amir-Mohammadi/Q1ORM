@@ -9,7 +9,10 @@ rem ---- Project paths (auto-derived from this script's location) ----
 set "PROJECT=%~dp0"
 if "%PROJECT:~-1%"=="\" set "PROJECT=%PROJECT:~0,-1%"
 set "BUILD=%PROJECT%\build"
+if defined Q1ORM_BUILD_DIR set "BUILD=%Q1ORM_BUILD_DIR%"
 set "RELEASE=%PROJECT%\Releases\Release-0.1"
+if defined Q1ORM_RELEASE_DIR set "RELEASE=%Q1ORM_RELEASE_DIR%"
+if not defined Q1ORM_RELEASE_SQL_DRIVERS set "Q1ORM_RELEASE_SQL_DRIVERS=QMYSQL;QSQLITE"
 
 rem ---- Auto-detect Qt (QTDIR env -> newest C:\Qt\<ver>\msvc2022_64 -> qmake on PATH) ----
 set "QT="
@@ -24,10 +27,6 @@ if not defined QT (
     if not errorlevel 1 for /f "delims=" %%p in ('qmake -query QT_INSTALL_PREFIX') do set "QT=%%p"
 )
 if not defined QT echo WARNING: Qt not found. Set QTDIR or run from a Qt-enabled prompt.
-set "QT_BIN="
-if defined QT set "QT_BIN=%QT%\bin"
-set "WINDEPLOYQT="
-if defined QT_BIN if exist "%QT_BIN%\windeployqt.exe" set "WINDEPLOYQT=%QT_BIN%\windeployqt.exe"
 
 rem ---- Auto-detect MSVC (validated: vcvars must expose MSVC toolset headers) ----
 set "VCVARS="
@@ -67,14 +66,14 @@ echo.
 echo.
 echo [1/6] Configuring project...
 if defined QT (
-    cmake -S "%PROJECT%" -B "%BUILD%" -DQ1ORM_BUILD_TOOLS=ON -DCMAKE_PREFIX_PATH="%QT%"
+    cmake -S "%PROJECT%" -B "%BUILD%" -DQ1ORM_BUILD_TOOLS=ON -DCMAKE_PREFIX_PATH="%QT%" -DQ1ORM_RELEASE_DIR="%RELEASE%" -DQ1ORM_RELEASE_SQL_DRIVERS="%Q1ORM_RELEASE_SQL_DRIVERS%"
 ) else (
-    cmake -S "%PROJECT%" -B "%BUILD%" -DQ1ORM_BUILD_TOOLS=ON
+    cmake -S "%PROJECT%" -B "%BUILD%" -DQ1ORM_BUILD_TOOLS=ON -DQ1ORM_RELEASE_DIR="%RELEASE%" -DQ1ORM_RELEASE_SQL_DRIVERS="%Q1ORM_RELEASE_SQL_DRIVERS%"
 )
 
 if errorlevel 1 (
     echo CONFIGURE FAILED!
-    pause
+    if not defined Q1ORM_NO_PAUSE pause
     exit /b 1
 )
 
@@ -84,7 +83,7 @@ cmake --build "%BUILD%" --target Src --config Release
 
 if errorlevel 1 (
     echo LIBRARY BUILD FAILED!
-    pause
+    if not defined Q1ORM_NO_PAUSE pause
     exit /b 1
 )
 
@@ -94,7 +93,7 @@ cmake --build "%BUILD%" --target ExampleProjectModifier --config Release
 
 if errorlevel 1 (
     echo EXAMPLE PROJECT MODIFIER BUILD FAILED!
-    pause
+    if not defined Q1ORM_NO_PAUSE pause
     exit /b 1
 )
 
@@ -104,7 +103,7 @@ cmake --build "%BUILD%" --config Release
 
 if errorlevel 1 (
     echo EXAMPLES BUILD FAILED!
-    pause
+    if not defined Q1ORM_NO_PAUSE pause
     exit /b 1
 )
 
@@ -132,7 +131,7 @@ if defined QT_DEBUG_BUILD (
         cmake --build "%QT_DEBUG_BUILD%"
         if errorlevel 1 (
             echo QT DEBUG BUILD FAILED!
-            pause
+            if not defined Q1ORM_NO_PAUSE pause
             exit /b 1
         )
     ) else (
@@ -148,7 +147,7 @@ if defined QT_RELEASE_BUILD (
         cmake --build "%QT_RELEASE_BUILD%"
         if errorlevel 1 (
             echo QT RELEASE BUILD FAILED!
-            pause
+            if not defined Q1ORM_NO_PAUSE pause
             exit /b 1
         )
     ) else (
@@ -164,7 +163,7 @@ cmake --install "%BUILD%" --config Release --prefix "%RELEASE%"
 
 if errorlevel 1 (
     echo INSTALL FAILED!
-    pause
+    if not defined Q1ORM_NO_PAUSE pause
     exit /b 1
 )
 
@@ -173,25 +172,17 @@ echo Verifying release...
 
 if not exist "%RELEASE%" (
     echo RELEASE DIRECTORY NOT FOUND!
-    pause
+    if not defined Q1ORM_NO_PAUSE pause
     exit /b 1
 )
 
 echo.
-echo Deploying Qt runtime...
-if defined WINDEPLOYQT (
-    if exist "%BUILD%\bin\Release\TestExample.exe" (
-        "%WINDEPLOYQT%" --no-translations --no-opengl-sw --force "%BUILD%\bin\Release\TestExample.exe"
-        if errorlevel 1 (
-            echo QT RUNTIME DEPLOY FAILED!
-            pause
-            exit /b 1
-        )
-    ) else (
-        echo WARNING: TestExample.exe not found in build bin. Skipping Qt runtime deploy.
-    )
-) else (
-    echo WARNING: windeployqt.exe not found. Skipping Qt runtime deploy.
+echo Packaging Qt SQL plugins and native client dependencies into the release...
+cmake --build "%BUILD%" --target Q1ORMReleaseRuntime --config Release
+if errorlevel 1 (
+    echo RELEASE RUNTIME PACKAGING FAILED! See the missing dependency or loader error above.
+    if not defined Q1ORM_NO_PAUSE pause
+    exit /b 1
 )
 
 echo.
@@ -210,4 +201,4 @@ if exist "%RELEASE%\bin" (
 )
 
 echo.
-pause
+if not defined Q1ORM_NO_PAUSE pause

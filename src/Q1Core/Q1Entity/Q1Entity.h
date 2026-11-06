@@ -20,6 +20,7 @@
 #include <QDateTime>
 #include <QSqlRecord>
 #include <QSqlQuery>
+#include <QScopeGuard>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -433,6 +434,7 @@ public:
             last_error = "Database connection failed";
             return false;
         }
+        const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
 
         QStringList set_clauses;
         QList<QVariant> values;
@@ -454,7 +456,6 @@ public:
         if (!sql_query.prepare(query))
         {
             last_error = sql_query.lastError().text();
-            connection->Disconnect();
             return false;
         }
 
@@ -466,11 +467,9 @@ public:
         {
             last_error = sql_query.lastError().text();
             qDebug() << "UpdateChangedById failed:" << last_error;
-            connection->Disconnect();
             return false;
         }
 
-        connection->Disconnect();
         TrackEntity(entity);
         return true;
     }
@@ -548,6 +547,7 @@ public:
             qDebug() << "Cannot connect to database";
             return false;
         }
+        const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
 
         QString query = QString(
                             UsesSqlServer()
@@ -581,7 +581,6 @@ public:
         if (!sql_query.exec(query))
         {
             qDebug() << "Schema check failed:" << sql_query.lastError().text();
-            connection->Disconnect();
             return false;
         }
 
@@ -600,7 +599,6 @@ public:
         }
         qDebug() << "================================";
 
-        connection->Disconnect();
         return true;
     }
 
@@ -615,6 +613,7 @@ public:
             last_error = "Database connection failed";
             return false;
         }
+        const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
 
         QStringList columns;
         QStringList placeholders;
@@ -660,7 +659,6 @@ public:
         if (columns.isEmpty())
         {
             last_error = "No columns to insert";
-            connection->Disconnect();
             return false;
         }
 
@@ -710,7 +708,6 @@ public:
         {
             last_error = sql_query.lastError().text();
             qDebug() << "Query preparation failed:" << last_error;
-            connection->Disconnect();
             return false;
         }
 
@@ -795,7 +792,6 @@ public:
             last_error = sql_query.lastError().text();
             qDebug() << "❌ Insert FAILED:" << last_error;
             qDebug() << "Query was:" << queryStr;
-            connection->Disconnect();
             return false;
         }
 
@@ -864,7 +860,6 @@ public:
                                       QStringLiteral("1 row"));
         qDebug() << "✓ Insert successful!";
         qDebug() << "========================\n";
-        connection->Disconnect();
         TrackEntity(entity);
         return true;
     }
@@ -880,6 +875,7 @@ public:
             last_error = "Database connection failed";
             return false;
         }
+        const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
 
         QStringList columns;
         QStringList placeholders;
@@ -903,7 +899,6 @@ public:
         if (columns.isEmpty())
         {
             last_error = "No columns to insert";
-            connection->Disconnect();
             return false;
         }
 
@@ -924,7 +919,6 @@ public:
             last_error = query.lastError().text().isEmpty()
                              ? connection->database.lastError().text()
                              : query.lastError().text();
-            connection->Disconnect();
             return false;
         }
 
@@ -945,7 +939,6 @@ public:
             {
                 last_error = query.lastError().text();
                 connection->database.rollback();
-                connection->Disconnect();
                 return false;
             }
 
@@ -972,14 +965,12 @@ public:
         {
             last_error = connection->database.lastError().text();
             connection->database.rollback();
-            connection->Disconnect();
             return false;
         }
 
         qInfo().noquote() << QStringLiteral("[CRUD] INSERT %1 -> %2 row(s)")
                                  .arg(table.table_name)
                                  .arg(entities.size());
-        connection->Disconnect();
         return true;
     }
 
@@ -993,6 +984,7 @@ public:
             last_error = "Database connection failed";
             return false;
         }
+        const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
 
         QStringList set_clauses;
         QList<QVariant> values;
@@ -1067,7 +1059,6 @@ public:
         {
             last_error = "No columns to update";
             qDebug() << "❌ Update FAILED: No columns to update";
-            connection->Disconnect();
             return false;
         }
 
@@ -1075,7 +1066,6 @@ public:
         {
             last_error = "UPDATE without WHERE clause is dangerous and not allowed";
             qDebug() << "❌ Update FAILED: WHERE clause is required";
-            connection->Disconnect();
             return false;
         }
 
@@ -1090,7 +1080,6 @@ public:
         {
             last_error = sql_query.lastError().text();
             qDebug() << "❌ Query preparation failed:" << last_error;
-            connection->Disconnect();
             return false;
         }
 
@@ -1108,7 +1097,6 @@ public:
             last_error = sql_query.lastError().text();
             qDebug() << "❌ Update FAILED:" << last_error;
             qDebug() << "Query was:" << query;
-            connection->Disconnect();
             return false;
         }
 
@@ -1127,7 +1115,6 @@ public:
         }
 
         qDebug() << "========================\n";
-        connection->Disconnect();
         return true;
     }
 
@@ -1195,6 +1182,7 @@ public:
             last_error = "Database connection failed";
             return false;
         }
+        const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
 
         const QString sql = QString("UPDATE %1 SET %2 WHERE %3 = ?")
                                 .arg(QuoteIdentifier(table.table_name),
@@ -1206,7 +1194,6 @@ public:
             last_error = query.lastError().text().isEmpty()
                              ? connection->database.lastError().text()
                              : query.lastError().text();
-            connection->Disconnect();
             return false;
         }
 
@@ -1217,7 +1204,6 @@ public:
             {
                 last_error = query.lastError().text();
                 connection->database.rollback();
-                connection->Disconnect();
                 return false;
             }
 
@@ -1230,7 +1216,6 @@ public:
             {
                 last_error = query.lastError().text();
                 connection->database.rollback();
-                connection->Disconnect();
                 return false;
             }
         }
@@ -1239,14 +1224,12 @@ public:
         {
             last_error = connection->database.lastError().text();
             connection->database.rollback();
-            connection->Disconnect();
             return false;
         }
 
         qInfo().noquote() << QStringLiteral("[CRUD] UPDATE %1 -> %2 row(s)")
                                  .arg(table.table_name)
                                  .arg(entities.size());
-        connection->Disconnect();
         return true;
     }
 
@@ -1262,6 +1245,7 @@ public:
             last_error = "Database connection failed";
             return false;
         }
+        const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
 
         qDebug() << "\n=== DELETE DEBUG INFO ===";
         qDebug() << "Table:" << table.table_name;
@@ -1271,7 +1255,6 @@ public:
         {
             last_error = "DELETE without WHERE clause is dangerous and not allowed";
             qDebug() << "❌ Delete FAILED: WHERE clause is required for safety";
-            connection->Disconnect();
             return false;
         }
 
@@ -1289,7 +1272,6 @@ public:
             last_error = sql_query.lastError().text();
             qDebug() << "❌ Delete FAILED:" << last_error;
             qDebug() << "Query was:" << query;
-            connection->Disconnect();
             return false;
         }
 
@@ -1306,7 +1288,6 @@ public:
         }
 
         qDebug() << "========================\n";
-        connection->Disconnect();
         return true;
     }
 
@@ -1360,6 +1341,7 @@ public:
             last_error = "Database connection failed";
             return false;
         }
+        const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
 
         const QString sql = QString("DELETE FROM %1 WHERE %2 = ?")
                                 .arg(QuoteIdentifier(table.table_name),
@@ -1370,7 +1352,6 @@ public:
             last_error = query.lastError().text().isEmpty()
                              ? connection->database.lastError().text()
                              : query.lastError().text();
-            connection->Disconnect();
             return false;
         }
 
@@ -1381,7 +1362,6 @@ public:
             {
                 last_error = query.lastError().text();
                 connection->database.rollback();
-                connection->Disconnect();
                 return false;
             }
             query.addBindValue(ReadPropertyValue(entity, pkName));
@@ -1389,7 +1369,6 @@ public:
             {
                 last_error = query.lastError().text();
                 connection->database.rollback();
-                connection->Disconnect();
                 return false;
             }
         }
@@ -1398,11 +1377,9 @@ public:
         {
             last_error = connection->database.lastError().text();
             connection->database.rollback();
-            connection->Disconnect();
             return false;
         }
 
-        connection->Disconnect();
         return true;
     }
 
@@ -1445,6 +1422,7 @@ public:
             last_error = "Database connection failed";
             return results;
         }
+        const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
 
         // Build SQL query
         QString query;
@@ -1517,7 +1495,6 @@ public:
             if (!sql_query.prepare(query))
             {
                 last_error = sql_query.lastError().text();
-                connection->Disconnect();
                 return results;
             }
             for (auto it = parameters.cbegin(); it != parameters.cend(); ++it)
@@ -1526,14 +1503,12 @@ public:
             {
                 last_error = sql_query.lastError().text();
                 qDebug() << "Select failed:" << last_error;
-                connection->Disconnect();
                 return results;
             }
         }
         else if (!sql_query.exec(query)) {
             last_error = sql_query.lastError().text();
             qDebug() << "Select failed:" << last_error;
-            connection->Disconnect();
             return results;
         }
 
@@ -1589,7 +1564,6 @@ public:
             results.append(entity);
         }
 
-        connection->Disconnect();
         return results;
     }
 
@@ -1698,6 +1672,7 @@ public:
             last_error = "Database connection failed";
             return QVariant();
         }
+        const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
 
         QSqlQuery query(connection->database);
         bool success = false;
@@ -1711,7 +1686,6 @@ public:
         {
             last_error = query.lastError().text();
             qDebug() << "ExecuteScalar failed: " << last_error;
-            connection->Disconnect();
             return QVariant();
         }
 
@@ -1722,7 +1696,6 @@ public:
         }
 
 
-        connection->Disconnect();
         return result;
     }
 
@@ -1736,6 +1709,7 @@ public:
             last_error = "Database connection failed";
             return results;
         }
+        const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
 
         qDebug() << "Executing relation query:" << query;
 
@@ -1755,7 +1729,6 @@ public:
         if (!success) {
             last_error = sql_query.lastError().text();
             qDebug() << "Relation query failed:" << last_error;
-            connection->Disconnect();
             return results;
         }
 
@@ -1796,7 +1769,6 @@ public:
             results.append(obj);
         }
 
-        connection->Disconnect();
         return results;
     }
 
@@ -1808,6 +1780,7 @@ public:
             last_error = "Database connection failed";
             return results;
         }
+        const auto disconnect = qScopeGuard([this] { connection->Disconnect(); });
 
         qDebug() << "Executing query:" << query;
 
@@ -1815,7 +1788,6 @@ public:
         if (!sql_query.exec(query)) {
             last_error = sql_query.lastError().text();
             qDebug() << "Query failed:" << last_error;
-            connection->Disconnect();
             return results;
         }
 
@@ -1853,7 +1825,6 @@ public:
             break;
         }
 
-        connection->Disconnect();
         return results;
     }
 

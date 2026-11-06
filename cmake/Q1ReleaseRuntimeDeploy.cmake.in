@@ -1,0 +1,124 @@
+cmake_minimum_required(VERSION 3.16)
+
+set(destination "@Q1ORM_RELEASE_DIR@")
+set(drivers "@Q1ORM_RELEASE_SQL_DRIVERS@")
+set(probe "$<TARGET_FILE:Q1SqlDriverCheck>")
+set(q1orm "$<TARGET_FILE:Src>")
+set(qt_plugins "@q1orm_qt_plugins@")
+set(qt_bin "@q1orm_qt_bin@")
+set(search_dirs "$<TARGET_FILE_DIR:Q1SqlDriverCheck>" "$<TARGET_FILE_DIR:Qt6::Core>" "${qt_bin}")
+if(NOT drivers)
+    message(FATAL_ERROR "Q1ORM_RELEASE_SQL_DRIVERS must contain at least one driver.")
+endif()
+if(NOT "$<CONFIG>" STREQUAL "Release")
+    message(FATAL_ERROR "Build Q1ORMReleaseRuntime with --config Release (or CMAKE_BUILD_TYPE=Release).")
+endif()
+
+file(MAKE_DIRECTORY "${destination}/bin/sqldrivers" "${destination}/lib")
+file(COPY "${probe}" DESTINATION "${destination}/bin")
+if(WIN32)
+    file(COPY "${q1orm}" DESTINATION "${destination}/bin")
+    find_program(windeployqt NAMES windeployqt HINTS "${qt_bin}" NO_DEFAULT_PATH)
+    if(NOT windeployqt)
+        message(FATAL_ERROR "windeployqt is missing from ${qt_bin}")
+    endif()
+    execute_process(COMMAND "${windeployqt}" --release --no-translations
+        --no-opengl-sw --no-plugins --force --dir "${destination}/bin" "${probe}"
+        RESULT_VARIABLE status)
+    if(NOT status EQUAL 0)
+        message(FATAL_ERROR "windeployqt failed to deploy Qt into ${destination}/bin")
+    endif()
+    find_program(CMAKE_GET_RUNTIME_DEPENDENCIES_COMMAND NAMES dumpbin
+        HINTS "@q1orm_compiler_bin@")
+    if(NOT CMAKE_GET_RUNTIME_DEPENDENCIES_COMMAND)
+        message(FATAL_ERROR "dumpbin is missing; run from the MSVC developer command prompt.")
+    endif()
+    set(CMAKE_GET_RUNTIME_DEPENDENCIES_TOOL dumpbin)
+    # Also discover PostgreSQL clients when explicitly requested for the release.
+    file(GLOB postgres_dirs "$ENV{ProgramW6432}/PostgreSQL/*/bin" "$ENV{ProgramFiles}/PostgreSQL/*/bin")
+    list(APPEND search_dirs ${postgres_dirs})
+else()
+    file(COPY "${q1orm}" DESTINATION "${destination}/lib" FOLLOW_SYMLINK_CHAIN)
+endif()
+
+set(plugins)
+foreach(driver IN LISTS drivers)
+    if(driver STREQUAL "QMYSQL")
+        set(stem qsqlmysql)
+    elseif(driver STREQUAL "QSQLITE")
+        set(stem qsqlite)
+    elseif(driver STREQUAL "QPSQL")
+        set(stem qsqlpsql)
+    elseif(driver STREQUAL "QODBC")
+        set(stem qsqlodbc)
+    else()
+        message(FATAL_ERROR "Unsupported release SQL driver: ${driver}")
+    endif()
+    if(WIN32)
+        set(plugin "${qt_plugins}/sqldrivers/${stem}.dll")
+    else()
+        set(plugin "${qt_plugins}/sqldrivers/lib${stem}.so")
+    endif()
+    if(NOT EXISTS "${plugin}")
+        message(FATAL_ERROR
+            "${driver} plugin is missing: ${plugin}\n"
+            "Install/build the SQL plugin matching this Qt installation. "
+            "On Ubuntu, install libqt6sql6-mysql for QMYSQL and libqt6sql6-sqlite for QSQLITE.")
+    endif()
+    file(COPY "${plugin}" DESTINATION "${destination}/bin/sqldrivers")
+    list(APPEND plugins "${plugin}")
+endforeach()
+
+# Resolve transitive native dependencies, including the MySQL client's OpenSSL.
+# System libraries belong to the target OS and must not be copied into the bundle.
+file(GET_RUNTIME_DEPENDENCIES
+    EXECUTABLES "${probe}"
+    LIBRARIES "${q1orm}"
+    MODULES ${plugins}
+    DIRECTORIES "${destination}/bin" ${search_dirs}
+    RESOLVED_DEPENDENCIES_VAR resolved
+    UNRESOLVED_DEPENDENCIES_VAR unresolved
+    PRE_EXCLUDE_REGEXES "[Aa][Pp][Ii]-[Mm][Ss]-.*" "[Ee][Xx][Tt]-[Mm][Ss]-.*"
+    POST_EXCLUDE_REGEXES ".*[/\\][Ss][Yy][Ss][Tt][Ee][Mm]32[/\\].*"
+        "^.*/ld-linux[^/]*\\.so.*" "^.*/lib(c|m|pthread|dl|rt|resolv|util)\\.so.*")
+if(unresolved)
+    message(FATAL_ERROR
+        "Release runtime dependencies are missing: ${unresolved}\n"
+        "For MySQL on Windows, install/extract the matching MySQL client and set "
+        "Q1ORM_MYSQL_RUNTIME_DIR to the directory containing libmysql.dll, then rebuild. "
+        "On Ubuntu, install the matching Qt SQL plugin and its native client package.")
+endif()
+if(WIN32)
+    set(library_dir "${destination}/bin")
+else()
+    set(library_dir "${destination}/lib")
+endif()
+foreach(dependency IN LISTS resolved)
+    file(COPY "${dependency}" DESTINATION "${library_dir}" FOLLOW_SYMLINK_CHAIN)
+endforeach()
+file(WRITE "${destination}/bin/qt.conf" "[Paths]\nPrefix=.\nPlugins=.\nLibraries=../lib\n")
+
+# Restrict the check to packaged plugins and libraries, without opening a server.
+get_filename_component(probe_name "${probe}" NAME)
+if(WIN32)
+    set(runtime_env "PATH=$ENV{SystemRoot}/System32;$ENV{SystemRoot}")
+else()
+    set(runtime_env "LD_LIBRARY_PATH=${library_dir}")
+    file(WRITE "${destination}/bin/q1orm-run"
+        "#!/usr/bin/env bash\nset -euo pipefail\n"
+        "runtime_bin=\"$(cd -- \"$(dirname -- \"\${BASH_SOURCE[0]}\")\" && pwd)\"\n"
+        "export LD_LIBRARY_PATH=\"$runtime_bin/../lib\${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\n"
+        "exec \"$@\"\n")
+    execute_process(COMMAND chmod +x "${destination}/bin/q1orm-run" RESULT_VARIABLE status)
+    if(NOT status EQUAL 0)
+        message(FATAL_ERROR "Cannot make ${destination}/bin/q1orm-run executable.")
+    endif()
+endif()
+execute_process(COMMAND "${CMAKE_COMMAND}" -E env "${runtime_env}"
+    "QT_PLUGIN_PATH=" "QT_QPA_PLATFORM_PLUGIN_PATH="
+    "${destination}/bin/${probe_name}" ${drivers}
+    RESULT_VARIABLE status)
+if(NOT status EQUAL 0)
+    message(FATAL_ERROR "Packaged SQL driver check failed. Release is incomplete; fix the loader errors above.")
+endif()
+message(STATUS "Release SQL runtime verified: ${drivers}")

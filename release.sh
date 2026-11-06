@@ -9,10 +9,10 @@ die() {
 PROJECT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 # Separate directory to avoid changing your existing build tree.
-BUILD="$PROJECT/build-ubuntu"
-RELEASE="$PROJECT/Releases/Release-0.1"
+BUILD="${Q1ORM_BUILD_DIR:-$PROJECT/build-ubuntu}"
+RELEASE="${Q1ORM_RELEASE_DIR:-$PROJECT/Releases/Release-0.1}"
 
-JOBS="$(nproc)"
+JOBS="${CMAKE_BUILD_PARALLEL_LEVEL:-$(nproc)}"
 QT="${QTDIR:-}"
 
 command -v cmake >/dev/null 2>&1 || die "CMake is not installed."
@@ -29,6 +29,8 @@ cmake_args=(
     -B "$BUILD"
     -DCMAKE_BUILD_TYPE=Release
     -DQ1ORM_BUILD_TOOLS=ON
+    "-DQ1ORM_RELEASE_DIR=$RELEASE"
+    "-DQ1ORM_RELEASE_SQL_DRIVERS=${Q1ORM_RELEASE_SQL_DRIVERS:-QMYSQL;QSQLITE}"
 )
 
 # If QTDIR is provided, use that Qt installation.
@@ -73,9 +75,14 @@ cmake --install "$BUILD" \
     --prefix "$RELEASE"
 
 echo
+echo "Packaging Qt SQL plugins and native client dependencies..."
+cmake --build "$BUILD" --target Q1ORMReleaseRuntime --config Release --parallel "$JOBS"
+
+echo
 echo "Installed files:"
 find "$RELEASE" -maxdepth 2 \( -type f -o -type l \) -print
 
 echo
 echo "Build and installation completed."
-echo "Note: Qt runtime libraries are not bundled by this script."
+echo "Qt SQL runtime libraries are bundled and verified in $RELEASE."
+echo "Use bin/q1orm-run to launch your application with the bundled libraries."

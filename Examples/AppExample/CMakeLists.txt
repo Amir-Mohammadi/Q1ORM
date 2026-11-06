@@ -41,6 +41,9 @@ if(WIN32)
     )
 endif()
 
+include("${CMAKE_CURRENT_LIST_DIR}/../../cmake/Q1MySqlRuntime.cmake")
+q1orm_deploy_mysql_runtime(AppExample)
+
 foreach(test_case IN ITEMS
     crud bulkCrud selects boundValues aggregates grouping joinsAndIncludes
     jsonAndRawSql changeTracking transactions constraints errorHandling sqlGeneration connectionLifecycle

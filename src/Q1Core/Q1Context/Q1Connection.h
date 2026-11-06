@@ -291,6 +291,11 @@ public:
 
     bool Connect()
     {
+        return Connect(true);
+    }
+
+    bool Connect(bool reportError)
+    {
         // Already open: just take a reference, so a nested Disconnect()
         // from an inner scope cannot close a connection an outer scope owns.
         if (database.isOpen())
@@ -310,7 +315,7 @@ public:
 
         if (!database.open())
         {
-            if (IsSqlServer() && TryOpenSqlServerWithFallbacks(database, database_name, false))
+            if (IsSqlServer() && TryOpenSqlServerWithFallbacks(database, database_name, false, reportError))
             {
                 ClearError();
                 open_count = 1;
@@ -318,7 +323,8 @@ public:
                 return true;
             }
             RecordError(database.lastError());
-            qCritical() << "Q1Connection::Connect failed:" << error.text();
+            if (reportError)
+                qCritical() << "Q1Connection::Connect failed:" << error.text();
             return false;
         }
 
@@ -694,7 +700,8 @@ private: // Connection Parameters
 
     bool TryOpenSqlServerWithFallbacks(QSqlDatabase &db,
                                        const QString &target_database_name,
-                                       bool is_root)
+                                       bool is_root,
+                                       bool reportError = true)
     {
         const QStringList driversToTry = SqlServerOdbcDrivers();
 
@@ -706,8 +713,9 @@ private: // Connection Parameters
         }
 
         RecordError(db.lastError());
-        qCritical() << (is_root ? "Q1Connection::RootConnect failed:" : "Q1Connection::Connect failed:")
-                    << error.text();
+        if (reportError)
+            qCritical() << (is_root ? "Q1Connection::RootConnect failed:" : "Q1Connection::Connect failed:")
+                        << error.text();
         return false;
     }
 

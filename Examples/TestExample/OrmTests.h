@@ -26,6 +26,7 @@ private slots:
     void constraints();
     void errorHandling();
     void sqlGeneration();
+    void databaseCreation();
     void connectionLifecycle();
     void threadedCrud();
     void services();

@@ -10,10 +10,27 @@ if (!context.Initialize()) {
 }
 ```
 
-It opens the database, creates missing tables, and checks mapped columns,
+It opens the database and automatically creates it if it does not exist, then
+creates missing tables and checks mapped columns,
 indexes, and relationships. Existing tables and saved rows are reused.
 If you add a supported column to your map, startup adds that missing column.
 There are no migration files, history records, or terminal commands to manage.
+
+PostgreSQL uses a connection to `postgres`, SQL Server uses `master`, and MySQL
+connects to the server without selecting a database to check for and create the
+configured database. The configured username and password are used for both
+connections, so that account must have permission to create databases. SQLite
+creates the database file when opened; its parent directory must already exist.
+The database server itself must already be running. Connection and creation
+failures return `false` and are available through `GetLastError()`.
+
+On Windows, the example builds copy an installed MySQL client runtime
+(`libmysql.dll` and its OpenSSL dependencies) beside the executables so Qt can
+load `QMYSQL`. For a custom client installation, configure CMake with
+`-DQ1ORM_MYSQL_RUNTIME_DIR="C:/path/to/mysql/lib"`. Use a client library matching
+the Qt plugin's architecture. A driver appearing in `QSqlDatabase::drivers()`
+only means Qt found its plugin; missing native DLLs can still prevent loading.
+Set `QT_DEBUG_PLUGINS=1` to see plugin loader diagnostics.
 
 An unchanged schema is checked but not recreated. Initialization does not insert
 application data. TestExample deliberately clears and reseeds its test tables

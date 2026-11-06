@@ -14,6 +14,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Sql)
 
 set(PROJECT_NAME "Q1ORM")
 set(CMAKE_Q1ORM_RELEASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../Releases/Release-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_Q1ORM_RELEASE_DIR}" CACHE PATH "Installation directory" FORCE)
+endif()
 
 set(Q1ORM_SCRIPTS
     Q1DatabaseInstall/postgresql_install.bat)
@@ -61,6 +64,11 @@ target_include_directories(Src
 add_library(Q1ORM::Q1ORM ALIAS Src)
 target_compile_features(Src PUBLIC cxx_std_20)
 
+# Public template headers can exceed the default MSVC object section limit.
+if(MSVC)
+    target_compile_options(Src PUBLIC /bigobj)
+endif()
+
 target_link_libraries(Src PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Sql)
@@ -70,12 +78,12 @@ set_target_properties(Src PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
 
 
 install(TARGETS Src
-        RUNTIME DESTINATION "${CMAKE_Q1ORM_RELEASE_DIR}/bin"
-        LIBRARY DESTINATION "${CMAKE_Q1ORM_RELEASE_DIR}/lib"
-        ARCHIVE DESTINATION "${CMAKE_Q1ORM_RELEASE_DIR}/lib"
+        RUNTIME DESTINATION "bin"
+        LIBRARY DESTINATION "lib"
+        ARCHIVE DESTINATION "lib"
         COMPONENT Q1ORM_Library)
 
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/" DESTINATION "${CMAKE_Q1ORM_RELEASE_DIR}/include"
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/" DESTINATION "include"
         FILE_PERMISSIONS
             OWNER_READ OWNER_EXECUTE OWNER_WRITE
             GROUP_READ GROUP_EXECUTE
@@ -87,7 +95,7 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/" DESTINATION "${CMAKE_Q1ORM_RELE
         COMPONENT Q1ORM_Library
         FILES_MATCHING PATTERN "*.h")
 
-install(DIRECTORY Q1DatabaseInstall DESTINATION "${CMAKE_Q1ORM_RELEASE_DIR}/scripts"
+install(DIRECTORY Q1DatabaseInstall DESTINATION "scripts"
         FILE_PERMISSIONS
             OWNER_READ OWNER_EXECUTE OWNER_WRITE
             GROUP_READ GROUP_EXECUTE

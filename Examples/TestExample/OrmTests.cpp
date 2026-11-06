@@ -3,6 +3,9 @@
 #include <Q1Core/Q1Migration/Q1MigrationQuery.h>
 
 #include <QJsonDocument>
+#include <QFileInfo>
+#include <QScopeGuard>
+#include <QRegularExpression>
 #include <QtTest>
 #include <barrier>
 #include <thread>
@@ -40,8 +43,10 @@ void OrmTests::initTestCase()
 
 void OrmTests::init()
 {
+    QTest::failOnWarning(QRegularExpression("Unable to free statement"));
     const QString test = QString::fromLatin1(QTest::currentTestFunction());
-    if (test == "modelBuilder" || test == "schemaScale" || test == "sqlGeneration")
+    if (test == "modelBuilder" || test == "schemaScale" || test == "sqlGeneration"
+        || test == "databaseCreation")
         return;
     connection = makeConnection();
     context = std::make_unique<ApplicationContext>(*connection);
@@ -255,6 +260,73 @@ void OrmTests::constraints()
     QCOMPARE(context->countries.Select().Count(), 1);
     QCOMPARE(context->cities.Select().Count(), 1);
     QCOMPARE(context->cities.Select().First().country_id, secondCountry.id);
+}
+
+void OrmTests::databaseCreation()
+{
+    auto local = makeConnection();
+    const QString name = "q1orm_create_" + QUuid::createUuid().toString(QUuid::Id128);
+    const QString target = driver == Q1Driver::SQLITE
+                               ? directory.filePath(name + ".sqlite") : name;
+    local->SetDatabaseName(target);
+    Q1Migration schema(*local);
+
+    if (local->IsSqlite())
+        QVERIFY(!QFileInfo::exists(target));
+    else
+    {
+        // A failed creation must not leave a stale error on catalog discovery.
+        QVERIFY(!schema.AddDatabase(QString()));
+        QVERIFY(!schema.ErrorMessage().isEmpty());
+        const QStringList databases = schema.GetDatabases();
+        QVERIFY2(schema.ErrorMessage().isEmpty(), qPrintable(schema.ErrorMessage()));
+        QVERIFY(!databases.contains(target));
+        QVERIFY(!local->IsRootOpen());
+    }
+
+    // Only remove the unique database owned by this test, including on failure.
+    const auto cleanupDatabase = qScopeGuard([&] {
+        if (local->IsSqlite()) return;
+        QVERIFY2(local->RootConnect(), qPrintable(local->ErrorMessage()));
+        const auto disconnect = qScopeGuard([&] { local->RootDisconnect(); });
+        QSqlQuery drop(local->root_database);
+        const QString sql = local->IsSqlServer()
+                                ? QString("IF DB_ID(%1) IS NOT NULL DROP DATABASE %2")
+                                      .arg(local->QuoteStringLiteral(target), local->QuoteIdentifier(target))
+                                : "DROP DATABASE IF EXISTS " + local->QuoteIdentifier(target);
+        QVERIFY2(drop.exec(sql), qPrintable(drop.lastError().text()));
+    });
+
+    ApplicationContext localContext(*local);
+    if (local->IsSqlite())
+    {
+        local->database.setConnectOptions("QSQLITE_OPEN_READONLY");
+        QVERIFY(!localContext.Initialize());
+        QVERIFY(localContext.GetLastError().contains(target));
+        QVERIFY(!local->IsOpen());
+        QVERIFY(!local->IsRootOpen());
+        local->database.setConnectOptions(QString());
+    }
+    QVERIFY2(localContext.Initialize(), qPrintable(localContext.GetLastError()));
+    QVERIFY(!local->IsOpen());
+    QVERIFY(!local->IsRootOpen());
+    if (local->IsSqlite())
+        QVERIFY(QFileInfo::exists(target));
+    else
+    {
+        const QStringList databases = schema.GetDatabases();
+        QVERIFY2(schema.ErrorMessage().isEmpty(), qPrintable(schema.ErrorMessage()));
+        QVERIFY(databases.contains(target));
+    }
+
+    Country saved{0, "Preserved on startup"};
+    QVERIFY2(localContext.countries.Insert(saved), qPrintable(localContext.countries.GetLastError()));
+    QVERIFY2(localContext.Initialize(), qPrintable(localContext.GetLastError()));
+    QCOMPARE(localContext.countries.Select().Count(), 1);
+    QCOMPARE(localContext.countries.Select().First().name, saved.name);
+    QVERIFY(localContext.GetLastError().isEmpty());
+    QVERIFY(!local->IsOpen());
+    QVERIFY(!local->IsRootOpen());
 }
 
 void OrmTests::connectionLifecycle()

@@ -120,11 +120,14 @@ SQLite does not require a database server.
 PostgreSQL, MySQL, and SQL Server require:
 
 * A running database server
-* An existing database
 * A database user
 * Appropriate permissions
 * The matching Qt SQL plugin
 * Required native client libraries
+
+`Initialize()` automatically creates a missing database using the configured
+credentials. The database user must have permission to create databases when
+the configured database does not exist.
 
 The application API remains the same across the supported database engines.
 
@@ -1111,6 +1114,136 @@ QMYSQL
 
 The Qt MySQL plugin and its native client libraries must match the Qt/compiler environment.
 
+### Run MySQL in Docker
+
+Start Docker Desktop or Docker Engine, then run this command in PowerShell or a terminal:
+
+```sh
+docker run --name q1orm-mysql -d -p 127.0.0.1:3307:3306 -e MYSQL_ROOT_PASSWORD=q1orm-dev-password -e "MYSQL_ROOT_HOST=%" -v q1orm-mysql-data:/var/lib/mysql mysql:8.4
+```
+
+This local development setup uses `root` with password `q1orm-dev-password` and
+publishes MySQL at `127.0.0.1:3307`. Use port `3307` in the connection above when
+connecting from your host application. If that port is already occupied, choose
+another host port and update the application's port to match.
+
+Watch startup:
+
+```sh
+docker logs -f q1orm-mysql
+```
+
+Wait for MySQL to report `ready for connections` on port `3306`, then press
+Ctrl+C to leave the log viewer. The container keeps running. Verify login with
+this command and enter `q1orm-dev-password` at the password prompt:
+
+```sh
+docker exec -it q1orm-mysql mysql -uroot -p -e "SELECT 1;"
+```
+
+Q1ORM's `Initialize()` creates the configured database if it is missing; the
+account must have permission to create it. The development root account above
+has that permission.
+
+The named volume `q1orm-mysql-data` preserves the database files. Stop and start
+the same container with:
+
+```sh
+docker stop q1orm-mysql
+docker start q1orm-mysql
+```
+
+The password environment variable initializes a new data directory only;
+changing it later does not reset the password stored in an existing volume.
+
+### Windows QMYSQL driver
+
+A Windows application connecting to Docker still needs the Windows Qt `QMYSQL`
+plugin and native MySQL client DLLs. Install or extract the Windows MySQL Server
+package to obtain `libmysql.dll` and its dependencies. Match the plugin to your
+Qt version, compiler, architecture, and Debug/Release configuration.
+
+The example builds automatically copy an installed `libmysql.dll` and its
+OpenSSL dependencies beside `AppExample.exe` and `TestExample.exe`. For a custom
+installation, configure the directory containing `libmysql.dll` explicitly
+(adjust these example paths to your installation):
+
+```powershell
+cmake -S . -B build -DCMAKE_PREFIX_PATH="C:/Qt/6.8.3/msvc2022_64" -DQ1ORM_MYSQL_RUNTIME_DIR="C:/Program Files/MySQL/MySQL Server 8.0/lib"
+cmake --build build --config Release
+```
+
+For example, a MySQL 8.0 client may require `libmysql.dll`,
+`libssl-1_1-x64.dll`, and `libcrypto-1_1-x64.dll`. Dependency names depend on the
+client version; keep the DLLs from the same client installation together.
+The CMake helper copies client DLLs; your Qt installation must already provide
+the `QMYSQL` plugin.
+
+`QMYSQL` can appear in `QSqlDatabase::drivers()` even when a dependency is missing.
+For `QMYSQL driver not loaded`, enable `$env:QT_DEBUG_PLUGINS = "1"` in PowerShell
+and run the application again to see the loader error.
+
+### Package the MySQL runtime automatically
+
+Run `release.bat` on Windows or `bash release.sh` on Ubuntu to build a release
+with Qt SQL plugins and their native client dependencies in
+`Releases/Release-0.1`. The scripts bundle `QMYSQL` and `QSQLITE` by default,
+including the MySQL client's OpenSSL libraries. Keep the release's `bin` files
+and `sqldrivers` folder together when deploying your executable.
+
+The build machine needs the matching Qt SQL plugins and MySQL client libraries.
+Windows discovery checks the standard MySQL installation directories; set
+`Q1ORM_MYSQL_RUNTIME_DIR` for a custom client location. On Ubuntu with the system
+Qt installation, install the build prerequisites with:
+
+```sh
+sudo apt-get install qt6-base-dev libqt6sql6-mysql libqt6sql6-sqlite
+```
+
+Each release runs `Q1SqlDriverCheck` with the packaged libraries and plugins.
+It loads the selected drivers without opening a database. Missing libraries or
+an unloadable plugin fail the release build before it reports success.
+Database server startup, credentials, and database permissions remain connection
+settings. On Windows, install the bundled `vc_redist.x64.exe` if the target
+machine does not already have the required MSVC runtime.
+
+On Ubuntu, launch your application with the generated wrapper so it uses the
+bundled shared libraries:
+
+```sh
+./Releases/Release-0.1/bin/q1orm-run ./Releases/Release-0.1/bin/MyApplication
+```
+
+To include PostgreSQL and SQL Server plugins too, set
+`Q1ORM_RELEASE_SQL_DRIVERS` to `QMYSQL;QSQLITE;QPSQL;QODBC` before running the
+release script. Their matching plugins and native clients must be installed on
+the build machine; SQL Server also needs an installed ODBC driver on the target.
+`Q1ORM_BUILD_DIR` and `Q1ORM_RELEASE_DIR` optionally select different build and
+output directories. Runtime packaging requires CMake 3.16 or newer.
+
+### Run AppExample against Docker MySQL
+
+From the repository root, set these variables in PowerShell before running:
+
+```powershell
+$env:Q1ORM_ONLY = "MYSQL"
+$env:Q1ORM_MYSQL_HOST = "127.0.0.1"
+$env:Q1ORM_MYSQL_PORT = "3307"
+$env:Q1ORM_MYSQL_DB_NAME = "q1orm_docker_example"
+$env:Q1ORM_MYSQL_USER = "root"
+$env:Q1ORM_MYSQL_PASSWORD = "q1orm-dev-password"
+.\build\bin\Release\AppExample.exe
+```
+
+The executable path above is for a Visual Studio Release build. For Qt Creator
+or a single-configuration generator, use the executable in your build's `bin`
+directory. Run from a Qt development terminal or deploy the required Qt DLLs
+and SQL plugin alongside the executable.
+
+Use a dedicated example database: `AppExample` clears and reseeds its demo tables.
+These `Q1ORM_MYSQL_*` settings belong to `AppExample`; your own application passes
+its connection settings to `Q1Connection`.
+
 ---
 
 ## SQL Server
@@ -1703,7 +1836,7 @@ Check:
 | Qt SQL driver not loaded    | Check `QSqlDatabase::drivers()`                            |
 | SQLite cannot open database | Check path and directory permissions                       |
 | PostgreSQL connection fails | Check host, port, credentials and `QPSQL`                  |
-| MySQL driver not loaded     | Check `QMYSQL` and native MySQL client libraries           |
+| MySQL driver not loaded     | See [Windows QMYSQL driver](#windows-qmysql-driver)        |
 | SQL Server connection fails | Check `QODBC` and SQL Server ODBC driver                   |
 | Schema initialization fails | Check `GetLastError()`                                     |
 | SQLite database locked      | Check concurrent writers and long transactions             |

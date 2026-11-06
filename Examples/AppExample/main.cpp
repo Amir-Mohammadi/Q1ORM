@@ -78,9 +78,9 @@ const DbConfig dbs[] = {
         Q1Driver::POSTGRE_SQL,
         "POSTGRES",
         "127.0.0.1",
-        "sa",
+        "postgres",
         "123",
-        "testdb",
+        "q1prm",
         5432
     },
 
@@ -88,10 +88,10 @@ const DbConfig dbs[] = {
         Q1Driver::MYSQL,
         "MYSQL",
         "127.0.0.1",
-        "sa",
+        "root",
         "123",
         "testdb",
-        3306
+        3307
     },
 
     {
@@ -99,8 +99,8 @@ const DbConfig dbs[] = {
         "SQLSERVER",
         "127.0.0.1",
         "sa",
-        "P@nd1378",
-        "testdb",
+        "123",
+        "q1orm_test",
         1433
     },
 };
@@ -239,7 +239,7 @@ public:
     {
         entity.ToTableName("countries");
         entity.HasKey<&Country::id>().ValueGeneratedOnAdd();
-        entity.Property<&Country::name>().IsRequired();
+        entity.Property<&Country::name>();
     }
 };
 
@@ -339,12 +339,9 @@ struct Suite
                        .arg(settings.user);
         }
 
-        // Probe the exact resolved connection settings before attempting
-        // context initialization/schema synchronization.
-        if (!conn.Connect())
-            return fail("connection", conn.ErrorMessage());
-
-        if (config.driver == Q1Driver::POSTGRE_SQL)
+        // Repair existing PostgreSQL example tables when they can be opened.
+        // Initialize() handles creating a missing database below.
+        if (config.driver == Q1Driver::POSTGRE_SQL && conn.Connect(false))
         {
             QString repairError;
             for (const QString& tableName : {QStringLiteral("countries"), QStringLiteral("cities")})
@@ -360,9 +357,8 @@ struct Suite
                 }
             }
             qInfo().noquote() << "[POSTGRES] example schema preflight complete";
+            conn.Disconnect();
         }
-
-        conn.Disconnect();
 
         if (!ctx.Initialize())
         {

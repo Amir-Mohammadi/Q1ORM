@@ -1,0 +1,2 @@
+release.sh text eol=lf
+release.bat text eol=crlf
